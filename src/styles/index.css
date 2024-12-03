@@ -62,7 +62,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .profile-image {
-    mask-image: url('../misc/image_mask/profile_image_mask.svg');
+    mask-image: url('../components/avatar/image_mask/profile_image_mask.svg');
     mask-size: cover;
     -webkit-mask-size: cover;
     mask-position: center;
@@ -72,7 +72,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .profile-status-image {
-    mask-image: url('../misc/image_mask/online_image_mask.svg');
+    mask-image: url('../components/avatar/image_mask/online_image_mask.svg');
     mask-size: cover;
     -webkit-mask-size: cover;
     mask-position: center;
