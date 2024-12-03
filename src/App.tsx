@@ -1,9 +1,10 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { DarkModeContext } from './contexts/darkModeContext';
 import useDarkMode from './hooks/useDarkMode';
 import Login from './routes/Login';
 import { TokenContext } from './contexts/tokenContext';
-import Home from './routes/layout/Home';
+import { AppContext } from './contexts/appContext';
+import Root from './components/common/Root.tsx';
 
 const App: () => (React.JSX.Element) = () => {
 
@@ -13,19 +14,21 @@ const App: () => (React.JSX.Element) = () => {
     // Obtención del token de autenticación por medio del valor del contexto
     const { token } = useContext(TokenContext);
 
+    // Inicialización de barra lateral siempre activa
+    const [ isSidebarOpen, setIsSidebarOpen ] = useState<boolean>(false);
+    const [ isSidebarLocked, setIsSidebarLocked ] = useState<boolean>(false);
+
     return (
         // Proveedor de contexto de modo oscuro
         <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
-            <div className='relative z-0 flex flex-col bg-slate-100 dark:bg-[#101b26] h-svh transition'>
-                {
-                    !token
-                    ? (
-                        <Login />
-                    )
-                    :
-                    <Home />
-                }
-            </div>
+            <AppContext.Provider value={{ isSidebarLocked, setIsSidebarLocked, isSidebarOpen, setIsSidebarOpen }} >
+                <div className='relative z-0 flex flex-col bg-slate-100 dark:bg-[#101b26] h-svh transition'>
+                    {!token
+                        ? <Login />
+                        : <Root/>
+                    }
+                </div>
+            </AppContext.Provider>
         </DarkModeContext.Provider>
     )
 };

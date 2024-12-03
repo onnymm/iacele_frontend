@@ -20,11 +20,21 @@ body {
     }
 
     button {
-        @apply select-none;
+        @apply select-none transition;
     }
 
     p > a {
         @apply text-main-500 underline
+    }
+
+    /* Animación de botón al darle clic */
+    button.ui-interactive {
+        @apply active:scale-90 transition;
+    }
+
+    /* Labels que envuelven botones para hacer más grande su área de clic */
+    .ui-label-button {
+        @apply cursor-pointer;
     }
 }
 
@@ -49,4 +59,24 @@ input[type="number"]::-webkit-inner-spin-button {
         transform: scale(4);
         opacity: 0;
     }
+}
+
+.profile-image {
+    mask-image: url('../misc/image_mask/profile_image_mask.svg');
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.profile-status-image {
+    mask-image: url('../misc/image_mask/online_image_mask.svg');
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }

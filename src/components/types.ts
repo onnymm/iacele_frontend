@@ -36,3 +36,12 @@ export enum InputAutoCapitalize {
 }
 
 export type AutoCapitalizeOptions = typeof InputAutoCapitalize[keyof typeof InputAutoCapitalize]
+
+export interface BaseImageComponent {
+    data: string;
+    alt?: string;
+}
+
+export interface AvatarParams extends BaseImageComponent {
+    online: boolean;
+}

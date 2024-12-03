@@ -1,10 +1,12 @@
 import Group from "../../components/layout/Group";
 
 const Home: () => (React.JSX.Element) = () => {
+    
+    console.log("render")
 
     return (
         <Group>
-            Inicio de la aplicación
+            Contenido
         </Group>
     );
 }
