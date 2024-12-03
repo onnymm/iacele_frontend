@@ -20,7 +20,7 @@ const ButtonLockSidebar: () => (React.JSX.Element) = () => {
     return (
         <button
             onClick={() => setIsSidebarLocked((prevState => !prevState))}
-            className={`${isSidebarLocked ? "bg-slate-900" : ""} hover:bg-slate-900 rounded-md size-12 sm:size-10`}
+            className={`${isSidebarLocked ? "bg-slate-900" : ""} hidden sm:block hover:bg-slate-900 rounded-md size-12 sm:size-10`}
         >
             <div className="p-2 size-full">
                 <LockClosedIcon className="size-8 sm:size-6 fill-white" />

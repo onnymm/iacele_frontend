@@ -16,7 +16,7 @@ const Navbar: () => (React.JSX.Element) = () => {
     return (
         <nav className="top-0 z-10 sticky flex flex-row justify-between bg-white dark:bg-[#1f2f3f] shadow w-full h-20 transition select-none">
             <div className="flex flex-row justify-between items-center px-4 w-72 h-full">
-                <h1>iaCele</h1>
+                <h1 id="navbar-logo" className="sm:block hidden">iaCele</h1>
                 <ButtonSidebarMenu />
             </div>
             <div className="flex flex-row gap-4 px-4 w-min h-full">

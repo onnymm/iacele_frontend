@@ -2,7 +2,7 @@
 export const screenWidthThereshold = 768
 
 // Ancho de sidebar
-export const sidebarWidth = 288
+export const sidebarWidth = 640
 
 // Exportación al safelist tailwind.config.js
 export const sidebarWidthClassName = `w-[${sidebarWidth}px]`

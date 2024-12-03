@@ -19,8 +19,8 @@ const NavbarProfile: () => (React.JSX.Element) = () => {
     const currentUser = useContext(UserContext);
 
     return (
-        <div className="flex flex-row items-center gap-2 w-max h-full">
-            <div>
+        <div id="navbar-profile" className="flex flex-row items-center gap-2 w-max h-full">
+            <div className="sm:block hidden">
                 <p className="justify-end font-semibold text-end text-sm">{currentUser.name}</p>
                 <p className="text-end text-gray-400 text-xs">{currentUser.user}</p>
             </div>

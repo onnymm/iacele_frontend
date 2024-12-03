@@ -6,12 +6,12 @@
 @tailwind utilities;
 
 body {
-	font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 @layer base {
     #root {
-        @apply h-screen;
+        @apply h-svh;
     }
 
     body,
