@@ -1,5 +1,5 @@
 import { mainColor } from './src/constants/colors'
-import { sidebarWidthClassName } from './src/settings/appSettings'
+import { sidebarWidthClassName } from './src/core/computedClassNames'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,12 +7,15 @@ export default {
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
+
     // Modo oscuro en clase CSS
     darkMode: 'class',
+
     // Lista de clases computadas a incluir siempre
     safelist: [
         sidebarWidthClassName,
     ],
+
     theme: {
         extend: {
             height: {
@@ -43,8 +46,11 @@ export default {
             },
             transitionProperty: {
                 width: 'width',
-                height: 'height'
+                height: 'height',
             },
+            backdropSaturate: {
+                115: '1.15',
+            }
         },
     },
     plugins: [],

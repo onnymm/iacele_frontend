@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import App from "./App";
 import Home from "./routes/layout/Home";
+import RouteCommissions from "./routes/layout/Commissions";
 
 const router = createBrowserRouter(
     [
@@ -11,6 +12,10 @@ const router = createBrowserRouter(
                 {
                     index: true,
                     element: <Home />
+                },
+                {
+                    path: '/commissions',
+                    element: <RouteCommissions />
                 }
             ]
         }

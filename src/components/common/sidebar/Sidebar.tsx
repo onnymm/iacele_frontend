@@ -40,7 +40,7 @@ const Sidebar: () => (React.JSX.Element) = (() => {
 
     return (
         // Contenedor de toda la interacción con la barra lateral
-        <div id="sidebar-section" className="top-0 z-20 absolute w-screen h-full pointer-events-none">
+        <div id="sidebar-section" className="top-0 z-20 absolute w-screen h-full text-gray-300 pointer-events-none">
 
             {/* Elemento que oscurece la vista de la aplicación cuando la barra lateral se muestra */}
             <div className={`${isSidebarOpen && !isSidebarLocked ? "opacity-20 pointer-events-auto": "opacity-0"} absolute transition-opacity bg-black w-screen h-full`}/>

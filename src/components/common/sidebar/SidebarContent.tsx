@@ -1,4 +1,7 @@
 import React from "react";
+import { sidebarMenu } from "../../../settings/appSettings";
+import StickySectionTag from "./StickySectionTag";
+import RouteGroup from "./RouteGroup";
 
 /** 
  *  ## Sección de menú de la barra lateral
@@ -12,8 +15,31 @@ import React from "react";
 const SidebarContent = () => {
 
     return (
-        <div className="flex flex-col flex-grow gap-2">
-            Información del Sidebar
+        <div className="flex flex-col flex-grow gap-4">
+        {
+            sidebarMenu.map(
+                (section, sectionKey) => (
+                    // Se renderiza todo dentro de otro contenedor para
+                    //      utilizar el 100% de altura del contenedor padre
+                    //      que usa la propiedad flex-grow.
+                    <div className="w-full h-min"  key={sectionKey}>
+                        {/* Título de la sección */}
+                        <StickySectionTag>
+                            {section.name}
+                        </StickySectionTag>
+                        
+                        {/* Mapeo de grupos */}
+                        {
+                            section.groups.map(
+                                (group, groupKey) => (
+                                    <RouteGroup key={groupKey} {...group} />
+                                )
+                            )
+                        }
+                    </div>
+                )
+            )
+        }
         </div>
     )
 }
