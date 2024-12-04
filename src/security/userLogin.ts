@@ -1,6 +1,6 @@
-import axios from "axios";
 import { AuthenticationHeaders } from "../types/authentication"
 import getBackendUrl from "../api/backendUrl";
+import iaCeleAxios from "../api/axiosInstance";
 
 /** 
  *  ## Inicio de sesión del usuario
@@ -54,7 +54,7 @@ const userLogin: (
     try {
 
         // Obtención del token de autenticación del usuario
-        const response = await axios.post(getBackendUrl('/token/'), d, config);
+        const response = await iaCeleAxios.post(getBackendUrl('/token/'), d, config);
         // Asignación de token
         setToken(response.data['access_token']);
         return true;

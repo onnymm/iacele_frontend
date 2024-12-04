@@ -37,11 +37,13 @@ const AuthProvider: (config: SingleJSXInvolverComponent) => (React.JSX.Element) 
         }, [token]
     );
 
-    // Almacenamiento de token
+    // Almacenamiento o remoción de token
     useEffect(
         () => {
             if ( token ) {
                 localStorage.setItem("userToken", token )
+            } else {
+                localStorage.removeItem("userToken")
             }
         }, [token]
     )

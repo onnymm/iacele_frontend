@@ -2,7 +2,7 @@ import axios from "axios";
 import userTemplate from "../constants/userTemplate";
 import { CurrentUserData } from "../types/currentUserData";
 import getBackendUrl from "../api/backendUrl";
-import { AuthenticationHeaders } from "../types/authentication";
+import iaCeleAxios from "../api/axiosInstance";
 
 interface UserAuthentication {
     token: string | null; // Token de autenticación.
@@ -33,17 +33,9 @@ const fetchUser: (config: UserAuthentication) => (Promise<void>) = async ({
         return;
     }
 
-    const config: AuthenticationHeaders = {
-        headers: {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        }
-    }
-
     try {
-
         // Envío de solicitud al api
-        const response = await axios.get(getBackendUrl('/account/me/'), config)
+        const response = await iaCeleAxios.get(getBackendUrl('/account/me/'), { authenticate: true })
         setUser(response.data)
     }
 
