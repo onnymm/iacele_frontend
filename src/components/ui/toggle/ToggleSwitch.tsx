@@ -1,13 +1,12 @@
 import { IconType } from "../../../types/commonTypes";
-import { StyleCategory, StyleCategoryOptions } from "../../types";
 
 interface ToggleSwitchParams {
-    value: boolean; // Valor para renderizar el estado del componente.
-    setValue: React.Dispatch<React.SetStateAction<boolean>>; // Función de cambio de estado del valor.
-    icon: IconType; // Ícono descriptivo indicador de valor activo.
-    iconOn?: IconType; // Ícono descriptivo indicador de valor inactivo.
-    type?: StyleCategoryOptions; // Estilo del interruptor.
-    fill?: boolean; // Indicador de relleno en color del interruptor. El valor por defecto es `true`.
+    value: boolean;
+    setValue: React.Dispatch<React.SetStateAction<boolean>>;
+    icon: IconType;
+    iconOn?: IconType;
+    type?: UIStyle;
+    fill?: boolean;
 }
 
 interface StateIconParams {
@@ -28,7 +27,12 @@ interface StateIconParams {
  *  - [ {@link IconType} ] `icon`: Ícono descriptivo indicador de valor activo.
  *  - [ {@link IconType} ] `iconOn`: Ícono descriptivo indicador de valor
  *  inactivo.
- *  - [ {@link StyleCategoryOptions} ] `type`: Estilo del interruptor.
+ *  - [ {@link UIStyle} ] `type`: Estilo del interruptor. Las opciones
+ *  disponibles son:
+ *      - `primary`
+ *      - `secondary`
+ *      - `danger`
+ *      - `success`
  *  - [ `boolean` ] `fill`: Indicador de relleno en color del interruptor. El
  *  valor por defecto es `true`.
  */ 
@@ -37,22 +41,22 @@ const ToggleSwitch: (config: ToggleSwitchParams) => (React.JSX.Element) = ({
     setValue,
     icon: Icon,
     iconOn: IconOn,
-    type = StyleCategory.Secondary,
+    type = 'secondary',
     fill = true,
 }) => {
 
     const bgColor = {
-        [StyleCategory.Primary]: "bg-main-500 dark:bg-main-500",
-        [StyleCategory.Secondary]: "bg-slate-400 dark:bg-slate-700",
-        [StyleCategory.Danger]: "bg-red-400",
-        [StyleCategory.Success]: "bg-green-400",
+        primary: "bg-main-500 dark:bg-main-500",
+        secondary: "bg-slate-400 dark:bg-slate-700",
+        danger: "bg-red-400",
+        success: "bg-green-400",
     };
 
     const fillColor = {
-        [StyleCategory.Primary]: "fill-main-500",
-        [StyleCategory.Secondary]: "fill-slate-400",
-        [StyleCategory.Danger]: "fill-red-400",
-        [StyleCategory.Success]: "fill-red-400",
+        primary: "fill-main-500",
+        secondary: "fill-slate-400",
+        danger: "fill-red-400",
+        success: "fill-red-400",
     };
 
     // Componente del ícono

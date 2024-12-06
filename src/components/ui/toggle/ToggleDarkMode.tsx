@@ -1,7 +1,6 @@
 import { useContext } from "react"
 import ToggleSwitch from "./ToggleSwitch"
 import { DarkModeContext } from "../../../contexts/darkModeContext"
-import { StyleCategory } from "../../types";
 import { MoonIcon, SunIcon } from "@heroicons/react/20/solid";
 
 /** 
@@ -22,7 +21,7 @@ const ToggleDarkMode: () => (React.JSX.Element) = () => {
         <ToggleSwitch
             value={darkMode}
             setValue={setDarkMode}
-            type={StyleCategory.Primary}
+            type='primary'
             icon={SunIcon}
             iconOn={MoonIcon}
         />

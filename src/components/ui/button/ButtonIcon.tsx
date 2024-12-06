@@ -1,5 +1,5 @@
 import { IconType } from "../../../types/commonTypes";
-import { GenericEvent, StyleCategoryOptions } from "../../types";
+import { GenericEvent } from "../../types";
 import ButtonTemplate from "./_ButtonTemplate";
 
 interface ButtonIconParams {
@@ -7,7 +7,7 @@ interface ButtonIconParams {
     icon: IconType;
     onClick: (e: GenericEvent) => void;
     disabled?: boolean;
-    type?: StyleCategoryOptions;
+    type?: UIStyle;
 }
 
 /** 
@@ -40,7 +40,7 @@ const ButtonIcon: (config: ButtonIconParams) => (React.JSX.Element) = ({
 
     return (
         <ButtonTemplate className={`${className} group-[.ui-layout-group]:w-12 group-[.ui-layout-group]:sm:w-10`} onClick={onClick} disabled={disabled} type={type}>
-            <div className="sm:size-5 size-7">
+            <div className="size-7 sm:size-5">
                 <Icon className="duration-current fill-current" />
             </div>
         </ButtonTemplate>

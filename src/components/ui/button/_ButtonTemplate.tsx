@@ -1,5 +1,5 @@
 import { createCircle } from "../../../core/uiEffects";
-import { GenericEvent, StyleCategory, StyleCategoryOptions } from "../../types";
+import { GenericEvent } from "../../types";
 import ButtonIcon from "./ButtonIcon"; // eslint-disable-line
 import ButtonText from "./ButtonText"; // eslint-disable-line
 import ButtonTextIcon from "./ButtonTextIcon"; // eslint-disable-line
@@ -9,7 +9,7 @@ interface ButtonTemplateParams {
     children: React.JSX.Element | React.JSX.Element[] | string;
     onClick: (e: GenericEvent) => void;
     disabled?: boolean;
-    type?: StyleCategoryOptions;
+    type?: UIStyle;
 }
 
 /** 
@@ -24,7 +24,7 @@ interface ButtonTemplateParams {
  *  del componente.
  *  - [ `function` ] `onClick`: Función a ejecutar cuando el botón es presionado.
  *  - [ `boolean` ] `disabled`: Condición para deshabilitar el botón.
- *  - [ {@link StyleCategory} ]: `type`: Estilo de botón a renderizar. Las
+ *  - [ {@link UIStyle} ]: `type`: Estilo de botón a renderizar. Las
  *  opciones disponibles son:
  *      - `primary`
  *      - `secondary`
@@ -36,23 +36,23 @@ const ButtonTemplate: (config: ButtonTemplateParams) => (React.JSX.Element) = ({
     children, // Contenido
     onClick, // Función a ejecutar
     disabled, // Desahbilitado
-    type = StyleCategory.Secondary, // Estilo de botón a renderizar
+    type = 'secondary', // Estilo de botón a renderizar
 }) => {
 
     // Apariencia del botón
     const buttonType = {
-        [StyleCategory.Primary]: 'bg-main-500 sm:hover:bg-main-400 text-white border-transparent disabled:border-gray-500/50',
-        [StyleCategory.Secondary]: 'text-gray-500 bg-white dark:bg-gray-500/30 sm:hover:bg-gray-50/20 dark:sm:hover:bg-white/10 border-gray-500/50 dark:text-white',
-        [StyleCategory.Danger]: 'text-red-500 border-red-500/50 sm:hover:bg-red-500/20 dark:text-red-400 border dark:border-red-400/50',
-        [StyleCategory.Success]: 'text-green-500 border-green-500/50 sm:hover:bg-green-500/20 dark:text-green-400 dark:border border-green-400/50'
+        primary: 'bg-main-500 sm:hover:bg-main-400 text-white border-transparent disabled:border-gray-500/50',
+        secondary: 'text-gray-500 bg-white dark:bg-gray-500/30 sm:hover:bg-gray-50/20 dark:sm:hover:bg-white/10 border-gray-500/50 dark:text-white',
+        danger: 'text-red-500 border-red-500/50 sm:hover:bg-red-500/20 dark:text-red-400 border dark:border-red-400/50',
+        success: 'text-green-500 border-green-500/50 sm:hover:bg-green-500/20 dark:text-green-400 dark:border border-green-400/50'
     };
 
     // Color del efecto de pulso en el botón
     const circleEffectColor = {
-        [StyleCategory.Primary]: 'bg-white/25',
-        [StyleCategory.Secondary]: 'bg-gray-600/25 dark:bg-white/50',
-        [StyleCategory.Danger]: 'bg-white/25',
-        [StyleCategory.Success]: 'bg-white/25',
+        primary: 'bg-white/25',
+        secondary: 'bg-gray-600/25 dark:bg-white/50',
+        danger: 'bg-white/25',
+        success: 'bg-white/25',
     }
 
     // Función de ejecución por el botón

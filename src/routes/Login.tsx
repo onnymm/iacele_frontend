@@ -6,7 +6,7 @@ import userLogin from "../security/userLogin";
 import InputUser from "../components/ui/input/InputUser";
 import InputPassword from "../components/ui/input/InputPassword";
 import ButtonText from "../components/ui/button/ButtonText";
-import { StatusCategory, StyleCategory } from "../components/types";
+import { StatusCategory } from "../components/types";
 import MiniGrapper from "../components/layout/MiniGrapper";
 import Alert from "../components/ui/alert/Alert";
 import ToggleDarkMode from "../components/ui/toggle/ToggleDarkMode";
@@ -42,7 +42,7 @@ const Login: () => (React.JSX.Element) = () => {
                 <Group title="Ingresa tus datos">
                     <InputUser value={inputUser} setValue={setInputUser} visiblePlaceholder="Nombre de usuario" onEnter={login} />
                     <InputPassword value={inputPassword} setValue={setInputPassword} visiblePlaceholder="Contraseña" onEnter={login} />
-                    <ButtonText type={StyleCategory.Primary} disabled={inputUser === "" || inputPassword === ""} onClick={login}>Iniciar sesión</ButtonText>
+                    <ButtonText type='primary' disabled={inputUser === "" || inputPassword === ""} onClick={login}>Iniciar sesión</ButtonText>
 
                     {/* Indicador de credenciales de usuario inválidas */}
                     {loginMessage !== "" && !success &&

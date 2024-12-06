@@ -1,14 +1,14 @@
 import { IconType } from "../../../types/commonTypes";
-import { GenericEvent, StyleCategoryOptions } from "../../types";
+import { GenericEvent } from "../../types";
 import ButtonTemplate from "./_ButtonTemplate";
 
 interface ButtonTextParams {
     className?: string;
     icon: IconType;
-    children: React.JSX.Element | string;
+    children: React.JSX.Element | string | (React.JSX.Element | string)[];
     onClick: (e: GenericEvent) => void;
     disabled?: boolean;
-    type?: StyleCategoryOptions;
+    type?: UIStyle;
 }
 
 /** 

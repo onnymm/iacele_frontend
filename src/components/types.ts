@@ -1,14 +1,5 @@
 export type GenericEvent = React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FocusEvent | React.KeyboardEvent;
 
-export enum StyleCategory {
-    Primary = 'primary',
-    Secondary = 'secondary',
-    Danger = 'danger',
-    Success = 'success',
-}
-
-export type StyleCategoryOptions = typeof StyleCategory[keyof typeof StyleCategory]
-
 export enum StatusCategory {
     Success = 'success',
     Warning = 'warning',

@@ -14,6 +14,7 @@ export default {
     // Lista de clases computadas a incluir siempre
     safelist: [
         sidebarWidthClassName,
+        "-translate-y-[50%]",
     ],
 
     theme: {
@@ -26,6 +27,8 @@ export default {
             },
             maxHeight: {
                 '9.5': '2.375rem',
+                50: '12.5rem',
+                94: '23.5rem',
             },
             maxWidth: {
                 '9.5': '2.375rem',
