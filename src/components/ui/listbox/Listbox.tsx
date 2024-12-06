@@ -27,17 +27,17 @@ interface ListboxParams {
 const Listbox: (config: ListboxParams) => (React.JSX.Element) = ({
     items,
     setActive,
-    iconActive: IconActive,
+    iconActive,
     _listboxRef, // Referencia usada por el componente Select.
 }) => {
 
     return (
-        <div className="border-gray-500/50 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm py-2 border rounded-lg">
-            <div ref={_listboxRef ? _listboxRef : undefined} className="p-2 max-h-94 sm:max-h-50 overflow-y-scroll md:dsk-vertical-difuminate mob-vertical-difuminate scrollbar-hide">
+        <div className="border-gray-500/50 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border rounded-lg">
+            <div ref={_listboxRef ? _listboxRef : undefined} className="px-2 py-4 max-h-94 sm:max-h-50 overflow-y-scroll md:dsk-vertical-difuminate mob-vertical-difuminate scrollbar-hide">
                 {
                     items.map(
                         (item, key) => (
-                            <ListboxOption item={item} icon={IconActive} key={key} setActive={setActive} />
+                            <ListboxOption item={item} icon={iconActive} key={key} setActive={setActive} />
                         )
                     )
                 }

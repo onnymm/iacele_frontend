@@ -38,11 +38,11 @@ const ListboxOption: (config: ListboxOptionParams) => (React.JSX.Element) = ({
     };
 
     return (
-        <button onClick={handleClick} className="relative flex flex-row items-center gap-2 sm:hover:bg-gray-500/10 dark:sm:hover:bg-white/10 active:bg-gray-500/10 dark:active:bg-white/10 px-4 rounded-lg w-full h-12 sm:h-10 font-light ui-text-theme duration-300 overflow-hidden">
+        <button onClick={handleClick} className="relative flex flex-row items-center gap-2 sm:hover:bg-gray-500/10 dark:sm:hover:bg-white/10 active:bg-gray-500/10 dark:active:bg-white/10 px-4 rounded-lg w-full h-12 sm:h-10 font-light text-gray-600 ui-text-theme sm:dark:hover:text-gray-200 sm:active:text-current sm:hover:text-black active:dark:text-gray-200 active:text-black dark:text-gray-400 whitespace-nowrap duration-300 overflow-hidden">
             <div className={`${!item.active ? "opacity-0" : "opacity-100"} flex justify-center items-center size-4 transition text-main-500`}>
                 <Icon className="size-full" />
             </div>
-            <p>{item.displayName}</p>
+            <p className="text-sm">{item.displayName}</p>
         </button>
     );
 };
