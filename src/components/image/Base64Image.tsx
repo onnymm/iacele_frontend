@@ -1,5 +1,3 @@
-import { BaseImageComponent } from "../types";
-
 /** 
  *  ## Imagen base 64
  *  Este componente renderiza una imagen a partir de datos base 64

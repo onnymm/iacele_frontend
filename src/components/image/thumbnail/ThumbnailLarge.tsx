@@ -1,5 +1,3 @@
-
-import { BaseImageComponent } from "../../types";
 import Base64Image from "../Base64Image";
 
 /** 

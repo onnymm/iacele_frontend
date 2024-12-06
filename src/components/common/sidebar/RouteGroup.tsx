@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from "react-router";
-import { MenuGroup } from "../../../settings/types";
 import React, { useEffect, useRef, useState } from "react";
 import useSidebar from "../../../hooks/useSidebar";
 import isBaseRoute from "../../functions/isBaseRoute";

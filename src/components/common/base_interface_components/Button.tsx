@@ -1,5 +1,3 @@
-import { IconType } from "../../../types/commonTypes"
-
 interface BaseInterfaceButton {
     icon: IconType;
     callback: () => (void);
@@ -24,7 +22,7 @@ const Button: (config: BaseInterfaceButton) => (React.JSX.Element) = ({
     return (
         <button onClick={callback} className="size-14 sm:size-12">
             <div className="p-2 size-full">
-                <Icon className="size-10 sm:size-8 fill-white" />
+                <Icon className="fill-white size-10 sm:size-8" />
             </div>
         </button>
     )

@@ -1,5 +1,4 @@
 import { SetStateAction } from "react";
-import { IconType } from "../../../types/commonTypes";
 
 interface ButtonToggleIconParams {
     value: boolean; // Valor para renderizar el estado del componente.

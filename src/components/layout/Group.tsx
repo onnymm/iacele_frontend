@@ -1,5 +1,3 @@
-import { GenericInvolverComponent } from "../../types/commonTypes";
-
 interface GroupParams extends GenericInvolverComponent {
     title?: string; // Título del grupo
 }

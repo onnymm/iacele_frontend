@@ -1,4 +1,3 @@
-import { GenericEvent } from "../../types";
 import ButtonTemplate from "./_ButtonTemplate";
 
 interface ButtonTextParams {

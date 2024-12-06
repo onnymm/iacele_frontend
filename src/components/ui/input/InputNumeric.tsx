@@ -1,7 +1,5 @@
 import { useState } from "react";
 import InputTemplate from "./_InputTemplate";
-import { InputType } from "../../types";
-import { IconType } from "../../../types/commonTypes";
 
 interface InputNumericParams {
     value: number | undefined;
@@ -123,7 +121,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             onChange={internalOnChange}
             onEnter={internalOnEnter}
             onBlur={internalOnBlur}
-            type={InputType.Number}
+            type={'number'}
             placeholder={placeholder}
             visiblePlaceholder={visiblePlaceholder}
             icon={icon}

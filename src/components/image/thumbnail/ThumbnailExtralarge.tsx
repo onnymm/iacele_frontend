@@ -1,5 +1,4 @@
 import Base64Image from "../../image/Base64Image";
-import { BaseImageComponent } from "../../types";
 
 /** 
  *  ## Miniatura extragrande

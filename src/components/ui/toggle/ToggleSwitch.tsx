@@ -1,5 +1,3 @@
-import { IconType } from "../../../types/commonTypes";
-
 interface ToggleSwitchParams {
     value: boolean;
     setValue: React.Dispatch<React.SetStateAction<boolean>>;

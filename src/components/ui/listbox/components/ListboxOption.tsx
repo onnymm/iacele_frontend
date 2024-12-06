@@ -1,5 +1,4 @@
 import { createCircle } from "../../../../core/uiEffects";
-import { IconType } from "../../../../types/commonTypes";
 
 interface ListboxOptionParams {
     item: OptionObject;

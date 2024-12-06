@@ -1,5 +1,4 @@
 import { createCircle } from "../../../core/uiEffects";
-import { GenericEvent } from "../../types";
 import ButtonIcon from "./ButtonIcon"; // eslint-disable-line
 import ButtonText from "./ButtonText"; // eslint-disable-line
 import ButtonTextIcon from "./ButtonTextIcon"; // eslint-disable-line

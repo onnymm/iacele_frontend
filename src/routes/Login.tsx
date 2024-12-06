@@ -6,7 +6,6 @@ import userLogin from "../security/userLogin";
 import InputUser from "../components/ui/input/InputUser";
 import InputPassword from "../components/ui/input/InputPassword";
 import ButtonText from "../components/ui/button/ButtonText";
-import { StatusCategory } from "../components/types";
 import MiniGrapper from "../components/layout/MiniGrapper";
 import Alert from "../components/ui/alert/Alert";
 import ToggleDarkMode from "../components/ui/toggle/ToggleDarkMode";
@@ -46,7 +45,7 @@ const Login: () => (React.JSX.Element) = () => {
 
                     {/* Indicador de credenciales de usuario inválidas */}
                     {loginMessage !== "" && !success &&
-                        <Alert type={StatusCategory.Error} title="Error al iniciar sesión">
+                        <Alert type={'error'} title="Error al iniciar sesión">
                             Usuario o contraseña inválidos.
                         </Alert>
                     }

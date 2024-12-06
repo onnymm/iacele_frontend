@@ -1,5 +1,3 @@
-import { GenericInvolverComponent } from "../../types/commonTypes";
-
 /** 
  *  ## Página compacta
  *  Este componente renderiza un contenedor de página compacta.

@@ -1,4 +1,3 @@
-import { IconType } from "../../../types/commonTypes"
 import ListboxOption from "./components/ListboxOption"
 
 interface ListboxParams {

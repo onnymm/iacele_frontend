@@ -1,5 +1,4 @@
 import ThumbNailSmall from "../image/thumbnail/ThumbnailSmall";
-import { AvatarParams } from "../types";
 
 /** 
  *  ## Avatar chico

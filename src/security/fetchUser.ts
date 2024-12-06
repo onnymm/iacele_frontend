@@ -1,6 +1,5 @@
 import axios from "axios";
 import userTemplate from "../constants/userTemplate";
-import { CurrentUserData } from "../types/currentUserData";
 import getBackendUrl from "../api/backendUrl";
 import iaCeleAxios from "../api/axiosInstance";
 

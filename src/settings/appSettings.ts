@@ -1,5 +1,4 @@
 import { BeakerIcon, Cog6ToothIcon, HomeIcon, SparklesIcon, UserIcon } from "@heroicons/react/24/outline"
-import { MenuSection } from "./types"
 
 // Delimitador de ancho de pantalla en pixeles
 export const screenWidthThereshold = 768

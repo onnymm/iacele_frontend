@@ -1,6 +1,4 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { MenuRoute } from "../../../settings/types";
-import { IconType } from "../../../types/commonTypes";
 
 interface GroupRouteButtonParams {
     name: string;

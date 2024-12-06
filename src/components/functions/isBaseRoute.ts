@@ -1,5 +1,3 @@
-import { MenuRoute } from "../../settings/types";
-
 /** 
  *  ## Es ruta base
  *  Esta función valida si una cadena de ruta es ruta base de la ubicación

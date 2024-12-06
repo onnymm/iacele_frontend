@@ -1,5 +1,4 @@
 import ThumbNailMedium from "../image/thumbnail/ThumbnailMedium";
-import { AvatarParams } from "../types";
 
 /** 
  *  ## Avatar mediano

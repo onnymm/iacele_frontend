@@ -1,5 +1,3 @@
-import { IconType } from "../../../types/commonTypes";
-import { GenericEvent } from "../../types";
 import ButtonTemplate from "./_ButtonTemplate";
 
 interface ButtonTextParams {

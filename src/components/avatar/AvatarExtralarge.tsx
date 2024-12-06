@@ -1,5 +1,4 @@
 import ThumbnailExtralarge from "../image/thumbnail/ThumbnailExtralarge";
-import { AvatarParams } from "../types";
 
 /** 
  *  ## Avatar extragrande

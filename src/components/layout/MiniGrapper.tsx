@@ -1,4 +1,3 @@
-import { GenericInvolverComponent } from "../../types/commonTypes";
 import Group from "./Group"; // eslint-disable-line
 
 interface MiniGrapperParams extends GenericInvolverComponent {

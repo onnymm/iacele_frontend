@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
-import { IconType } from "../../../types/commonTypes"
-import { AutoCapitalizeOptions, InputType, InputTypeOptions } from "../../types";
 import ButtonToggleIcon from "./ButtonToggleIcon";
 
 import InputText from "./InputText"; // eslint-disable-line
@@ -22,8 +20,8 @@ interface _InputParams {
     visiblePlaceholder?: string;
     icon?: IconType;
     loading?: boolean;
-    type?: InputTypeOptions;
-    autoCapitalize?: AutoCapitalizeOptions;
+    type?: InputType;
+    autoCapitalize?: InputAutoCapitalizeType;
     _iconOn?: IconType;
     _iconOff?: IconType;
     componentBefore?: React.JSX.Element | React.JSX.Element[];
@@ -84,7 +82,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
     visiblePlaceholder = "",
     icon: Icon = undefined,
     loading = undefined,
-    type = InputType.Text,
+    type = 'text',
     autoCapitalize = "sentences",
     _iconOn = undefined,
     _iconOff = undefined,
@@ -208,7 +206,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
                 <div className="absolute flex flex-row pointer-events-none size-full">
                     {/* Ícono */}
                     {Icon &&
-                        <div className="size-12 sm:size-10 z-10 flex justify-center items-center">
+                        <div className="z-10 flex justify-center items-center size-12 sm:size-10">
                             <Icon className={`${colorVisiblePlaceholder} text-gray-500 size-[50%]`} />
                         </div>
                     }
@@ -241,7 +239,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
 
             </div>
             {type === "password" && _iconOn && _iconOff &&
-                <div className="size-12 sm:size-10 right-0 absolute flex justify-center items-center">
+                <div className="right-0 absolute flex justify-center items-center size-12 sm:size-10">
                     <ButtonToggleIcon iconOn={_iconOn} iconOff={_iconOff} value={showPassword} setValue={setShowPassword}/>
                 </div>
             }

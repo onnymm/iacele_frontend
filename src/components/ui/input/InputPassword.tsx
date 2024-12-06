@@ -1,7 +1,6 @@
 import { EyeIcon, EyeSlashIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import InputTemplate from "./_InputTemplate";
 import { SetStateAction } from "react";
-import { InputType } from "../../types";
 
 interface InputPasswordParams {
     value: string;
@@ -56,7 +55,7 @@ const InputPassword: (config: InputPasswordParams) => (React.JSX.Element) = ({
 }) => {
 
     return (
-        <InputTemplate value={value} setValue={setValue} visiblePlaceholder={visiblePlaceholder} type={InputType.Password} _iconOn={EyeSlashIcon} _iconOff={EyeIcon} icon={LockClosedIcon} onEnter={onEnter} />
+        <InputTemplate value={value} setValue={setValue} visiblePlaceholder={visiblePlaceholder} type={'password'} _iconOn={EyeSlashIcon} _iconOff={EyeIcon} icon={LockClosedIcon} onEnter={onEnter} />
     )
 }
 

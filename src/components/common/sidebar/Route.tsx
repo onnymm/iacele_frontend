@@ -1,5 +1,4 @@
 import React from "react";
-import { MenuRoute } from "../../../settings/types";
 import isBaseRoute from "../../functions/isBaseRoute";
 
 interface RouteParams {

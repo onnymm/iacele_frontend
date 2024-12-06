@@ -1,10 +1,8 @@
 import { CheckIcon, ExclamationTriangleIcon, XMarkIcon } from "@heroicons/react/16/solid";
-import { IconType, TextInvolverComponent } from "../../../types/commonTypes";
-import { StatusCategory, StatusCategoryOptions } from "../../types";
 
 interface AlertTemplateParams extends TextInvolverComponent {
     title?: string; // Título a renderizar.
-    type: StatusCategoryOptions; // Tipo de alerta a mostrar.
+    type: StatusStyle; // Tipo de alerta a mostrar.
     closeable?: boolean; // Indicdor de si la alerta puede cerrarse o se mantendrá siempre visible. El valor por defecto es `false`.
 }
 
@@ -33,29 +31,29 @@ const Alert: (config: AlertTemplateParams) => (React.JSX.Element) = ({
 
     // Clases para estilización del componente
     const iconBgClassName = {
-        [StatusCategory.Success]: "bg-green-400 dark:bg-green-400",
-        [StatusCategory.Warning]: "bg-yellow-400 dark:bg-yellow-400",
-        [StatusCategory.Error]: "bg-red-400 dark:bg-red-400",
+        success: "bg-green-400 dark:bg-green-400",
+        warning: "bg-yellow-400 dark:bg-yellow-400",
+        error: "bg-red-400 dark:bg-red-400",
     }
     const wraperBgClassName = {
-        [StatusCategory.Success]: "bg-green-400/10 dark:bg-green-400/10",
-        [StatusCategory.Warning]: "bg-yellow-400/10 dark:bg-yellow-400/10",
-        [StatusCategory.Error]: "bg-red-400/10 dark:bg-red-400/10",
+        success: "bg-green-400/10 dark:bg-green-400/10",
+        warning: "bg-yellow-400/10 dark:bg-yellow-400/10",
+        error: "bg-red-400/10 dark:bg-red-400/10",
     }
     const colorClassName = {
-        [StatusCategory.Success]: "text-green-400",
-        [StatusCategory.Warning]: "text-yellow-400",
-        [StatusCategory.Error]: "text-red-400",
+        success: "text-green-400",
+        warning: "text-yellow-400",
+        error: "text-red-400",
     }
     const borderClassName = {
-        [StatusCategory.Success]: "border-green-500/50",
-        [StatusCategory.Warning]: "border-yellow-500/50",
-        [StatusCategory.Error]: "border-red-500/50",
+        success: "border-green-500/50",
+        warning: "border-yellow-500/50",
+        error: "border-red-500/50",
     }
     const statusIcon: {[key: string]: IconType} = {
-        [StatusCategory.Success]: CheckIcon,
-        [StatusCategory.Warning]: ExclamationTriangleIcon,
-        [StatusCategory.Error]: XMarkIcon,
+        success: CheckIcon,
+        warning: ExclamationTriangleIcon,
+        error: XMarkIcon,
     }
 
     // Definición de ícono a renderizar en base al tipo de alerta.

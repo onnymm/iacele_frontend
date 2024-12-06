@@ -1,4 +1,3 @@
-import { AuthenticationHeaders } from "../types/authentication"
 import getBackendUrl from "../api/backendUrl";
 import iaCeleAxios from "../api/axiosInstance";
 

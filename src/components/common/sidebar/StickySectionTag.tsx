@@ -1,5 +1,3 @@
-import { TextInvolverComponent } from "../../../types/commonTypes";
-
 /** 
  *  ## Etiqueta de sección de barra lateral
  *  Este componente renderiza una etiqueta de título para sección de grupos del

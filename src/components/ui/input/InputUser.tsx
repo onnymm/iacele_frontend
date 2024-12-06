@@ -1,6 +1,5 @@
 import { UserIcon } from "@heroicons/react/24/solid";
 import InputTemplate from "./_InputTemplate";
-import { InputAutoCapitalize } from "../../types";
 
 interface InputUserParams {
     value: string
@@ -40,7 +39,7 @@ const InputUser: (config: InputUserParams) => (React.JSX.Element) = ({
             setValue={setValue}
             visiblePlaceholder={visiblePlaceholder}
             icon={UserIcon}
-            autoCapitalize={InputAutoCapitalize.Off}
+            autoCapitalize={'off'}
             onEnter={onEnter}
         />
     )

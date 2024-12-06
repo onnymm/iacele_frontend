@@ -1,5 +1,3 @@
-import { CurrentUserData } from "../types/currentUserData";
-
 const userTemplate: CurrentUserData = {
     id: undefined,
     user: "",

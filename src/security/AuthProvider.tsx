@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react"
-import { CurrentUserData } from "../types/currentUserData"
 import userTemplate from "../constants/userTemplate"
 import fetchUser from "./fetchUser"
 import { TokenContext } from "../contexts/tokenContext"
 import { UserContext } from "../contexts/userContext"
-import {  SingleJSXInvolverComponent } from "../types/commonTypes"
 
 /**
  *  ## Proveedor de autenticación

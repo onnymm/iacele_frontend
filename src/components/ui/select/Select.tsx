@@ -3,7 +3,6 @@ import ButtonTextIcon from "../button/ButtonTextIcon";
 import React, { useEffect, useRef, useState } from "react";
 import useClickOutside from "../../../hooks/useClickOutside";
 import Listbox from "../listbox/Listbox";
-import { IconType } from "../../../types/commonTypes";
 
 interface SelectParams {
     children: string;

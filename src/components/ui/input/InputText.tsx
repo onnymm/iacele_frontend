@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { IconType } from "../../../types/commonTypes";
-import { AutoCapitalizeOptions, InputAutoCapitalize, InputType } from "../../types";
 import InputTemplate from "./_InputTemplate";
 
 interface InputTextParams {
@@ -14,7 +12,7 @@ interface InputTextParams {
     placeholder?: string;
     visiblePlaceholder?: string;
     icon?: IconType;
-    autoCapitalize?: AutoCapitalizeOptions;
+    autoCapitalize?: InputAutoCapitalizeType;
 }
 
 /**
@@ -59,7 +57,7 @@ const InputText: (config: InputTextParams) => (React.JSX.Element) = ({
     placeholder,
     visiblePlaceholder,
     icon,
-    autoCapitalize = InputAutoCapitalize.Sentences,
+    autoCapitalize = 'sentences',
 }) => {
 
     // Valor controlado
@@ -80,7 +78,7 @@ const InputText: (config: InputTextParams) => (React.JSX.Element) = ({
         <InputTemplate
             value={value}
             setValue={setInputValue}
-            type={InputType.Text}
+            type={'text'}
             autoCapitalize={autoCapitalize}
             onChange={onChange}
             onEnter={onEnter}
