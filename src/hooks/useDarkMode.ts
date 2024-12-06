@@ -27,13 +27,19 @@ const useDarkMode: () => ({
         () => {
 
             // Se obtiene la configuración del modo oscuro desde el dispositivo
-            const storedDarkMode = localStorage.getItem("darkMode")
+            const storedDarkMode = localStorage.getItem("darkMode") as 'false' | 'true' | null
 
             // Si existe una configuración guardada se establece ésta
             if ( storedDarkMode !== null ) {
 
+                // Índice para conversión a booleano
+                const keyValue = {
+                    'false': false,
+                    'true': true,
+                }
+
                 // Retorno de la configuración guardada, convertida a booleano
-                return Boolean(storedDarkMode)
+                return Boolean( keyValue[storedDarkMode] )
             }
 
             // En caso de no existir se toma la configuración del tema del dispositivo

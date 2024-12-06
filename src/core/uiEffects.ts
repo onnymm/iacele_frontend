@@ -44,7 +44,7 @@ export const createCircle: (
 
     // Definición de la altura y ancho del círculo
     circle.style.width = `${buttonElement.offsetWidth}px`;
-    circle.style.height = `${buttonElement.offsetHeight}px`;
+    circle.style.height = `${buttonElement.offsetWidth}px`;
 
     // Definición de coordenadas del círculo
     circle.style.left = `${x - buttonElement.offsetWidth / 2}px`;
