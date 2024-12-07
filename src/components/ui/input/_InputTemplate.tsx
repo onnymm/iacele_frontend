@@ -196,7 +196,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
     }
 
     return (
-        <div className="group-[.ui-layout-group]:w-full relative flex flex-row gap-2 w-56">
+        <div className="group-[.ui-layout-group]:w-full relative flex flex-row gap-2 w-56 max-w-full">
 
             {/* Compónente del lado izquierdo */}
             {componentBefore}

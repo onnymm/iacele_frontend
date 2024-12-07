@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputTemplate from "./_InputTemplate";
 
 interface InputNumericParams {
     value: number | undefined;
-    setValue: React.Dispatch<React.SetStateAction<number | undefined>>;
+    setValue: React.Dispatch<React.SetStateAction<number | undefined | ((page: number) => (number))>>;
     min?: number;
     max?: number;
     onChange?: (controlledValue: number, event: React.ChangeEvent<HTMLInputElement>) => (void);
@@ -66,6 +66,13 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
 
     // Uso de nuevo valor para el componente
     const [ inputValue, setInputValue ] = useState<string>(value ? String(value) : "");
+
+    // Cambio manual del valor de entrada
+    useEffect(
+        () => {
+            setInputValue(String(value));
+        }, [value]
+    )
 
     // Validación de rango
     const controlValue: () => (number) = () => {
