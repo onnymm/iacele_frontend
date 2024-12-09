@@ -42,17 +42,7 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
     // Obtención de la ubicación actual de la URL
     const location  = useLocation()
 
-    // Función a ejecutar por el botón de grupo de rutas
-    const groupCallback: () => (void) = () => {
-
-        // Si el grupo sólo es una ruta se navega hacia ella
-        if ( typeof routes === 'string' ) {
-            navigateTo(routes)
-        // Si el grupo es una lista de rutas, el botón despliega o contrae la lista de rutas
-        } else {
-            setIsOpen( (prevState: boolean) => (!prevState) )
-        }
-    }
+    console.log("routes", routes, ( isBaseRoute(location.pathname, routes)))
 
     // Función a ejecutar por rutas de grupo
     const routeCallback: (route: string) => (void) = (route) => {
@@ -61,6 +51,19 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
         navigateTo(route)
         // Se intenta cerrar la barra lateral
         setIsSidebarOpen(false);
+    }
+
+    // Función a ejecutar por el botón de grupo de rutas
+    const groupCallback: () => (void) = () => {
+
+        // Si el grupo sólo es una ruta se navega hacia ella
+        if ( typeof routes === 'string' ) {
+            // Se ejecuta la función de ruta
+            routeCallback(routes);
+        // Si el grupo es una lista de rutas, el botón despliega o contrae la lista de rutas
+        } else {
+            setIsOpen( (prevState: boolean) => (!prevState) )
+        }
     }
 
     // Ejecución de efecto para calcular la altura de contenedor de rutas
@@ -85,6 +88,11 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
                 if ( isBaseRoute(location.pathname, routes) ) {
                     // Se cambia el estado de ubicación activa a verdadero
                     setIsActiveLocation(true)
+                } else {
+                    // Se cambia el estado de ubicación activa a falso
+                    // Normalmente casi todos los casos terminan aquí pero se debe
+                    // mantener el estado en falso de todos modos.
+                    setIsActiveLocation(false)
                 }
             
             // Si la ruta es un objeto, significa que es un grupo de rutas
