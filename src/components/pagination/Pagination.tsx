@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import usePagination from "../../hooks/usePagination";
 import buildSmartPagination from "../functions/buildSmartPagination";
 import ButtonIcon from "../ui/button/ButtonIcon";
-import { ChevronLeftIcon } from "@heroicons/react/16/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import PageContainer from "./components/PagesContainer";
 import InputNumeric from "../ui/input/InputNumeric";
 
@@ -85,7 +85,7 @@ const Pagination: (config: PaginationParams) => (React.JSX.Element) = ({
             <span className="sm:hidden px-2 text-xl ui-text-none"> / {pagesQty}</span>
 
             {/* Botón de incremento de página */}
-            <ButtonIcon type="primary" onClick={increasePage} icon={ChevronLeftIcon} disabled={page === pages.length || pages.length === 0 || disabled} />
+            <ButtonIcon type="primary" onClick={increasePage} icon={ChevronRightIcon} disabled={page === pages.length || pages.length === 0 || disabled} />
         </div>
     )
 }
