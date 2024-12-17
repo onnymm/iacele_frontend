@@ -14,7 +14,7 @@ const Header: (config: GenericInvolverComponent) => (React.JSX.Element) = ({
 }) => {
 
     return (
-        <div className="flex flex-wrap gap-2 h-min">
+        <div className="z-10 flex flex-wrap gap-2 h-min">
             {children}
         </div>
     )

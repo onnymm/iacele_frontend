@@ -25,7 +25,7 @@ const Root: () => (React.JSX.Element) = () => {
             <Navbar />
 
             {/* Contenido de la aplicación */}
-            <div className="flex flex-row w-full h-fit">
+            <div className="flex flex-row flex-shrink h-[calc(100%_-_5rem)] max-h-[calc(100%_-_5rem)]">
                 <div className={`${isSidebarOpen && isSidebarLocked ? "w-72" : "w-0"} h-full transition-width duration-300`}/>
                 {/* Se contiene sólo esta parte para evitar renderizaciones innecesarias */}
                 <Content />

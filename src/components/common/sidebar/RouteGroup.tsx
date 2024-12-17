@@ -42,8 +42,6 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
     // Obtención de la ubicación actual de la URL
     const location  = useLocation()
 
-    console.log("routes", routes, ( isBaseRoute(location.pathname, routes)))
-
     // Función a ejecutar por rutas de grupo
     const routeCallback: (route: string) => (void) = (route) => {
 

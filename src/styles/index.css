@@ -5,8 +5,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tipo de fuente */
 body {
     font-family: 'Poppins', sans-serif;
+}
+
+/* Configuración de barra de deslizamiento */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f0f0f0;
+}
+
+.dark * {
+    scrollbar-color: #354657 #142434;
 }
 
 @layer base {
@@ -39,8 +50,13 @@ body {
 }
 
 @layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+        scrollbar-width: none; /* Para Firefox */
+    }
+
     .scrollbar-hide::-webkit-scrollbar {
-        display: none;
+        display: none; /* Para Chrome */
     }
 
     .text-theme {
