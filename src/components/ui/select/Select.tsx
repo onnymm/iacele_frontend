@@ -4,10 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import useClickOutside from "../../../hooks/useClickOutside";
 import Listbox from "../listbox/Listbox";
 
-interface SelectParams {
+interface SelectParams<T extends string | number | boolean> {
     children: string;
     options: OptionObject[];
-    setOptions: (key: string | number | boolean) => (void);
+    setOptions: (key: T) => (void);
     icon: IconType;
     iconActive: IconType;
     type?: UIStyle;
@@ -47,15 +47,17 @@ interface SelectParams {
  *      - `'multiOption'`: Varias opciones a la vez, pueden ser activadas o
  *  desactivadas. La lista de opciones no se contrae al seleccionar una opción.
  */
-const Select: (config: SelectParams) => (React.JSX.Element) = ({
-    children,
-    options,
-    setOptions,
-    icon,
-    iconActive,
-    type = 'secondary',
-    mode,
-}) => {
+const Select = <T extends string | number | boolean>(
+    {
+        children,
+        options,
+        setOptions,
+        icon,
+        iconActive,
+        type = 'secondary',
+        mode,
+    }: SelectParams<T>
+): (React.JSX.Element) => {
 
     // Inicialización de estado de lista de opciones
     const [ isOpen, setIsOpen ] = useState<boolean>(false)

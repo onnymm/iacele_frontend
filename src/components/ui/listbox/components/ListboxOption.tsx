@@ -1,8 +1,8 @@
 import { createCircle } from "../../../../core/uiEffects";
 
-interface ListboxOptionParams {
+interface ListboxOptionParams<T extends string | number | boolean> {
     item: OptionObject;
-    setActive: (key: string | number | boolean) => (void);
+    setActive: (key: T) => (void);
     icon: IconType;
 };
 
@@ -21,11 +21,13 @@ interface ListboxOptionParams {
  *  - [ {@link IconType} ] `icon`: Ícono descriptivo a renderizar cuando la
  *  opción está activa.
  */ 
-const ListboxOption: (config: ListboxOptionParams) => (React.JSX.Element) = ({
-    item,
-    setActive,
-    icon: Icon,
-}) => {
+const ListboxOption = <T extends string | number | boolean>(
+    {
+        item,
+        setActive,
+        icon: Icon,
+    }: ListboxOptionParams<T>
+): (React.JSX.Element) => {
 
     // Función de ejecución por el botón
     const handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void = ( event ) => {
@@ -34,7 +36,7 @@ const ListboxOption: (config: ListboxOptionParams) => (React.JSX.Element) = ({
         createCircle(event, "bg-gray-500/50");
 
         // Ejecución de la función provista
-        setActive(item.key);
+        setActive(item.key as T);
     };
 
     return (

@@ -1,8 +1,8 @@
 import ListboxOption from "./components/ListboxOption"
 
-interface ListboxParams {
+interface ListboxParams<T> {
     items: OptionObject[];
-    setActive: (key: string | number | boolean) => (void);
+    setActive: (key: T) => (void);
     iconActive: IconType;
     _listboxRef?: React.MutableRefObject<HTMLDivElement | null>;
 }
@@ -24,12 +24,14 @@ interface ListboxParams {
  *  - [ {@link IconType} ] `iconActive`: Ícono descriptivo a renderizar en las
  *  opciones cuando están activas.
  */ 
-const Listbox: (config: ListboxParams) => (React.JSX.Element) = ({
-    items,
-    setActive,
-    iconActive,
-    _listboxRef, // Referencia usada por el componente Select.
-}) => {
+const Listbox =  <T extends string | number | boolean>(
+    {
+        items,
+        setActive,
+        iconActive,
+        _listboxRef, // Referencia usada por el componente Select.
+    }: ListboxParams<T>
+): (React.JSX.Element) => {
 
     return (
         <div className="border-gray-500/50 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border rounded-lg">
