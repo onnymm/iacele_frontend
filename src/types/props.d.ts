@@ -25,8 +25,9 @@ interface OptionObject {
     [ keysToKeep: string | number ]: number | string | boolean | object;
 }
 
-interface SelectableOption {
-    key: string | number | boolean;
+interface SelectableOption<T extends string | number | boolean> {
+    key: T;
     displayName: string;
-    [ keysToKeep: string | number ]: number | string | boolean | object;
+    [ keysToKeep?: string | number ]: number | string | boolean | object;
+    [key?: string | number | boolean ]: string | number | boolean;
 }
