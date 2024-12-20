@@ -31,3 +31,7 @@ interface SelectableOption<T extends string | number | boolean> {
     [ keysToKeep?: string | number ]: number | string | boolean | object;
     [key?: string | number | boolean ]: string | number | boolean;
 }
+
+type GenericObject = { [key: string]: string | number | boolean };
+
+type WidthsValues = {[key: string]: number | null}

@@ -47,6 +47,51 @@ body {
     .ui-label-button {
         @apply cursor-pointer;
     }
+
+    /* Estilos de la UI */
+    .ui-text {
+        @apply text-black dark:text-white;
+    }
+
+    .ui-background-danger {
+        @apply bg-red-500/30;
+    }
+
+    .ui-text-danger {
+        @apply text-red-600 dark:text-red-400;
+    }
+
+    .ui-background-warning {
+        @apply bg-yellow-500/30;
+    }
+
+    .ui-text-warning {
+        @apply text-yellow-600 dark:text-yellow-500;
+    }
+
+    .ui-background-success {
+        @apply bg-green-500/30;
+    }
+
+    .ui-text-success {
+        @apply text-green-500;
+    }
+
+    .ui-background-info {
+        @apply bg-sky-500/30;
+    }
+
+    .ui-text-info {
+        @apply text-sky-500;
+    }
+
+    .ui-background-none {
+        @apply bg-gray-500/20;
+    }
+
+    .ui-text-none {
+        @apply text-gray-600 dark:text-gray-400;
+    }
 }
 
 @layer utilities {
@@ -93,6 +138,14 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .mob-vertical-difuminate {
     mask-image: linear-gradient(to top, transparent 0%, rgb(0, 0, 0) 1.5rem, rgb(0, 0, 0) calc(100% - 1.5rem), transparent 100%);
+}
+
+.ui-table-column {
+    mask-image: linear-gradient(to right, rgb(0, 0, 0) calc(100% - 2.5rem), transparent calc(100% - 2rem));
+}
+
+.tablecell-difuminat {
+    mask-image: linear-gradient(to right,rgb(0, 0, 0) calc(100% - 1rem), transparent calc(100% - 0.5rem));
 }
 
 .profile-image {

@@ -1,17 +1,19 @@
 import { useState } from "react";
 
-interface OptionObject {
-    key: string | number | boolean;
+interface OptionObject<T extends string | number | boolean>{
+    key: T;
     active: boolean;
     displayName: string;
     [ keysToKeep: string | number ]: number | string | boolean | object;
 }
 
-interface UseOptionsConfig {
+type KeyType<T extends SelectableOption<string | number | boolean>[]> = T[0]['key']
+
+interface UseOptionsConfig<T>{
     keysToKeep?:  Array<string | number> | undefined; // Atributos de los objetos que se desean conservar, para uso personalizado.
     initialActive?: string | number | boolean | undefined; // Llave de alguno de los atributos que se inicializará como opción opción activas.
     mode?: SelectableOptionsBehavior; // Modo de selección de opciones. Las opciones disponibles son:
-    validateActive?: (item: SelectableOption) => (boolean); // Función para validar si alguna de las opciones iniciará como activa.
+    validateActive?: (item: T) => (boolean); // Función para validar si alguna de las opciones iniciará como activa.
 }
 
 const defaultConfig = {
@@ -27,15 +29,15 @@ const defaultConfig = {
  *  renderizado por los componentes {@link Select} o {@link Listbox}.
  *  
  *  ### Parámetros de entrada
- *  - [ {@link SelectableOption SelectableOption[ ]} ] `items`: Arreglo de
- *  elementos a usar como opciones. Éstos deben contener al menos las dos
- *  siguientes llaves en cada de uno de ellos:
+ *  - [ {@link SelectableOption SelectableOption<string | number | boolean>[ ]} ]
+ *  `items`: Arreglo de elementos a usar como opciones. Éstos deben contener al
+ *  menos las dos siguientes llaves en cada de uno de ellos:
  *      - [ `(string | number | boolean)` ] `key`: Llave que se usará para
  *  activar o desactivar la opción.
  *      - [ `string` ] `displayName`: Nombre a renderizar por el componente
  *  {@link Listbox} por sí sólo o a través del componente {@link Select}.
- *  - [ {@link UseOptionsConfig} ] `{}` Opciones de generación de objeto
- *  interactivo de opciones:
+ *  - [ {@link UseOptionsConfig UseOptionsConfig<string | number | boolean> } ]
+ *  `{}` Opciones de generación de objeto interactivo de opciones:
  *      - [ `(string | number | undefined)[]` ] `keysToKeep`: Atributos
  *  de los objetos que se desean conservar, para uso personalizado.
  *      - [ `(string | number | boolean | undefined)` ] `initialActive`: Llave
@@ -62,13 +64,13 @@ const defaultConfig = {
  *  modo de selección de opciones es `'multiOption'` este valor será
  *  `undefined`.
  */ 
-const useOptions = (
-    items: SelectableOption[],
-    config: UseOptionsConfig = {} 
+const useOptions = <T extends SelectableOption<string | number | boolean>[]>(
+    items: T,
+    config: UseOptionsConfig<T[0]> = {} 
 ): [
-    OptionObject[],
-    (key: string | number | boolean) => (void),
-    string | number | boolean | undefined,
+    OptionObject<KeyType<T>>[],
+    (key: KeyType<T>) => (void),
+    KeyType<T> | undefined
 ] => {
 
     // Uso de las opciones especificadas y las opciones por defecto.
@@ -82,7 +84,7 @@ const useOptions = (
         (item) => {
 
             // Mapeo de los atributos de funcionamiento para el componente select
-            const option: OptionObject = {
+            const option: OptionObject<T[0]['key']> = {
                 key: item.key,
                 active: (
                     finalConfig.mode === "switch" || finalConfig.mode === "alwaysActive"
@@ -107,9 +109,9 @@ const useOptions = (
     );
 
     // Mapa de opciones
-    const [ options, setOptions ] = useState<OptionObject[]>(initialOptions);
+    const [ options, setOptions ] = useState<OptionObject<KeyType<T>>[]>(initialOptions);
     // Estado de llave de opción activa
-    const [ activeOptionKey, setActiveOptionKey ] = useState<string | number | boolean | undefined>(finalConfig.initialActive);
+    const [ activeOptionKey, setActiveOptionKey ] = useState<KeyType<T> | undefined>(finalConfig.initialActive);
 
     // Función para establecer opción activa
     const setActiveOption = (key: string | number | boolean): (void) => {

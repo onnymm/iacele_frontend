@@ -59,3 +59,9 @@ export const sidebarMenu: MenuSection[] = [
         ]
     }
 ]
+
+// Mensajes y leyendas
+export const COMMON_LEGEND = {
+    NO_RECORDS_MESSAGE: "No hay registros.",
+    CELL_RENDER_ERROR: 'N/A',
+}

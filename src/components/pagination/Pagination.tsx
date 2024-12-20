@@ -6,10 +6,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import PageContainer from "./components/PagesContainer";
 import InputNumeric from "../ui/input/InputNumeric";
 
-interface PaginationParams {
+interface PaginationParams<T extends number | undefined | ((page: number) => (number))> {
     count: number;
     page: number;
-    setPage: React.Dispatch<React.SetStateAction<number | undefined | ((page: number) => (number))>>;
+    setPage: React.Dispatch<React.SetStateAction<T>>;
     itemsPerPage: number;
     disabled: boolean;
 }
@@ -28,7 +28,7 @@ interface PaginationParams {
  *  - [ `number` ] `itemsPerPage`: Número de registros por página.
  *  - [ `boolean` ] `disabled`: Deshabilitado.
  */
-const Pagination: (config: PaginationParams) => (React.JSX.Element) = ({
+const Pagination: (config: PaginationParams<number | ((page: number) => (number)) | undefined>) => (React.JSX.Element) = ({
     count,
     page,
     setPage,
