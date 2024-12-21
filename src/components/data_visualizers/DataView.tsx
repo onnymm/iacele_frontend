@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import getTableData, { DataViewData } from "../../api/dataVisualization";
+import getTableData from "../../api/dataVisualization";
 import Header from "../layout/Header";
 import Select from "../ui/select/Select";
 import useOptions from "../../hooks/useOptions";
@@ -48,7 +48,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     const [ loading, setLoading ] = useState<boolean>(true);
 
     // Inicialización de estado de los datos
-    const [ data, setData ] = useState<DataViewData | undefined>(undefined);
+    const [ data, setData ] = useState<ResponseDataStructure | undefined>(undefined);
     // Inicialización de la página a visualizar
     const [ page, setPage ] = useState<number | ((page: number) => number) | undefined>(0);
     // Inicialización de cantidad de registros por página
@@ -77,7 +77,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     const toggleableColumns = useMemo<ViewConfig[]>(
         () => (
             viewConfig.filter(
-                (item) => (!item.tableHide)
+                (item) => (item.tableVisible !== undefined)
             )
         ), [viewConfig]
     );
@@ -87,7 +87,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
         toggleableColumns,
         {
             mode: 'multiOption',
-            validateActive: (item: ViewConfig) => (item.toggleable !== false),
+            validateActive: (item: ViewConfig) => (item.tableVisible === true),
         },
     );
 

@@ -51,7 +51,7 @@ const TableColumns = ({
 
                             const isVisible = visibleColumns.find( (item) => (item.key == column.key) )
 
-                            if ( column.tableHide !== false && isVisible?.active ) {
+                            if ( column.tableVisible === undefined || isVisible?.active ) {
                                 return (
                                     <TableColumn
                                         key={i}

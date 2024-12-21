@@ -21,7 +21,7 @@ const SortingDirection = ({
 }: SortingDirectionParams): (React.JSX.Element) => {
 
     return (
-        <div className="right-2 absolute min-w-4 h-4">
+        <div className="right-2 absolute min-w-4 h-4 pointer-events-none">
             {ascending
                 ? <ChevronDownIcon />
                 : <ChevronUpIcon />

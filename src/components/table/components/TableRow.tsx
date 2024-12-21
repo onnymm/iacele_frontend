@@ -43,12 +43,12 @@ const TableRow = ({
                     viewConfig.filter(
                         (recordConfig) => {
                             // Mostrar columna desde configuración
-                            const configShowColumn = !recordConfig.tableHide
+                            const configShowColumn = recordConfig.tableVisible === undefined
                             // Columna visible
                             const isVisible = visibleColumns.find(
                                 (item) => (item.key === recordConfig.key)
                             )
-                            return ( configShowColumn && isVisible?.active )
+                            return ( configShowColumn || isVisible?.active )
                         }
                     )
                     .map(

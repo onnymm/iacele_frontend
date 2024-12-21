@@ -14,7 +14,7 @@ import Table from "../Table"; // eslint-disable-line
 const SortingIndicator = (): (React.JSX.Element) => {
 
     return (
-        <div className="right-2 absolute opacity-0 group-hover:opacity-100 min-w-4 h-4 transition-opacity duration-300">
+        <div className="right-2 absolute opacity-0 group-hover:opacity-100 min-w-4 h-4 transition-opacity duration-300 pointer-events-none">
             <ChevronUpDownIcon />
         </div>
     )

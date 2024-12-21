@@ -22,13 +22,14 @@ interface ViewConfig extends SelectableOption<string> {
     canSort?: boolean;
     toggleable?: boolean;
     tableHide?: boolean;
+    tableVisible?: boolean;
     type?: WidgetComponent | ((config: {[key: string]: DataValue}) => (React.JSX.Element));
     options?: ValidationOptions;
 }
 
 // Registro recibido desde el backend
 type DataRecord = {
-    [key: string]: DataValue;
+    [ key: string ]: DataValue;
 };
 
 // Información de tipo de dato
@@ -65,5 +66,5 @@ interface DataViewFilters {
 
 // Interfaz de anchos de columna de tabla
 interface ColumnWidths {
-    [key: string]: number | null
+    [ key: string ]: number | null
 };
