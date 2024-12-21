@@ -27,14 +27,14 @@ export const sidebarMenu: MenuSection[] = [
                 routes: [
                     {
                         name: 'Actividades',
-                        route: '/todo',
+                        route: '',
                     }
                 ]
             },
             {
                 name: 'Mi cuenta',
                 icon: UserIcon,
-                routes: '/me',
+                routes: '',
             },
         ]
     },
@@ -44,7 +44,7 @@ export const sidebarMenu: MenuSection[] = [
             {
                 name: 'Preferencias',
                 icon: Cog6ToothIcon,
-                routes: '/settings',
+                routes: '',
             }
         ]
     },

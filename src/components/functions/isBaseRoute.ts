@@ -15,6 +15,9 @@
  */ 
 const isBaseRoute: (location: string, route: string | MenuRoute[] | undefined) => (boolean) = (location, route) => {
 
+    // Si es ruta raíz se retorna falso
+    if ( location === '/' || route == '' ) return false;
+
     // Creación de patrón de expresión regular para validar
     const pattern = RegExp(`^(${route})/?`);
 
@@ -23,6 +26,7 @@ const isBaseRoute: (location: string, route: string | MenuRoute[] | undefined) =
 
     // Retorno de validación
     if ( match ) return match[1] === route;
+
     return false;
 }
 
