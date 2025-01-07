@@ -2,7 +2,7 @@ import { useState } from "react";
 import InputTemplate from "./_InputTemplate";
 import ButtonIcon from "../button/ButtonIcon";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { StyleCategory } from "../../types";
+
 
 interface InputSearchParams {
     search: string;
@@ -53,7 +53,7 @@ const InputSearch: (config: InputSearchParams) => (React.JSX.Element) = ({
     }
 
     // Componente de borrar contenido declarado por separado para mejorar legibilidad
-    const ButtonDelete = <ButtonIcon icon={XMarkIcon} onClick={clearSearchInput} disabled={!value || loading} type={StyleCategory.Primary} />
+    const ButtonDelete = <ButtonIcon icon={XMarkIcon} onClick={clearSearchInput} disabled={!value || loading} type='primary' />
 
     return (
         <InputTemplate

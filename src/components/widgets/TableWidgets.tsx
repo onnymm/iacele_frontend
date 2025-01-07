@@ -1,5 +1,3 @@
-type TableGenericWidget<T extends string | number | boolean> = (config: { [ key: string ]: T }) => (React.JSX.Element)
-
 const char = (field: string): TableGenericWidget<string | number> => {
     const CharComponent: TableGenericWidget<string | number> = ({
         [ field ]: content,
@@ -123,12 +121,12 @@ export const commonComponent = {
     integer,
     badge,
     date,
-    // datetime: char,
-    // time: char,
-    // many2one: char,
+    datetime: char,
+    time: char,
+    many2one: char,
     float: float,
     monetary,
     percentage: percentage,
-    // selection: char,
-    // check: char,
+    selection: char,
+    check: char,
 }
