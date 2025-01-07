@@ -53,14 +53,9 @@ const CellComponent = React.memo<(config: TableCellRender) => (React.JSX.Element
 );
 
 // Constructor del componente de la celda
-const buildCellComponent: (
+const buildCellComponent: (recordConfig: ViewConfig, fields: DataField[]) => TableGenericWidget<number> | TableGenericWidget<string> = (
     recordConfig: ViewConfig,
-    fields: DataField[]
-) => ( (config: {
-    [key: string]: string | number | boolean;
-}) => (React.JSX.Element) ) = (
-    recordConfig,
-    fields,
+    fields: DataField[],
 ) => {
 
     // Si el valor del tipo es un componente personalizado
