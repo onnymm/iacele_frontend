@@ -8,6 +8,8 @@ import Pagination from "../pagination/Pagination";
 import useSortingFields from "../../hooks/useSortingFields";
 import Table from "../table/Table";
 import { COMMON_LEGEND } from "../../settings/appSettings";
+import useSearch from "../../hooks/useSearch";
+import InputSearch from "../ui/input/InputSearch";
 
 interface DataViewParams {
     backendPath: string;
@@ -17,6 +19,7 @@ interface DataViewParams {
     itemsPerPage?: number;
     noRecordsIcon: IconType;
     noRecordsMessage: string;
+    searchScope?: Record<string, SearchType>;
 }
 
 const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
@@ -27,6 +30,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     itemsPerPage: _itemsPerPage = 40,
     noRecordsIcon: NoRecordsIcon = ListBulletIcon,
     noRecordsMessage = COMMON_LEGEND.NO_RECORDS_MESSAGE,
+    searchScope,
 }) => {
 
     // Función para crear o actualizar filtro
@@ -50,12 +54,15 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     // Inicialización de estado de los datos
     const [ data, setData ] = useState<ResponseDataStructure | undefined>(undefined);
     // Inicialización de la página a visualizar
-    const [ page, setPage ] = useState<number | ((page: number) => number) | undefined>(0);
+    const [ page, setPage ] = useState<number | ((page: number) => (number)) | undefined>(0);
     // Inicialización de cantidad de registros por página
     const [ itemsPerPage ] = useState<number>(_itemsPerPage);
 
     // Referencia de la tabla
     const tableRef = useRef<HTMLDivElement>(null);
+
+    // Dominio de búsqueda
+    const { searchText, setSearchText, apiSearch } = useSearch(searchScope);
 
     // Inicialización de objeto de filtros para uso en componente Select
     const [ filterOptions, setFilterOptions, activeFilter ] = useOptions<DataFilter[]>(
@@ -117,10 +124,11 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
                     'sortby': sortingFieldKey,
                     'page': page,
                     'ascending': ascending,
-                    'search_criteria': filter.criteria
+                    'search_criteria': filter.criteria,
+                    'search': apiSearch,
                 },
             )
-        }, [backendPath, itemsPerPage, sortingFieldKey, page, ascending, filter]
+        }, [backendPath, itemsPerPage, sortingFieldKey, page, ascending, filter, apiSearch]
     )
 
     // Establecer carga a falso después de recibir los datos tras nueva solicitud
@@ -137,7 +145,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     useEffect(
         () => {
             setPage(0);
-        }, [activeFilter]
+        }, [activeFilter, searchText]
     )
 
     if (data) {
@@ -150,6 +158,9 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
                     <Select options={visibleColumns} setOptions={setVisibleColumns} mode="multiOption" icon={TableCellsIcon} iconActive={EyeIcon}>
                         Mostrar columnas
                     </Select>
+                    {searchScope &&
+                        <InputSearch search={searchText} setSearch={setSearchText} loading={loading} />
+                    }
                     <Pagination count={data?.count} itemsPerPage={itemsPerPage} disabled={false} page={page as number} setPage={setPage} />
                 </Header>
                 <Table tableRef={tableRef} loading={loading} data={data} viewConfig={viewConfig} sortingFieldKey={sortingFieldKey} ascending={ascending} visibleColumns={visibleColumns} setSortingColumn={setTableSortingField} noRecordsIcon={NoRecordsIcon} noRecordsMessage={noRecordsMessage} />

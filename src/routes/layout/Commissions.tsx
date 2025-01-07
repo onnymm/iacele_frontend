@@ -11,7 +11,8 @@ const RouteCommissions: () => (React.JSX.Element) = () => {
             viewConfig={viewConfig}
             filters={filters}
             noRecordsIcon={BanknotesIcon}
-            noRecordsMessage="¡No tienes comisiones!"
+            noRecordsMessage="¡No hay comisiones!"
+            searchScope={search}
         />
     )
 }
@@ -34,6 +35,13 @@ const filters = {
             criteria: '[["partner_name", "=", "Mostrador"]]',
         },
     ]
+}
+
+const search: SearchScope = {
+    'invoice_name': 'contains',
+    'partner_name': 're',
+    'product_name': 're',
+    'internal_reference': 'match',
 }
 
 const viewConfig: ViewConfig[] = [
