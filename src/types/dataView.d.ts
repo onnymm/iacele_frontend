@@ -7,6 +7,24 @@ type DataValue = string | number | boolean;
 // Función de validación de valor
 type ValidationCallback<T extends DataValue> = (value: T) => boolean;
 
+// Widget de tabla
+type TableGenericWidget<T extends string | number | boolean> = (config: { [ key: string ]: T }) => (React.JSX.Element)
+
+// Tipo de emparejamiento de búsqueda
+type SearchType = 're' | 'contains' | 'match'
+
+// Dominio de búsqueda
+type SearchScope = Record<string, SearchType>
+
+// Estructura de dominio de búsqueda
+interface SearchStructure {
+    text: string;
+    method:  {
+        field: string;
+        type: SearchType;
+    }[]
+}
+
 // Interfaz de funciones de validación
 interface ValidationOptions {
     info?: ValidationCallback;
