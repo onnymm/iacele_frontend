@@ -22,7 +22,7 @@ const getTableData = async (
 ): Promise<void> => {
 
     // Obtención de los datos
-    const response = await iaCeleAxios.get(getBackendUrl(route), { params, authenticate: true })
+    const response = await iaCeleAxios.post(getBackendUrl(route), { ...params }, {authenticate: true})
 
     // Asignación de estado
     stateSetter(response.data)

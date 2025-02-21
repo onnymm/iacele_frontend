@@ -15,7 +15,6 @@ interface DataViewParams {
     backendPath: string;
     viewConfig: ViewConfig[];
     filters: DataViewFilters;
-    // apiCallback?: GenericDataViewAPICallback;
     itemsPerPage?: number;
     noRecordsIcon: IconType;
     noRecordsMessage: string;
@@ -25,7 +24,6 @@ interface DataViewParams {
 const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     backendPath,
     viewConfig,
-    // apiCallback,
     filters,
     itemsPerPage: _itemsPerPage = 40,
     noRecordsIcon: NoRecordsIcon = ListBulletIcon,
@@ -34,7 +32,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
 }) => {
 
     // Función para crear o actualizar filtro
-    const createOrUpdateFilter = useCallback<(activeFilter: number | undefined) => ({ criteria: string } | DataFilter)>(
+    const createOrUpdateFilter = useCallback<(activeFilter: number | undefined) => ({ criteria: CriteriaStructure } | DataFilter)>(
         (activeFilter: number | undefined) => {
             // Si hay un filtro, se establece éste
             if ( activeFilter !== undefined ) {
@@ -71,7 +69,7 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     );
 
     // Inicialización de indicador de filtro para solicitud de datos al backend
-    const [ filter, setFilter ] = useState<{ criteria: string } | DataFilter>( createOrUpdateFilter(activeFilter) )
+    const [ filter, setFilter ] = useState<{ criteria: CriteriaStructure } | DataFilter>( createOrUpdateFilter(activeFilter) )
 
     // Actualización de filtro cuando el componente Select cambia de llave
     useEffect(
@@ -125,7 +123,6 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
                     'page': page,
                     'ascending': ascending,
                     'search_criteria': filter.criteria,
-                    'search': apiSearch,
                 },
             )
         }, [backendPath, itemsPerPage, sortingFieldKey, page, ascending, filter, apiSearch]

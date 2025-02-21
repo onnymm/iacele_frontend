@@ -33,9 +33,12 @@ interface ValidationOptions {
     danger?: ValidationCallback;
 }
 
+// Posición de kanban
+type KanbanPosition = 'title'| 'description' | 'check' | 'fixed' | 'details' | 'none';
+
 // Interfaz de configuración de vista de datos
 interface ViewConfig extends SelectableOption<string> {
-    kanban?: 'title'| 'description' | 'check' | 'fixed' | 'details' | 'none';
+    kanban?: KanbanPosition;
     kanbanDisplayName?: boolean;
     canSort?: boolean;
     toggleable?: boolean;
@@ -63,6 +66,21 @@ interface ResponseDataStructure {
     fields: DataField[];
 };
 
+// Operador lógico
+type LogicOperator = '&' | '|'
+
+// Operador de comparación
+type ComparisonOperator = '=' | '!=' | '>' | '>=' | '<' | '<=' | '><' | 'in' | 'not in' | 'ilike' | 'not ilike' | '~' | '~*'
+
+// Formato de valures de tripleta
+type TripletValue = number | string | boolean | number[]
+
+// Tripleta
+type Triplete = [string, ComparisonOperator, TripleteValue]
+
+// Estructura de criterio de búsqueda
+type CriteriaStructure = (LogicOperator | Triplete)[]
+
 // Interfaz de función de solicitud de datos al backend
 type GenericDataViewAPICallback = (
     params: object,
@@ -71,13 +89,13 @@ type GenericDataViewAPICallback = (
 
 // Filtro seleccionable para vista de datos
 interface DataFilter extends SelectableOption<number> {
-    criteria: string;
+    criteria: CriteriaStructure;
 }
 
 // Interfaz de filtros
 interface DataViewFilters {
     default: {
-        criteria: string;
+        criteria: CriteriaStructure;
     };
     available: DataFilter[]
 }

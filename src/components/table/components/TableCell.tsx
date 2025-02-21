@@ -36,7 +36,7 @@ const TableCell: (config: TableCellParams) => (React.JSX.Element) = ({
 
     return (
         <td
-            className="group-hover:*:text-main-500 min-w-4 h-full font-light text-gray-600 text-start dark:text-white/70 *:transition-colors overflow-hidden"
+            className="group-hover:*:text-main-500 min-w-4 h-full overflow-hidden font-light text-gray-600 dark:text-white/70 text-start *:transition-colors"
             >
             <div
                 style={width ? {width: width + 'px'} : undefined}
