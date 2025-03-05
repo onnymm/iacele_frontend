@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import App from "./App";
 import Home from "./routes/layout/Home";
-import RouteCommissions from "./routes/layout/Commissions";
+import RouteSales from "./routes/layout/Sales";
 import RouteUITests from "./routes/layout/UITests";
 
 const router = createBrowserRouter(
@@ -15,8 +15,8 @@ const router = createBrowserRouter(
                     element: <Home />
                 },
                 {
-                    path: '/commissions',
-                    element: <RouteCommissions />
+                    path: '/sales',
+                    element: <RouteSales />
                 },
                 {
                     path: '/uitests',

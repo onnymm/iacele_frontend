@@ -16,8 +16,8 @@ export const sidebarMenu: MenuSection[] = [
                 icon: HomeIcon,
                 routes: [
                     {
-                        name: 'Mis comisiones',
-                        route: '/commissions',
+                        name: 'Mis ventas',
+                        route: '/sales',
                     },
                 ]
             },
