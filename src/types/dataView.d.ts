@@ -2,7 +2,7 @@
 type WidgetComponent = 'char' | 'badge' | 'monetary' | 'datetime' | 'date' | 'time' | 'many2one' | 'float' | 'percentage' | 'check' | 'integer';
 
 // Valor genérico
-type DataValue = string | number | boolean;
+type DataValue = string | number | undefined;
 
 // Función de validación de valor
 type ValidationCallback<T extends DataValue> = (value: T) => boolean;
@@ -50,7 +50,7 @@ interface ViewConfig extends SelectableOption<string> {
 
 // Registro recibido desde el backend
 type DataRecord = {
-    [ key: string ]: DataValue;
+    [ key: string ]: IACele.Types.ValueType;
 };
 
 // Información de tipo de dato
@@ -65,21 +65,6 @@ interface ResponseDataStructure {
     count: number;
     fields: DataField[];
 };
-
-// Operador lógico
-type LogicOperator = '&' | '|'
-
-// Operador de comparación
-type ComparisonOperator = '=' | '!=' | '>' | '>=' | '<' | '<=' | '><' | 'in' | 'not in' | 'ilike' | 'not ilike' | '~' | '~*'
-
-// Formato de valures de tripleta
-type TripletValue = number | string | boolean | number[]
-
-// Tripleta
-type Triplete = [string, ComparisonOperator, TripleteValue]
-
-// Estructura de criterio de búsqueda
-type CriteriaStructure = (LogicOperator | Triplete)[]
 
 // Interfaz de función de solicitud de datos al backend
 type GenericDataViewAPICallback = (
