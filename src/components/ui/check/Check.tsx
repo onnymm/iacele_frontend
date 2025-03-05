@@ -1,9 +1,8 @@
 import { CheckIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
 
 interface CheckParams {
     value: boolean; // Valor del checkbox
-    onClick?: (value: boolean) => void; // Función a ejecutar por el checkbox
+    setValue: React.Dispatch<React.SetStateAction<boolean>>; //
 }
 
 /** 
@@ -15,39 +14,23 @@ interface CheckParams {
  *  
  *  ### Parámetros de entrada
  *  - [ `boolean` ] `value`: Valor del checkbox.
- *  - [ `function` ] `onClick`: Función a ejecutar por el checkbox.
+ *  - [ `setValue` ] {@link React.Dispatch<React.SetStateAction<boolean>>}: Función de cambio de estado de valor.
  */ 
 const Check: (config: CheckParams) => (React.JSX.Element) = ({
     value,
-    onClick,
+    setValue,
 }) => {
 
-    // Inicialización del estado a usar en el componente renderizado
-    const [ checked, setChecked ] = useState<boolean>(value);
-
     // Clases dinámicas para indicar el valor del estado
-    const borderClassName = checked ? 'border-main-500' : 'border-gray-500';
-    const fillClassName = checked ? 'scale-100' : 'scale-0';
-    const IconClassName = checked ? 'opacity-100 delay-200' : 'opacity-0 delay-0'
-
-    // Función a ejecutar cuando el checkbox se marca o se desmarca
-    const internalOnClick: () => (void) = () => {
-
-        // Si se proporcionó una función...
-        if ( onClick ) {
-            // Se ejecuta la función con el estado forzado a actualización
-            onClick(!checked)
-        }
-
-        // Se cambia el valor del estado de marcado
-        setChecked( (prevState) => (!prevState) )
-    }
+    const borderClassName = value ? 'border-main-500' : 'border-gray-500';
+    const fillClassName = value ? 'scale-100' : 'scale-0';
+    const IconClassName = value ? 'opacity-100 delay-200' : 'opacity-0 delay-0'
 
     return (
         // Borde de la caja
         <div
             className={`${borderClassName} relative flex justify-center items-center border-2 hover:border-main-500 rounded-md transition-colors duration-200 cursor-pointer overflow-hidden size-6`}
-            onClick={internalOnClick}
+            onClick={() => setValue( (prevState) => (!prevState) )}
         >
             {/* Relleno de la caja */}
             <span className={`${fillClassName} bg-main-500 rounded-sm duration-300 size-full`}/>
