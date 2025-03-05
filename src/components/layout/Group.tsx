@@ -1,33 +1,33 @@
+import Sheet from "./Sheet"; // eslint-disable-line
+
 interface GroupParams extends GenericInvolverComponent {
-    title?: string; // Título del grupo
+    title?: string; // Título del grupo de componentes.
 }
 
 /** 
- *  ## Grupo de elementos de vista
- *  Este componente renderiza un grupo contenedor de elementos.
+ *  ## Grupo de datos
+ *  Este componente renderiza un contenedor de grupo de componentes UI que se
+ *  ordenan dentro de un componente {@link Sheet} y, anidado dentro de sí mismo
+ *  crea una vista de grid para ordenar datos en una cuadrícula subdidida.
  *  
- *  Este componente sirve para envolver elementos y mapearlos en display flex o
- *  grid así como para darles un estilizado y espacio homogéneos y poder
- *  construir vistas de forma muy rápida.
- *   
  *  `< tsx >...</ tsx >` Contiene elementos hijos.
- *   
+ *  
  *  ### Parámetros de entrada
- *  - [ `string` ] `title`: Título del grupo
+ *  - [ `string` ] `title`: Título del grupo de componentes.
  */ 
 const Group: (config: GroupParams) => (React.JSX.Element) = ({
-    children,
     title,
+    children,
 }) => {
 
     return (
-        <div className="group-[.line-division]:last:pb-0 group-[.line-division]:pb-[calc(1.5rem_-_2px)] group-[.line-division]:pt-2 flex flex-col gap-2 group-[.line-division]:border-gray-400/50 group-[.line-division]:dark:border-white/30 pb-[calc(1rem_-_2px)] last:pb-0 group-[.line-division]:last:dark:border-transparent group-[.line-division]:last:border-transparent border-b-2 border-b-transparent group ui-layout-group">
+        <div className="group ui-layout-w-1-group group-[.ui-layout-w-1-group]:grid group-[.ui-layout-w-1-group]:pb-0 flex flex-col gap-2 group-[.ui-layout-w-1-group]:grid-cols-2 pb-2 last:pb-0">
             {title &&
-                <p className="font-semibold self-center">{title}</p>
+                <p className="group-[:has(.ui-layout-w-2-group)]:hidden self-center opacity-50 font-semibold text-xs uppercase select-none">{title}</p>
             }
             {children}
         </div>
-    )
-}
+    );
+};
 
 export default Group;
