@@ -13,7 +13,7 @@ import { Outlet } from "react-router";
 const Content: () => (React.JSX.Element) = () => {
 
     return (
-        <main id="app-content" className="flex-grow p-4 min-h-full max-h-full overflow-y-auto">
+        <main id="app-content" className="flex-grow p-2 min-h-full max-h-full overflow-y-auto">
             <Outlet />
         </main>
     )
