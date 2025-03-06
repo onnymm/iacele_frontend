@@ -61,12 +61,12 @@ const Alert: (config: AlertTemplateParams) => (React.JSX.Element) = ({
 
     return (
         <div className={`${borderClassName[type]} ${wraperBgClassName[type]} w-full border rounded-xl align-top flex flex-row gap-2 p-2`}>
-            <div className={`${iconBgClassName[type]} p-2 rounded-lg flex flex-col size-8`}>
+            <div className={`${iconBgClassName[type]} p-1 rounded-lg flex flex-col size-6`}>
                 <IconToRender className="fill-white size-4" />
             </div>
-            <div className={`${colorClassName[type]} w-full flex flex-col`}>
+            <div className={`${colorClassName[type]} pt-[2px] w-full flex flex-col`}>
                 {title && 
-                    <p className="font-bold">{title}</p>
+                    <p className="mt-[-2px] font-bold">{title}</p>
                 }
                 <p className="w-full font-light text-current text-sm break-words whitespace-normal">{children}</p>
             </div>
