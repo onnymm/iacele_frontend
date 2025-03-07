@@ -58,14 +58,6 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
         }, [recordData, name, dataChanged, type]
     )
 
-    // Si el valor del campo ha cambiado se indica al estado del contexto que los datos han sufrido cambios
-    useEffect(
-        () => {
-            if ( recordValue === originalValue.current || reload ) return;
-            setDataChanged(true);
-        }, [recordValue, setDataChanged, reload, recordData, setRecordValue, name]
-    )
-
     // Si se detecta un cambio en el estado del valor pero su valor es igual
     //      al original y el estado de carga es activo, se cambia el estado
     //      de carga a inactivo
@@ -120,6 +112,8 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
         setRecordValue( event.target.value)
         // Se establece el valor a mostrar en el campo
         setDisplayValue( event.target.value )
+        // Se actualiza el contexto para indicar que hay cambios en los datos
+        setDataChanged(true);
     }
 
     return (
