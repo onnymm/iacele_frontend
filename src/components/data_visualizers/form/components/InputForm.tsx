@@ -131,13 +131,16 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                     </div>
                 </div>
             </div>
+            <div className={`${highlightVisibleholder} ${type !== 'monetary' ? 'hidden' : ''} ${!isFocused && displayValue === '' ? 'hidden' : ''} absolute flex flex-col justify-center pl-3 h-8`}>
+                $
+            </div>
             <input
                 type={inputType[type]}
                 step={0.01}
                 onChange={fieldOnChange}
                 value={displayValue}
                 disabled={readonly}
-                className={`${colorBorder} dark:bg-gray-900 scrollbar-hide overflow-y-hidden dark:disabled:bg-gray-800 disabled:bg-gray-200 disabled:border-gray-500/20 disabled:text-gray-500 w-full font-light border px-4 rounded-lg outline-none h-8 text-black`}
+                className={`${colorBorder} ${type === 'monetary' ? 'pl-8' : ''} dark:bg-gray-900 scrollbar-hide overflow-y-hidden dark:disabled:bg-gray-800 disabled:bg-gray-200 disabled:border-gray-500/20 disabled:text-gray-500 w-full font-light border px-4 rounded-lg outline-none h-8 text-black`}
                 onFocus={() => setIsFocused(true)}
                 onBlur={fieldOnBlur}
             />

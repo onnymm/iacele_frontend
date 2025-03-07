@@ -10,7 +10,7 @@ import Field from "../../components/data_visualizers/form/Field";
 const UITests = () => {
 
     return (
-        <DataViewForm id={10} table="commissions.line" readonly>
+        <DataViewForm id={11} table="commissions.line">
             <Page>
                 <Header>
                     <ButtonSave />
@@ -30,12 +30,12 @@ const UITests = () => {
                     <Group title="Producto">
                         <Group>
                             <Field name="product_id" type="integer" title="ID del producto" />
-                            <Field name="internal_reference" type="integer" title="Código" />
+                            <Field name="internal_reference" type="char" title="Código" />
                         </Group>
                         <Field name="product_name" type="char" title="Descripción" />
                         <Group>
                             <Field name="quantity" type="float" title="Cantidad" />
-                            <Field name="price_unit" type="float" title="Precio" />
+                            <Field name="price_unit" type="monetary" title="Precio" />
                         </Group>
                     </Group>
 

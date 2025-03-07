@@ -40,7 +40,7 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
             <div
                 className='flex flex-row items-center px-4 rounded-lg outline-none w-full h-8 overflow-x-hidden font-light text-ellipsis'
             >
-                {recordValue ? recordValue : 0}
+                <span className={`${type !== 'monetary' ? 'hidden' : 'pr-2'} select-none`}>$</span>{recordValue ? recordValue : 0}
             </div>
         </div>
     )

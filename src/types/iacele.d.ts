@@ -9,12 +9,14 @@ declare namespace IACele {
         type Char = string | undefined;
         // Flotante
         type Float = number | undefined;
+        // Monetario
+        type Monetary = number | undefined;
 
         // Nombres de tipo de dato
-        type TypeName = 'char' | 'integer' | 'float';
+        type TypeName = 'char' | 'integer' | 'float' | 'monetary';
 
         // Unión de tipos de dato
-        type ValueType = Integer | Char | Float;
+        type ValueType = Integer | Char | Float | Monetary;
     }
 
     // Interfaces para componentes complejos

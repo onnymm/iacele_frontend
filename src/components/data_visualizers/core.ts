@@ -2,6 +2,7 @@ export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<
     'char': 'text',
     'integer': 'number',
     'float': 'number',
+    'monetary': 'text',
 }
 
 type ValueValidationFunctionMap = Record<
@@ -60,6 +61,16 @@ export const validationCallbacks: ValueValidationFunctionMap = {
 
         // Retorno del valor formateado
         return formattedValue;
+    },
+
+    // Validación de tipo monetario
+    monetary: (_, fieldValue) => {
+
+        // Si el valor de entrada no es un número se establece en undefined
+        const formattedValue = parseTo.float(fieldValue)
+
+        // Retorno del valor formateado
+        return formattedValue;
     }
 }
 
@@ -92,6 +103,21 @@ const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
                 )
                 : undefined
         )
+    },
+
+    monetary: (value: string): IACele.Types.Monetary => {
+
+        return (
+            value !== ''
+                ? (
+                    matchType.float.test(value)
+                        ? Number(value)
+                        : matchType.integer.test(value)
+                            ? Number(value)
+                            : undefined
+                )
+                : undefined
+        )
     }
 }
 
@@ -108,6 +134,10 @@ export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Typ
         if ( typeof value === 'number' ) return value.toFixed(2);
         return '';
     },
+    monetary: (value) => {
+        if ( typeof value === 'number' ) return value.toFixed(2);
+        return ''
+    }
 }
 
 // Funciones para validar si un campo es directamente convertible
