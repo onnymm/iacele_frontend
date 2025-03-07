@@ -7,12 +7,14 @@ declare namespace IACele {
         type Integer = number | undefined;
         // Cadena de texto
         type Char = string | undefined;
+        // Flotante
+        type Float = number | undefined;
 
         // Nombres de tipo de dato
-        type TypeName = 'char' | 'integer'
+        type TypeName = 'char' | 'integer' | 'float';
 
         // Unión de tipos de dato
-        type ValueType = IACele.Types.Integer | IACele.Types.Char;
+        type ValueType = Integer | Char | Float;
     }
 
     // Interfaces para componentes complejos

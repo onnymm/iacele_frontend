@@ -34,8 +34,8 @@ const UITests = () => {
                         </Group>
                         <Field name="product_name" type="char" title="Descripción" />
                         <Group>
-                            <Field name="quantity" type="integer" title="Cantidad" />
-                            <Field name="price_unit" type="integer" title="Precio" />
+                            <Field name="quantity" type="float" title="Cantidad" />
+                            <Field name="price_unit" type="float" title="Precio" />
                         </Group>
                     </Group>
 
@@ -51,8 +51,8 @@ const UITests = () => {
                     <Group title="Cliente">
                         <Field name="partner_id" type="integer" title="ID del cliente" />
                         <Field name="partner_name" type="char" title="Nombre del cliente" readonly />
-                        <Field name="partner_commission" type="integer" title="Comision del cliente" />
-                        <Field name="partner_commission_cost" type="integer" title="Costo de comisión del cliente" />
+                        <Field name="partner_commission" type="float" title="Comision del cliente" />
+                        <Field name="partner_commission_cost" type="float" title="Costo de comisión del cliente" />
                     </Group>
 
                 </Sheet>

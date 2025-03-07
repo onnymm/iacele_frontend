@@ -2,6 +2,7 @@ import { useContext } from "react";
 import FormContext from "../../../../contexts/formContext";
 import Field from "../Field";
 import DataViewForm from "../../DataViewForm"; // eslint-disable-line
+import { parseDisplayValue } from "../../core";
 
 /** 
  *  ## Input "sólo lectura" de formulario
@@ -18,13 +19,14 @@ import DataViewForm from "../../DataViewForm"; // eslint-disable-line
 const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     name,
     title,
+    type,
 }) => {
 
     // Obtención de los datos del registro actual
     const { recordData } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
 
     // Obtención del valor para el campo
-    const recordValue = recordData.data[name]
+    const recordValue = parseDisplayValue[type](recordData.data[name])
 
     return (
         <div className='relative mt-4 pt-1 pr-4 w-full scrollbar-hide'>

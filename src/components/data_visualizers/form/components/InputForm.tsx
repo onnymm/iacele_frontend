@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { inputType, validationCallbacks } from "../../core";
+import { inputType, parseDisplayValue, validationCallbacks } from "../../core";
 import FormContext from "../../../../contexts/formContext";
 import Field from "../Field";
 
@@ -30,13 +30,14 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     // Obtención de los datos del registro y funciones de cambio  de estado
     const { recordData, setDataChanged, setFormValue, dataChanged, reload, setReload } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
     // Creación de estado de valor de campo actual
-    const [ recordValue, setRecordValue ] = useState<string | number | undefined>(recordData.data[name]);
+    const [ recordValue, setRecordValue ] = useState<IACele.Types.ValueType>(recordData.data[name]);
     // Creación de dato estático que almacena el valor original proveniente del backend
     const originalValue = useRef<string | number | undefined>(recordData.data[name])
     // Función de cambio de valor de referencia
     const setOriginalValue = (value: string | number | undefined) => {
         originalValue.current = value
     }
+    const [ displayValue, setDisplayValue ] = useState<string>(parseDisplayValue[type](recordValue))
 
     // Si el valor estático cambia significa que se hizo recarga de datos
     useEffect(
@@ -53,7 +54,8 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
         () => {
             if ( dataChanged ) return;
             setRecordValue(recordData.data[name])
-        }, [recordData, name, dataChanged]
+            setDisplayValue(parseDisplayValue[type](recordData.data[name]))
+        }, [recordData, name, dataChanged, type]
     )
 
     // Si el valor del campo ha cambiado se indica al estado del contexto que los datos han sufrido cambios
@@ -99,14 +101,25 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
             : 'border-gray-500/50'
     )
 
-    // Creación de función a ejecutar cuando existan cambios
-    const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fieldOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        // Se cambia el estado a desenfocado
+        setIsFocused(false)
         // Creación del valor formateado y corregido en caso de ser necesario
         const formattedValue = validateValue(String(recordValue), event.target.value)
         // Se prepara el valor en los cambios del formulario para una posible escritura de éstos
         setFormValue(name, formattedValue)
         // Se establece el valor en el input
         setRecordValue(formattedValue)
+        // Se establece el valor a mostrar en el campo
+        setDisplayValue( parseDisplayValue[type](formattedValue) )
+    }
+
+    // Creación de función a ejecutar cuando existan cambios
+    const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // Se establece el valor en el input
+        setRecordValue( event.target.value)
+        // Se establece el valor a mostrar en el campo
+        setDisplayValue( event.target.value )
     }
 
     return (
@@ -120,12 +133,13 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
             </div>
             <input
                 type={inputType[type]}
-                value={recordValue}
-                disabled={readonly}
+                step={0.01}
                 onChange={fieldOnChange}
+                value={displayValue}
+                disabled={readonly}
                 className={`${colorBorder} dark:bg-gray-900 scrollbar-hide overflow-y-hidden dark:disabled:bg-gray-800 disabled:bg-gray-200 disabled:border-gray-500/20 disabled:text-gray-500 w-full font-light border px-4 rounded-lg outline-none h-8 text-black`}
                 onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
+                onBlur={fieldOnBlur}
             />
         </div>
     )

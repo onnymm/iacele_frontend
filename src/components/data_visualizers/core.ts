@@ -1,6 +1,7 @@
 export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<HTMLInputElement>['type']> = {
     'char': 'text',
-    'integer': 'number'
+    'integer': 'number',
+    'float': 'number',
 }
 
 type ValueValidationFunctionMap = Record<
@@ -42,23 +43,75 @@ export const validationCallbacks: ValueValidationFunctionMap = {
     },
 
     // Validación de valores tipo integer
-    integer: (recordValue, fieldValue) => {
-
-        // Creación de patrón regex
-        const pattern: RegExp = /^\d+?$/
+    integer: (_, fieldValue) => {
 
         // Si el valor de entrada no es un número se establece en undefined
-        const formattedValue = (
-            recordValue !== ''
-                ? (
-                    pattern.test(fieldValue)
-                        ? Number(fieldValue)
-                        : undefined
-                )
-                : undefined
-        )
+        const formattedValue = parseTo.integer(fieldValue)
+
+        // Retorno del valor formateado
+        return formattedValue;
+    },
+
+    // Validación de valores tipo float
+    float: (_, fieldValue) => {
+
+        // Si el valor de entrada no es un número se establece en undefined
+        const formattedValue = parseTo.float(fieldValue)
 
         // Retorno del valor formateado
         return formattedValue;
     }
+}
+
+const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
+    integer: (value: string): IACele.Types.Integer => {
+
+        return (
+            value !== ''
+                ? (
+                    matchType.integer.test(value)
+                        ? Number(value)
+                        : matchType.float.test(value)
+                            ? Number( value.replace(/^(\d+?)\.\d+?$/, '$1') )
+                            : undefined
+                )
+                : undefined
+        )
+    },
+
+    float: (value: string): IACele.Types.Float => {
+
+        return (
+            value !== ''
+                ? (
+                    matchType.float.test(value)
+                        ? Number(value)
+                        : matchType.integer.test(value)
+                            ? Number( `${value}.00` )
+                            : undefined
+                )
+                : undefined
+        )
+    }
+}
+
+export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Types.ValueType) => string> = {
+    char: (value) => {
+        if ( typeof value === 'string' ) return value;
+        return '';
+    },
+    integer: (value) => {
+        if ( typeof value === 'number' ) return String(value);
+        return '';
+    },
+    float: (value) => {
+        if ( typeof value === 'number' ) return value.toFixed(2);
+        return '';
+    },
+}
+
+// Funciones para validar si un campo es directamente convertible
+const matchType = {
+    integer: /^\d+?$/,
+    float: /^\d+?\.\d+?$/
 }

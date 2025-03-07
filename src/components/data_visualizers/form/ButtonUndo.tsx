@@ -17,7 +17,7 @@ import FormContext from "../../../contexts/formContext";
 const ButtonUndo: () => (React.JSX.Element | undefined) = () => {
 
     // Obtención de los estados y funciones de cambio de estado necesarios del contexto del formulario
-    const { dataChanged, readonly, undoChanges, setDataChanged } = useContext<FormDetail | undefined>(FormContext) as FormDetail;
+    const { dataChanged, readonly, undoChanges, setDataChanged } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
 
     if ( !readonly ) {
         const undoCallback = () => {
