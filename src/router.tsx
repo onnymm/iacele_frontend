@@ -3,28 +3,31 @@ import App from "./App";
 import Home from "./routes/layout/Home";
 import RouteSales from "./routes/layout/Sales";
 import RouteUITests from "./routes/layout/UITests";
+import ErrorPage from "./routes/ErrorPage";
 
 const router = createBrowserRouter(
     [
         {
             path: "/",
             element: <App />,
+            errorElement: <ErrorPage />,
             children: [
                 {
                     index: true,
-                    element: <Home />
+                    element: <Home />,
                 },
                 {
                     path: '/sales',
-                    element: <RouteSales />
+                    element: <RouteSales />,
                 },
                 {
                     path: '/uitests',
-                    element: <RouteUITests />
-                }
-            ]
-        }
-    ]
+                    element: <RouteUITests />,
+                    errorElement: <ErrorPage />,
+                },
+            ],
+        },
+    ],
 )
 
 export default router;
