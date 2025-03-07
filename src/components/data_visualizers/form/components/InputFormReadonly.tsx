@@ -38,9 +38,13 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                 </div>
             </div>
             <div
-                className='flex flex-row items-center px-4 rounded-lg outline-none w-full h-8 overflow-x-hidden font-light text-ellipsis'
+                className='relative flex flex-row items-center px-4 rounded-lg outline-none w-full h-8 overflow-x-hidden font-light text-ellipsis'
             >
-                <span className={`${type !== 'monetary' ? 'hidden' : 'pr-2'} select-none`}>$</span>{recordValue ? recordValue : ''}
+                <span className={`${recordValue !== '' ? type !== 'monetary' ? 'hidden' : 'pr-2' : 'hidden'} select-none`}>
+                    {type === 'monetary' ? '$' : type === 'percentage' ? '%' : ''}
+                </span>
+                {recordValue ? recordValue : ''}
+                <span className={`${recordValue !== '' ? type === 'percentage' ? 'absolute right-8' : 'hidden' : 'hidden'} select-none`}>%</span>
             </div>
         </div>
     )

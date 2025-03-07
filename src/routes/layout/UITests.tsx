@@ -35,7 +35,7 @@ const UITests = () => {
                         <Field name="product_name" type="char" title="Descripción" />
                         <Group>
                             <Field name="quantity" type="float" title="Cantidad" />
-                            <Field name="price_unit" type="monetary" title="Precio" />
+                            <Field name="price_unit" type="percentage" title="Precio" />
                         </Group>
                     </Group>
 
