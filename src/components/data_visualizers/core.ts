@@ -68,7 +68,7 @@ export const validationCallbacks: ValueValidationFunctionMap = {
     monetary: (_, fieldValue) => {
 
         // Si el valor de entrada no es un número se establece en undefined
-        const formattedValue = parseTo.float(fieldValue)
+        const formattedValue = parseTo.monetary(fieldValue)
 
         // Retorno del valor formateado
         return formattedValue;
@@ -78,7 +78,7 @@ export const validationCallbacks: ValueValidationFunctionMap = {
     percentage: (_, fieldValue) => {
 
                 // Si el valor de entrada no es un número se establece en undefined
-                const formattedValue = parseTo.float(fieldValue)
+                const formattedValue = parseTo.percentage(fieldValue)
         
                 // Retorno del valor formateado
                 return formattedValue;
@@ -121,8 +121,22 @@ const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
         return (
             value !== ''
                 ? (
-                    matchType.float.test(value)
-                        ? Number(value)
+                    matchType.monetary.test(value)
+                        ? Number(value.replace(/^\$?(\d+?)(\.)?((\d+)?)$/, '$1$2$3'))
+                        : matchType.integer.test(value)
+                            ? Number(value)
+                            : undefined
+                )
+                : undefined
+        )
+    },
+
+    percentage: (value: string): IACele.Types.Percentage => {
+        return (
+            value !== ''
+                ? (
+                    matchType.percentage.test(value)
+                        ? Number(value.replace(/^\$?(\d+?)(\.)?((\d+)?)%?$/, '$1$2$3'))
                         : matchType.integer.test(value)
                             ? Number(value)
                             : undefined
@@ -150,7 +164,7 @@ export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Typ
         return ''
     },
     percentage: (value) => {
-        if ( typeof value === 'number' ) return `${value.toFixed(2)} %`;
+        if ( typeof value === 'number' ) return value.toFixed(2);
         return '';
     },
 };
@@ -158,5 +172,7 @@ export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Typ
 // Funciones para validar si un campo es directamente convertible
 const matchType = {
     integer: /^\d+?$/,
-    float: /^\d+?\.\d+?$/
+    float: /^\d+?\.(\d+)?$/,
+    monetary: /^\$?\d+?\.?(\d+)?$/,
+    percentage: /^\$?\d+?\.?(\d+)?%?$/,
 }

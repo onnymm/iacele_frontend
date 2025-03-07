@@ -30,9 +30,9 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     // Obtención de los datos del registro y funciones de cambio  de estado
     const { recordData, setDataChanged, setFormValue, dataChanged, reload, setReload } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
     // Creación de estado de valor de campo actual
-    const [ recordValue, setRecordValue ] = useState<IACele.Types.ValueType>(recordData.data[name]);
+    const [ recordValue, setRecordValue ] = useState<IACele.Types.ValueType>(recordData.data[name] !== null ? recordData.data[name] : undefined);
     // Creación de dato estático que almacena el valor original proveniente del backend
-    const originalValue = useRef<string | number | undefined>(recordData.data[name])
+    const originalValue = useRef<string | number | undefined>(recordData.data[name] !== null ? recordData.data[name] : undefined)
     // Función de cambio de valor de referencia
     const setOriginalValue = (value: string | number | undefined) => {
         originalValue.current = value
@@ -82,7 +82,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
 
     // Posición del placeholder visible
     const visiblePlaceholderPosition = (
-        (isFocused) || recordValue !== undefined
+        (isFocused) || displayValue !== ''
             ? 'translate-y-[-75%] scale-75 -translate-x-[12.5%]'
             : ''
     )
@@ -131,8 +131,8 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                     </div>
                 </div>
             </div>
-            <div className={`${highlightVisibleholder} ${type !== 'monetary' ? 'hidden' : ''} ${!isFocused && displayValue === '' ? 'hidden' : ''} absolute flex flex-col justify-center pl-3 h-8`}>
-                $
+            <div className={`${highlightVisibleholder} ${type !== 'monetary' ? type === 'percentage' ? 'right-8' : 'hidden' : '' } ${!isFocused && displayValue === '' ? 'hidden' : ''} absolute flex flex-col justify-center pl-3 h-8`}>
+                {type === 'monetary' ? '$' : type === 'percentage' ? '%' : ''}
             </div>
             <input
                 type={inputType[type]}
