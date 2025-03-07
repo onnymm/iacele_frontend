@@ -10,7 +10,7 @@ import Field from "../../components/data_visualizers/form/Field";
 const UITests = () => {
 
     return (
-        <DataViewForm id={11} table="commissions.line">
+        <DataViewForm id={11} table="commissions.line" readonly>
             <Page>
                 <Header>
                     <ButtonSave />
@@ -51,8 +51,8 @@ const UITests = () => {
                     <Group title="Cliente">
                         <Field name="partner_id" type="integer" title="ID del cliente" />
                         <Field name="partner_name" type="char" title="Nombre del cliente" readonly />
-                        <Field name="partner_commission" type="float" title="Comision del cliente" />
-                        <Field name="partner_commission_cost" type="float" title="Costo de comisión del cliente" />
+                        <Field name="partner_commission" type="percentage" title="Comision del cliente" />
+                        <Field name="partner_commission_cost" type="percentage" title="Costo de comisión del cliente" />
                     </Group>
 
                 </Sheet>

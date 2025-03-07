@@ -11,12 +11,14 @@ declare namespace IACele {
         type Float = number | undefined;
         // Monetario
         type Monetary = number | undefined;
+        // Porcentaje
+        type Percentage = number | undefined;
 
         // Nombres de tipo de dato
-        type TypeName = 'char' | 'integer' | 'float' | 'monetary';
+        type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage';
 
         // Unión de tipos de dato
-        type ValueType = Integer | Char | Float | Monetary;
+        type ValueType = Integer | Char | Float | Monetary | Percentage;
     }
 
     // Interfaces para componentes complejos
