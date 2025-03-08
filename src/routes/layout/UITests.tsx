@@ -10,7 +10,7 @@ import Field from "../../components/data_visualizers/form/Field";
 const UITests = () => {
 
     return (
-        <DataViewForm id={11} table="commissions.line" readonly>
+        <DataViewForm id={11} table="commissions.line">
             <Page>
                 <Header>
                     <ButtonSave />

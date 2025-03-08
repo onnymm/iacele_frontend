@@ -6,14 +6,6 @@ export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<
     'percentage': 'text',
 }
 
-type ValueValidationFunctionMap = Record<
-    IACele.Types.TypeName,
-    (
-        recordValue: string,
-        fieldValue: string
-    ) => (IACele.Types.ValueType)
->
-
 /** 
  *  ## Funciones de validación de valor en campo
  *  Estas funciones, indexables por tipo de dato, realizan una validación del
@@ -21,71 +13,19 @@ type ValueValidationFunctionMap = Record<
  *  no serlo, intentan corregirlo o lo establecen a `undefined`.
  *  
  *  ### Parámetros de entrada
- *  - [ `string` ] `recordValue`: Valor del registro en la base de datos.
- *  - [ `string` ] `fieldValue`: Valor del registro en el campo.
+ *  - [ `string` ] `value`: Valor del registro en el campo.
  */ 
-export const validationCallbacks: ValueValidationFunctionMap = {
-    
-    // Validación de valores tipo string
-    char: (recordValue, fieldValue) => {
+export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
 
-        // Si el texto está vacío se convierte a undefined
-        const formattedValue = (
-            recordValue !== ''
-                ? (
-                    fieldValue !== ''
-                        ? fieldValue
-                        : undefined
-                )
+    char: (value: string): IACele.Types.Char => {
+
+        return (
+            value !== ''
+                ? value
                 : undefined
         )
-
-        // Retorno del valor formateado
-        return formattedValue;
     },
 
-    // Validación de valores tipo integer
-    integer: (_, fieldValue) => {
-
-        // Si el valor de entrada no es un número se establece en undefined
-        const formattedValue = parseTo.integer(fieldValue)
-
-        // Retorno del valor formateado
-        return formattedValue;
-    },
-
-    // Validación de valores tipo float
-    float: (_, fieldValue) => {
-
-        // Si el valor de entrada no es un número se establece en undefined
-        const formattedValue = parseTo.float(fieldValue)
-
-        // Retorno del valor formateado
-        return formattedValue;
-    },
-
-    // Validación de tipo monetario
-    monetary: (_, fieldValue) => {
-
-        // Si el valor de entrada no es un número se establece en undefined
-        const formattedValue = parseTo.monetary(fieldValue)
-
-        // Retorno del valor formateado
-        return formattedValue;
-    },
-    
-    // Validación de tipo porcentaje
-    percentage: (_, fieldValue) => {
-
-                // Si el valor de entrada no es un número se establece en undefined
-                const formattedValue = parseTo.percentage(fieldValue)
-        
-                // Retorno del valor formateado
-                return formattedValue;
-    }
-}
-
-const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
     integer: (value: string): IACele.Types.Integer => {
 
         return (
@@ -146,6 +86,15 @@ const parseTo: Record<string, (value: string) => IACele.Types.ValueType> = {
     }
 }
 
+/** 
+ *  ## Parseo de valor a mostrar
+ *  Este componente renderiza Este mapa de funciones indexable por el tipo de
+ *  dato a parsear formatea el valor entrante y lo convierte en una cadena de
+ *  texto que se mostrará como valor del componente {@link InputForm}.
+ *  
+ *  ### Parámetros de entrada
+ *  Este componente no requiere parámetros de entrada.
+ */
 export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Types.ValueType) => string> = {
     char: (value) => {
         if ( typeof value === 'string' ) return value;

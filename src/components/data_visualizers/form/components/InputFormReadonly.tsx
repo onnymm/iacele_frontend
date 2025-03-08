@@ -28,6 +28,20 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     // Obtención del valor para el campo
     const recordValue = parseDisplayValue[type](recordData.data[name])
 
+    // Posicionamiento del símbolo de moneda
+    const currencySymbolDisplay = (
+        recordValue !== '' && type === 'monetary'
+            ? 'pr-2'
+            : 'hidden'
+    )
+
+    // Posicionamiento del símbolo de porcentaje
+    const percentageSymbolDisplay = (
+        recordValue !== '' && type === 'percentage'
+            ? 'absolute right-8'
+            : 'hidden'
+    )
+
     return (
         <div className='relative mt-4 pt-1 pr-4 w-full scrollbar-hide'>
             <div className='absolute flex flex-row size-full text-nowrap pointer-events-none select-none'>
@@ -40,11 +54,9 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
             <div
                 className='relative flex flex-row items-center px-4 rounded-lg outline-none w-full h-8 overflow-x-hidden font-light text-ellipsis'
             >
-                <span className={`${recordValue !== '' ? type !== 'monetary' ? 'hidden' : 'pr-2' : 'hidden'} select-none`}>
-                    {type === 'monetary' ? '$' : type === 'percentage' ? '%' : ''}
-                </span>
+                <span className={`${currencySymbolDisplay} select-none`}>$</span>
                 {recordValue ? recordValue : ''}
-                <span className={`${recordValue !== '' ? type === 'percentage' ? 'absolute right-8' : 'hidden' : 'hidden'} select-none`}>%</span>
+                <span className={`${percentageSymbolDisplay} select-none`}>%</span>
             </div>
         </div>
     )
