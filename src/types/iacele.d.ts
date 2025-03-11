@@ -13,12 +13,14 @@ declare namespace IACele {
         type Monetary = number | undefined;
         // Porcentaje
         type Percentage = number | undefined;
+        // Booleano
+        type Boolean = boolean | undefined;
 
         // Nombres de tipo de dato
-        type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage';
+        type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage' | 'boolean';
 
         // Unión de tipos de dato
-        type ValueType = Integer | Char | Float | Monetary | Percentage;
+        type ValueType = Integer | Char | Float | Monetary | Percentage | Boolean;
     }
 
     // Interfaces para componentes complejos
@@ -30,6 +32,18 @@ declare namespace IACele {
             title: string; // Nombre visible del campo en el placeholder.
             type: IACele.Types.TypeName; // Tipo de valor del campo.
             readonly?: boolean; // Modo "sólo lectura".
+        }
+
+        // Avanzado
+        declare namespace Core {
+
+            interface Input extends IACele.UI.Field {
+                displayValue: string | boolean; // Valor a mostrar en el campo.
+                isFocused: boolean; // El campo está enfocado.
+                setRecordValue:  (newValue: IACele.Types.ValueType) => (void); // Función de cambio de estado de valor del registro.
+                setDataChanged: React.Dispatch<React.SetStateAction<boolean>>; // Función de cambio de estado de cambio de datos.
+                setFormValue: (name: string, value: string | number | boolean | undefined) => (void); // Función de cambio de estado de valor de formulario.
+            }
         }
     }
 
@@ -58,7 +72,7 @@ declare namespace IACele {
                 // Función para guardar los cambios
                 saveData: (data: DataRecord) => (void);
                 // Función de cambio de estado para cambio de un valor en los datos del formulario
-                setFormValue: (name: string, value: string | number | undefined) => (void);
+                setFormValue: (name: string, value: string | number | boolean | undefined) => (void);
                 // Función para deshacer cambios
                 undoChanges: () => (void);
             };

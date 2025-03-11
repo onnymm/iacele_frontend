@@ -4,6 +4,7 @@ export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<
     'float': 'number',
     'monetary': 'text',
     'percentage': 'text',
+    'boolean': 'checkbox'
 }
 
 /** 
@@ -94,8 +95,8 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
  *  
  *  ### Parámetros de entrada
  *  Este componente no requiere parámetros de entrada.
- */
-export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Types.ValueType) => string> = {
+ */ 
+export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Types.ValueType) => string | boolean> = {
     char: (value) => {
         if ( typeof value === 'string' ) return value;
         return '';
@@ -116,6 +117,10 @@ export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Typ
         if ( typeof value === 'number' ) return value.toFixed(2);
         return '';
     },
+    boolean: (value) => {
+        if ( typeof value === 'boolean' ) return value;
+        return false;
+    }
 };
 
 // Funciones para validar si un campo es directamente convertible

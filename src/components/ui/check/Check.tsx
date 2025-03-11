@@ -1,8 +1,9 @@
 import { CheckIcon } from "@heroicons/react/16/solid";
 
 interface CheckParams {
-    value: boolean; // Valor del checkbox
-    setValue: React.Dispatch<React.SetStateAction<boolean>>; //
+    value: boolean; // Valor del checkbox.
+    setValue: React.Dispatch<React.SetStateAction<boolean>>; // Función de cambio del valor.
+    readonly?: boolean; // Deshabilitado.
 }
 
 /** 
@@ -14,11 +15,14 @@ interface CheckParams {
  *  
  *  ### Parámetros de entrada
  *  - [ `boolean` ] `value`: Valor del checkbox.
- *  - [ `setValue` ] {@link React.Dispatch<React.SetStateAction<boolean>>}: Función de cambio de estado de valor.
+ *  - [ {@link React.Dispatch<React.SetStateAction<boolean>>} ] `setValue`:
+ *  Función de cambio del valor.
+ *  - [ `boolean` ] `readonly`: Deshabilitado.
  */ 
 const Check: (config: CheckParams) => (React.JSX.Element) = ({
     value,
     setValue,
+    readonly = false,
 }) => {
 
     // Clases dinámicas para indicar el valor del estado
@@ -26,11 +30,17 @@ const Check: (config: CheckParams) => (React.JSX.Element) = ({
     const fillClassName = value ? 'scale-100' : 'scale-0';
     const IconClassName = value ? 'opacity-100 delay-200' : 'opacity-0 delay-0'
 
+    // Función de cambio de estado solo cuando el componente está activo.
+    const onClickCallback = () => {
+        if ( readonly ) return;
+        setValue( (prevState) => (!prevState) );
+    }
+
     return (
         // Borde de la caja
         <div
-            className={`${borderClassName} relative flex justify-center items-center border-2 hover:border-main-500 rounded-md transition-colors duration-200 cursor-pointer overflow-hidden size-6`}
-            onClick={() => setValue( (prevState) => (!prevState) )}
+            className={`${borderClassName} ${readonly ? 'opacity-50' : 'group-hover/label:border-main-500 hover:border-main-500 cursor-pointer'} relative flex justify-center items-center border-2 rounded-md transition-colors duration-200 overflow-hidden size-6`}
+            onClick={onClickCallback}
         >
             {/* Relleno de la caja */}
             <span className={`${fillClassName} bg-main-500 rounded-sm duration-300 size-full`}/>

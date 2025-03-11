@@ -10,15 +10,26 @@ import Field from "../../components/data_visualizers/form/Field";
 const UITests = () => {
 
     return (
-        <DataViewForm id={11} table="commissions.line">
+        <DataViewForm id={18} table="base.users">
             <Page>
                 <Header>
                     <ButtonSave />
                     <ButtonUndo />
                 </Header>
                 <Sheet>
+                    
+                    <Group title="Datos">
+                        <Field name="user" title="Nombre de usuario" type="char" />
+                        <Field name="name" title="Nombre" type="char" />
+                        <Field name="odoo_id" title="ID de Odoo" type="integer" />
+                        <Field name="active" title="Activo" type="boolean" />
+                        <Field name="password" title="Contraseña" type="char" readonly />
+                    </Group>
+                    {/* <Group title="Nombre y todo">
+                        <Field name="active" title="Activo" type="boolean" />
+                    </Group> */}
 
-                    <Group title="General">
+                    {/* <Group title="General">
                         <Group>
                             <Field name="invoice_line_id" type="integer" title="ID de línea de factura" readonly />
                             <Field name="invoice_id" type="integer" title="ID de factura" readonly />
@@ -53,7 +64,7 @@ const UITests = () => {
                         <Field name="partner_name" type="char" title="Nombre del cliente" readonly />
                         <Field name="partner_commission" type="percentage" title="Comision del cliente" />
                         <Field name="partner_commission_cost" type="percentage" title="Costo de comisión del cliente" />
-                    </Group>
+                    </Group> */}
 
                 </Sheet>
             </Page>

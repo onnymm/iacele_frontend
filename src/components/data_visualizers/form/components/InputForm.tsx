@@ -1,8 +1,10 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { inputType, parseDisplayValue, parseTo } from "../../core";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { parseDisplayValue, parseTo } from "../../core";
 import FormContext from "../../../../contexts/formContext";
 import Field from "../Field";
 import useRecordValue from "../../../../hooks/form/useRecordValue";
+import KeyboardInput from "./KeyboardInput";
+import CheckInput from "./CheckInput";
 
 /** 
  *  ## Input de formulario
@@ -40,7 +42,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     const originalValue = useRef<string | number | undefined>(recordData.data[name] ?? undefined)
 
     // Valor a mostrar en el campo
-    const [ displayValue, setDisplayValue ] = useState<string>(parseValueToDisplay(recordValue))
+    const [ displayValue, setDisplayValue ] = useState<string | boolean>(parseValueToDisplay(recordValue))
 
     // Estado de campo enfocado
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
@@ -80,106 +82,42 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
         }, [recordValue, reload, setReload]
     )
 
-    // Posición del placeholder visible
-    const visiblePlaceholderPosition = (
-        isFocused || displayValue !== ''
-            ? 'translate-y-[-75%] scale-75 -translate-x-[12.5%]'
-            : ''
-    )
+    if ( type === 'char' || type === 'float' || type === 'integer' || type === 'monetary' || type === 'percentage' ) {
 
-    // Resaltar color del placeholder
-    const highlight = (
-        (isFocused)
-            ? 'text-main-500'
-            : 'dark:text-gray-400 text-gray-500'
-    )
-
-    // Resaltar color del borde del campo
-    const colorBorder = (
-        (isFocused)
-            ? 'border-main-500'
-            : 'border-gray-500/50'
-    )
-
-    // Estilización del símbolo de campo numérico
-    const numberSymbol = (
-        type === 'monetary'
-            ? ''
-            : type === 'percentage'
-                ? 'right-8'
-                : 'hidden'
-    )
-
-    // Se muestra o se oculta símbolo de campo numérico
-    const hideNumberSymbol = (
-        !isFocused && displayValue === ''
-            ? 'hidden'
-            : ''
-    )
-
-    // Símbolo a mostrar en campo numérico
-    const symbolToShow = (
-        type === 'monetary'
-            ? '$'
-            : type === 'percentage'
-                ? '%'
-                : ''
-    )
-
-    // Espaciado inicial en input
-    const startPadding = (
-        type === 'monetary'
-            ? 'pl-8'
-            : ''
-    )
-
-    // Función a ejecutar cuando el campo es desenfocado
-    const fieldOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-        // Se cambia el estado a desenfocado
-        setIsFocused(false)
-        // Creación del valor formateado y corregido en caso de ser necesario
-        const formattedValue = formatRecordValue(event.target.value)
-        // Se prepara el valor en los cambios del formulario para una posible escritura de éstos
-        setFormValue(name, formattedValue)
-        // Se establece el valor en el input
-        setRecordValue(formattedValue)
-        // Se establece el valor a mostrar en el campo
-        setDisplayValue( parseValueToDisplay(formattedValue) )
-    }
-
-    // Función a ejecutar cuando el valor del campo cambia
-    const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // Se establece el valor en el input
-        setRecordValue( formatRecordValue(event.target.value) )
-        // Se establece el valor a mostrar en el campo
-        setDisplayValue( event.target.value )
-        // Se actualiza el contexto para indicar que hay cambios en los datos
-        setDataChanged(true);
-    }
-
-    return (
-        <div className='relative mt-4 pt-1 w-full'>
-            <div className='absolute flex flex-row size-full pointer-events-none select-none'>
-                <div className='z-10 px-4 h-full'>
-                    <div className={`${visiblePlaceholderPosition} ${highlight} text-nowrap font-light transition h-full flex items-center`}>
-                        {title}
-                    </div>
-                </div>
-            </div>
-            <div className={`${highlight} ${numberSymbol} ${hideNumberSymbol} absolute flex flex-col justify-center pl-3 h-8`}>
-                {symbolToShow}
-            </div>
-            <input
-                type={inputType[type]}
-                onChange={fieldOnChange}
-                value={displayValue}
-                disabled={readonly}
-                className={`${colorBorder} ${startPadding} dark:bg-gray-900 scrollbar-hide overflow-y-hidden dark:disabled:bg-gray-800 disabled:bg-gray-200 disabled:border-gray-500/20 disabled:text-gray-500 w-full font-light border px-4 rounded-lg outline-none h-8 text-black`}
-                onFocus={() => setIsFocused(true)}
-                onBlur={fieldOnBlur}
+        return (
+            <KeyboardInput
+                    name={name}
+                    title={title}
+                    type={type}
+                    readonly={readonly}
+                    isFocused={isFocused}
+                    setIsFocused={setIsFocused}
+                    displayValue={displayValue}
+                    setDisplayValue={setDisplayValue}
+                    formatRecordValue={formatRecordValue}
+                    setFormValue={setFormValue}
+                    setRecordValue={setRecordValue}
+                    parseValueToDisplay={parseValueToDisplay}
+                    setDataChanged={setDataChanged}
             />
-        </div>
-    )
+        )
+
+    } else {
+        return (
+            <CheckInput
+                recordValue={recordValue as boolean}
+                name={name}
+                type={type}
+                title={title}
+                readonly={readonly}
+                displayValue={displayValue as boolean}
+                setRecordValue={setRecordValue}
+                setDataChanged={setDataChanged}
+                setFormValue={setFormValue}
+                isFocused={isFocused}
+            />
+        )
+    }
 }
 
 export default InputForm;
