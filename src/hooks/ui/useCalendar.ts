@@ -26,7 +26,7 @@ const useCalendar = (initialDate: string) => {
 
     // Función para cambio de mes
     const changeMonth = (offset: number) => {
-        calendar.current.changeTo(offset)
+        calendar.changeTo(offset)
         setVisibleDays(calendar.calendarDays())
     }
 
