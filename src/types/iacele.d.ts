@@ -15,6 +15,12 @@ declare namespace IACele {
         type Percentage = number | undefined;
         // Booleano
         type Boolean = boolean | undefined;
+        // Fecha
+        type Date = {
+            year: number;
+            month: number;
+            day: number;
+        };
 
         // Nombres de tipo de dato
         type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage' | 'boolean';
@@ -43,6 +49,14 @@ declare namespace IACele {
                 setRecordValue:  (newValue: IACele.Types.ValueType) => (void); // Función de cambio de estado de valor del registro.
                 setDataChanged: React.Dispatch<React.SetStateAction<boolean>>; // Función de cambio de estado de cambio de datos.
                 setFormValue: (name: string, value: string | number | boolean | undefined) => (void); // Función de cambio de estado de valor de formulario.
+            }
+
+            // Vista de días del calendario
+            interface CalendarDay {
+                day: number;
+                month: number;
+                year: number;
+                current: boolean;
             }
         }
     }
