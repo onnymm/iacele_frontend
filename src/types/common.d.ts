@@ -7,7 +7,7 @@ interface SingleJSXInvolverComponent {
 }
 
 interface GenericInvolverComponent {
-    children: string | React.JSX.Element | Array<React.JSX.Element | string | boolean | undefined>
+    children: string | React.JSX.Element | undefined | Array<React.JSX.Element | string | boolean | undefined>
 }
 
 type IconType = React.ForwardRefExoticComponent<Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
