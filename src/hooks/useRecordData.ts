@@ -33,7 +33,7 @@ const useRecordData = (
 ): {
     recordData: IACele.View.Form.Record | undefined;
     formData: DataRecord;
-    setFormValue: (name: string, value: string | number | undefined) => (void);
+    setFormValue: (name: string, value: string | number | boolean | undefined) => (void);
     reload: boolean;
     setReload: React.Dispatch<React.SetStateAction<boolean>>;
     reloadData: () => (void);
@@ -70,36 +70,41 @@ const useRecordData = (
     );
 
     // Función para deshacer cambios
-    const undoChanges = () => {
-        // Se sobreescriben los datos del formulario del componente desde los datos originales del registro
-        setFormData(recordData?.data as IACele.View.Form.Record['data']);
-    };
+    const undoChanges = useCallback(
+        () => {
+            // Se sobreescriben los datos del formulario del componente desde los datos originales del registro
+            setFormData(recordData?.data as IACele.View.Form.Record['data']);
+        }, [recordData]
+    )
 
     // Función para cambiar un valor del registro en el formulario.
-    const setFormValue = (
-        name: string,
-        value: string | number | undefined,
-    ): void => {
+    const setFormValue = useCallback(
+        (
+            (
+                name: string,
+                value: string | number | boolean | undefined,
+            ): void => {
 
-        // Creación de copia de los datos
-        const formDataCopy = { ...formData }
-
-        // Se cambian los datos del estado
-        setFormData(
-            {
-                // Se vuelven a llenar los datos del formulario
-                ...formDataCopy,
-                // Se sobreescribe el valor cambiado en el campo indicado
-                [ name ]: value,
-            } as DataRecord
-        );
-    };
+                // Se cambian los datos del estado
+                setFormData(
+                    (prevFormData: IACele.View.Form.Record['data']) => {
+                        return {
+                            ...prevFormData,
+                            [ name ]: value
+                        }
+                    }
+                )
+            }
+        ), []
+    )
 
     // Función para invocar una recarga de los datos
-    const reloadData: () => (void) = () => {
-        // 
-        setReload( true );
-    };
+    const reloadData = useCallback<() => (void)>(
+        () => {
+            // Se establece el estado de carga a activo
+            setReload( true );
+        }, []
+    );
 
     // Obtención de los datos del registro desde el backend
     useEffect(

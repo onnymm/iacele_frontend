@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 /** 
  *  ## Estado de valor de registro
@@ -19,9 +19,11 @@ const useRecordValue = (
     const [ value, setValue ] = useState<IACele.Types.ValueType>(dataValue ?? undefined)
 
     // Función para cambiar el valor del estado de manera controlada
-    const setRecordValue = (newValue: IACele.Types.ValueType): (void) => {
-        setValue(newValue ?? undefined)
-    }
+    const setRecordValue = useCallback(
+        (newValue: IACele.Types.ValueType): (void) => {
+            setValue(newValue ?? undefined)
+        }, []
+    )
 
     return [ value, setRecordValue ] as const;
 }

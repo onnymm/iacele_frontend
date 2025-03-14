@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useCallback, useEffect } from "react"
 
 /** 
  *  ## Clic afuera
@@ -20,17 +20,14 @@ const useClickOutside: (ref: React.MutableRefObject<HTMLElement | null>, callbac
 ) => {
 
     // Función a ejecutar si el clic fue fuera de la referencia
-    const handleClick = useMemo(
-        () => (
-            ( event: MouseEvent ) => {
-
-                // Validación del clic
-                if ( ref && ref.current && !ref.current.contains(event.target as Node) ) {
-                    // Ejecución de la función provista
-                    callback();
-                }
+    const handleClick = useCallback(
+        ( event: MouseEvent ) => {
+            // Validación del clic
+            if ( ref && ref.current && !ref.current.contains(event.target as Node) ) {
+                // Ejecución de la función provista
+                callback();
             }
-        ), [callback, ref]
+        },  [callback, ref]
     )
 
     useEffect(

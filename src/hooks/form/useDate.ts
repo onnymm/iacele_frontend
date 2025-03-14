@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { formatDate, parseDateToString } from "../../core/calendar/utils";
 
 /** 
@@ -19,9 +19,11 @@ const useDate = (initialDate: Date | string) => {
     const todayRef = useRef<string>( parseDateToString(new Date()) )
 
     // Función envuelta
-    const setTextValue = (rawDate: Date | string) => {
-        setValue( formatDate(rawDate) );
-    };
+    const setTextValue = useCallback(
+        (rawDate: Date | string) => {
+            setValue( formatDate(rawDate) );
+        }, []
+    );
 
     return [ value, setTextValue as React.Dispatch<React.SetStateAction<Date | string>>, todayRef ] as const;
 }
