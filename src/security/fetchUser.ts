@@ -34,8 +34,8 @@ const fetchUser: (config: UserAuthentication) => (Promise<void>) = async ({
 
     try {
         // Envío de solicitud al api
-        const response = await iaCeleAxios.get(getBackendUrl('/account/me/'), { authenticate: true })
-        setUser(response.data)
+        const response = await iaCeleAxios.get(getBackendUrl('/account/me/'), { authenticate: true });
+        setUser(response.data);
     }
 
     // En caso de no ser autenticado se elimina el token
@@ -48,6 +48,6 @@ const fetchUser: (config: UserAuthentication) => (Promise<void>) = async ({
             console.error("Hubo un problema al autenticar el usuario:", error)
         }
     }
-}
+};
 
 export default fetchUser;

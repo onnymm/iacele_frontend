@@ -52,7 +52,7 @@ const ButtonTemplate: (config: ButtonTemplateParams) => (React.JSX.Element) = ({
         secondary: 'bg-gray-600/25 dark:bg-white/50',
         danger: 'bg-white/25',
         success: 'bg-white/25',
-    }
+    };
 
     // Función de ejecución por el botón
     const handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void = ( event ) => {
@@ -62,7 +62,7 @@ const ButtonTemplate: (config: ButtonTemplateParams) => (React.JSX.Element) = ({
 
         // Ejecución de la función provista
         onClick(event);
-    }
+    };
 
     return (
         <button
@@ -74,7 +74,7 @@ const ButtonTemplate: (config: ButtonTemplateParams) => (React.JSX.Element) = ({
                 {children}
             </div>
         </button>
-    )
-}
+    );
+};
 
 export default ButtonTemplate;

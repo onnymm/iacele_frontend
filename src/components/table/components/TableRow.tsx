@@ -69,7 +69,7 @@ const TableRow = ({
                 )
             }
         </tr>
-    )
-}
+    );
+};
 
 export default TableRow;

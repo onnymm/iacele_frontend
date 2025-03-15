@@ -58,4 +58,4 @@ export const createCircle: (
 
     // Se añade el círculo al botón
     buttonElement.appendChild(circle);
-}
+};

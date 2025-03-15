@@ -41,7 +41,7 @@ const InputSearch: (config: InputSearchParams) => (React.JSX.Element) = ({
         //      contenido del campo es distinto al estado
         if ( search !== value ) {
             // Se establece el texto del campo como estado
-            setSearch(value)
+            setSearch(value);
         }
     }
 
@@ -53,7 +53,7 @@ const InputSearch: (config: InputSearchParams) => (React.JSX.Element) = ({
     }
 
     // Componente de borrar contenido declarado por separado para mejorar legibilidad
-    const ButtonDelete = <ButtonIcon icon={XMarkIcon} onClick={clearSearchInput} disabled={!value || loading} type='primary' />
+    const ButtonDelete = <ButtonIcon icon={XMarkIcon} onClick={clearSearchInput} disabled={!value || loading} type='primary' />;
 
     return (
         <InputTemplate
@@ -65,7 +65,7 @@ const InputSearch: (config: InputSearchParams) => (React.JSX.Element) = ({
             loading={loading}
             componentAfter={ButtonDelete}
         />
-    )
-}
+    );
+};
 
 export default InputSearch;

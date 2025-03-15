@@ -25,7 +25,7 @@ const Button: (config: BaseInterfaceButton) => (React.JSX.Element) = ({
                 <Icon className="fill-white size-10 sm:size-8" />
             </div>
         </button>
-    )
-}
+    );
+};
 
 export default Button;

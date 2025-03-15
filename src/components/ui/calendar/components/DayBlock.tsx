@@ -37,9 +37,9 @@ const CalendarButtonDay: (config: CalendarButtonDayParams) => (React.JSX.Element
         new Date(
             monthDay.year,
             monthDay.month,
-            monthDay.day
+            monthDay.day,
         )
-    )
+    );
 
     return (
         <button
@@ -48,7 +48,7 @@ const CalendarButtonDay: (config: CalendarButtonDayParams) => (React.JSX.Element
         >
             {monthDay.day}
         </button>
-    )
-}
+    );
+};
 
 export default CalendarButtonDay;

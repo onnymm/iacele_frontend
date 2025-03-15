@@ -33,7 +33,7 @@ const Pagination: (config: PaginationParams<number | ((page: number) => (number)
     page,
     setPage,
     itemsPerPage,
-    disabled
+    disabled,
 }) => {
 
     // Obtención de arreglo de páginas y cantidad de páginas con respeto a
@@ -47,26 +47,26 @@ const Pagination: (config: PaginationParams<number | ((page: number) => (number)
             const pages =  Array.from(
                 { length: pagesQty },
                 (_, i) => (i)
-            )
+            );
 
-            return { pages, pagesQty }
+            return { pages, pagesQty };
         }, [count, itemsPerPage]
-    )
+    );
 
     // Obtención de páginas a mostrar desde la función de construcción
     //      inteligente
     const pagesToShow = useMemo(
         () => {
-            return buildSmartPagination(pages, page)
+            return buildSmartPagination(pages, page);
         }, [pages, page]
-    )
+    );
 
     // Obtención de funciones de cambio de página para control de cambios
     //      dentro del rango válido
     const { setPageIndex, increasePage, decreasePage } = usePagination(pages, setPage);
 
     // Declaración de función de cambio de página para uso óptimo de memoria
-    const updatePage = (value: number) => setPage(value)
+    const updatePage = (value: number) => setPage(value);
 
     return (
         <div className="flex flex-row flex-none items-center gap-2">
@@ -82,12 +82,12 @@ const Pagination: (config: PaginationParams<number | ((page: number) => (number)
             </div>
 
             {/* Indicador de conteo total de páginas */}
-            <span className="sm:hidden px-2 text-xl ui-text-none"> / {pagesQty}</span>
+            <span className="sm:hidden px-2 ui-text-none text-xl"> / {pagesQty}</span>
 
             {/* Botón de incremento de página */}
             <ButtonIcon type="primary" onClick={increasePage} icon={ChevronRightIcon} disabled={page === pages.length || pages.length === 0 || disabled} />
         </div>
-    )
-}
+    );
+};
 
 export default Pagination;

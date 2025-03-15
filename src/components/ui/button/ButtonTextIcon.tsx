@@ -40,14 +40,14 @@ const ButtonTextIcon: (config: ButtonTextParams) => (React.JSX.Element) = ({
 
     return (
         <ButtonTemplate className={className} onClick={onClick} disabled={disabled} type={type}>
-            <div className="mr-2 sm:ml-1 h-[75%] duration-current aspect-square fill-current">
+            <div className="fill-current mr-2 sm:ml-1 h-[75%] aspect-square duration-current">
                 {Icon && <Icon />}
             </div>
             <div className="flex flex-row items-center gap-1 pr-2">
                 {children}
             </div>
         </ButtonTemplate>
-    )
-}
+    );
+};
 
 export default ButtonTextIcon;

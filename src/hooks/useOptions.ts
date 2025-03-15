@@ -66,18 +66,18 @@ const defaultConfig = {
  */ 
 const useOptions = <T extends SelectableOption<string | number | boolean>[]>(
     items: T,
-    config: UseOptionsConfig<T[0]> = {} 
+    config: UseOptionsConfig<T[0]> = {},
 ): [
     OptionObject<KeyType<T>>[],
     (key: KeyType<T>) => (void),
-    KeyType<T> | undefined
+    KeyType<T> | undefined,
 ] => {
 
     // Uso de las opciones especificadas y las opciones por defecto.
     const finalConfig = {
         ...defaultConfig,
         ...config
-    }
+    };
 
     // Inicialización de opciones
     const initialOptions = items.map(

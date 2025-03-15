@@ -13,10 +13,10 @@ import { formatDate, parseDateToString } from "../../core/calendar/utils";
 const useDate = (initialDate: Date | string) => {
 
     // Inicialización del estado
-    const [ value, setValue ] = useState<string>( formatDate(initialDate) )
+    const [ value, setValue ] = useState<string>( formatDate(initialDate) );
 
     // Referencia del día de hoy para señalar la fecha actual en el calendario
-    const todayRef = useRef<string>( parseDateToString(new Date()) )
+    const todayRef = useRef<string>( parseDateToString(new Date()) );
 
     // Función envuelta
     const setTextValue = useCallback(

@@ -27,7 +27,7 @@ const useDarkMode: () => ({
         () => {
 
             // Se obtiene la configuración del modo oscuro desde el dispositivo
-            const storedDarkMode = localStorage.getItem("darkMode") as 'false' | 'true' | null
+            const storedDarkMode = localStorage.getItem("darkMode") as 'false' | 'true' | null;
 
             // Si existe una configuración guardada se establece ésta
             if ( storedDarkMode !== null ) {
@@ -36,10 +36,10 @@ const useDarkMode: () => ({
                 const keyValue = {
                     'false': false,
                     'true': true,
-                }
+                };
 
                 // Retorno de la configuración guardada, convertida a booleano
-                return Boolean( keyValue[storedDarkMode] )
+                return Boolean( keyValue[storedDarkMode] );
             }
 
             // En caso de no existir se toma la configuración del tema del dispositivo
@@ -48,31 +48,31 @@ const useDarkMode: () => ({
                     '(prefers-color-scheme: dark)'
                 )
                 .matches
-            )
+            );
 
             // Se retorna la preferencia del usuario en el dispositivo
-            return systemDarkMode
+            return systemDarkMode;
         }
-    )
+    );
 
     useEffect(
         () => {
 
             // Si el modo oscuro está activado
             if ( darkMode ) {
-                document.documentElement.classList.add("dark")
+                document.documentElement.classList.add("dark");
             // Si el modo oscuro está desactivado
             } else {
-                document.documentElement.classList.remove("dark")
+                document.documentElement.classList.remove("dark");
             }
 
             // Se guarda la configuración actual
-            localStorage.setItem("darkMode", String(darkMode))
+            localStorage.setItem("darkMode", String(darkMode));
         }
-    )
+    );
 
     // Retorno de estado y función de cambio de estado
-    return { darkMode, setDarkMode }
-}
+    return { darkMode, setDarkMode };
+};
 
 export default useDarkMode;

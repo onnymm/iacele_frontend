@@ -35,7 +35,7 @@ const useBreakpoint: (thereshold: number) => (WidthThereshold) = ( thereshold ) 
             window.addEventListener(
                 'resize',
                 handleResize
-            )
+            );
 
             // Retorno de la remoción del escuchador de eventos
             return (
@@ -45,9 +45,9 @@ const useBreakpoint: (thereshold: number) => (WidthThereshold) = ( thereshold ) 
                         handleResize
                     )
                 }
-            )
+            );
         }, [isOverThereshold, thereshold]
-    )
+    );
 
     return { isOverThereshold };
 }

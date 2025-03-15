@@ -22,7 +22,7 @@ const App: () => (React.JSX.Element) = () => {
         // Proveedor de contexto de modo oscuro
         <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
             <AppContext.Provider value={{ isSidebarLocked, setIsSidebarLocked, isSidebarOpen, setIsSidebarOpen }} >
-                <div className='relative z-0 flex flex-col bg-slate-100 dark:bg-[#101b26] h-svh transition'>
+                <div className='z-0 relative flex flex-col bg-slate-100 dark:bg-[#101b26] h-svh transition'>
                     {!token
                         ? <Login />
                         : <Root/>
@@ -30,7 +30,7 @@ const App: () => (React.JSX.Element) = () => {
                 </div>
             </AppContext.Provider>
         </DarkModeContext.Provider>
-    )
+    );
 };
 
 export default App;

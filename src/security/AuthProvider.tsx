@@ -23,7 +23,7 @@ const AuthProvider: (config: SingleJSXInvolverComponent) => (React.JSX.Element) 
 }) => {
 
     // Se intenta obtener el token desde el dispositivo
-    const [ token, setToken ] = useState<string | null>( localStorage.getItem("userToken") )
+    const [ token, setToken ] = useState<string | null>( localStorage.getItem("userToken") );
 
     // Inicialización del usuario actual
     const [ user, setUser ] = useState<CurrentUserData>(userTemplate);
@@ -39,12 +39,12 @@ const AuthProvider: (config: SingleJSXInvolverComponent) => (React.JSX.Element) 
     useEffect(
         () => {
             if ( token ) {
-                localStorage.setItem("userToken", token )
+                localStorage.setItem("userToken", token );
             } else {
-                localStorage.removeItem("userToken")
+                localStorage.removeItem("userToken");
             }
         }, [token]
-    )
+    );
 
     return (
         <TokenContext.Provider value={{token, setToken}}>
@@ -52,7 +52,7 @@ const AuthProvider: (config: SingleJSXInvolverComponent) => (React.JSX.Element) 
                 { children }
             </UserContext.Provider>
         </TokenContext.Provider>
-    )
-}
+    );
+};
 
 export default AuthProvider;

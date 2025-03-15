@@ -18,7 +18,7 @@ const DayName: (config: GenericInvolverComponent) => (React.JSX.Element) = ({
         <div className="flex flex-row justify-center items-center w-8 h-6 font-bold text-[10px] text-gray-500 uppercase">
             {children}
         </div>
-    )
-}
+    );
+};
 
 export default DayName;

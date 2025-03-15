@@ -72,7 +72,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
         () => {
             setInputValue(String(value));
         }, [value]
-    )
+    );
 
     // Validación de rango
     const controlValue: () => (number) = () => {
@@ -89,7 +89,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             return Number(max);
         }
         return numericValue;
-    }
+    };
 
     // Funciones provistas envueltas en validación de rango para controlar el flujo
     const internalOnChange: (event: React.ChangeEvent<HTMLInputElement>) => (void) = (event) => {
@@ -101,7 +101,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             // Validación de rango
             controlValue();
         }
-    }
+    };
     const internalOnEnter: (event: React.KeyboardEvent<HTMLInputElement>) => (void) = (event) => {
         // Ejecución de función provista
         if ( onEnter ) {
@@ -110,7 +110,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             // Validación de rango
             controlValue();
         }
-    }
+    };
     const internalOnBlur: (event: React.FocusEvent<HTMLInputElement>) => (void) = (event) => {
         // Ejecución de función provista
         if ( onBlur ) {
@@ -119,7 +119,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             // Validación de rango
             controlValue();
         }
-    }
+    };
 
     return (
         <InputTemplate
@@ -133,7 +133,7 @@ const InputNumeric: (config: InputNumericParams) => (React.JSX.Element) = ({
             visiblePlaceholder={visiblePlaceholder}
             icon={icon}
         />
-    )
-}
+    );
+};
 
 export default InputNumeric;

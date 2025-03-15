@@ -24,11 +24,11 @@ const TableNoRecords: (config: TableNoTecordsParams) => (React.JSX.Element) = ({
     return (
         <div className="flex flex-col justify-center items-center gap-6 size-full">
             <div className="size-16">
-                <Icon className="text-gray-500/50 size-full" />
+                <Icon className="size-full text-gray-500/50" />
             </div>
             <span className="text-gray-500/50 select-none">{message}</span>
         </div>
-    )
-}
+    );
+};
 
 export default TableNoRecords;

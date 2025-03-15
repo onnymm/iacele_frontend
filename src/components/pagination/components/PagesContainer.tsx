@@ -29,11 +29,11 @@ const PageContainer: (config: PageContainerParams) => (React.JSX.Element) = ({
     pagesToShow,
     page,
     setPageIndex,
-    disabled
+    disabled,
 }) => {
 
     return (
-        <div className="relative sm:flex hidden">
+        <div className="hidden relative sm:flex">
 
             {/* Botón de página */}
             <div className="flex">
@@ -48,7 +48,7 @@ const PageContainer: (config: PageContainerParams) => (React.JSX.Element) = ({
 
             {/* Indicador de página */}
             <div
-                className="absolute bg-main-500 shadow-sm rounded-xl transition-transform duration-300 size-10"
+                className="absolute bg-main-500 shadow-sm rounded-xl size-10 transition-transform duration-300"
                 style={{
                     transform: `translateX( calc(${pagesToShow.indexOf(page) !== -1 ? pagesToShow.indexOf(page) : 0} * 2.5rem) )`
                 }}
@@ -68,14 +68,14 @@ const PageContainer: (config: PageContainerParams) => (React.JSX.Element) = ({
                                 </div>
                             )
                         )
-                        : <div className="flex justify-center items-center text-sm text-white dark:text-white transition duration-200 size-10">
+                        : <div className="flex justify-center items-center size-10 text-white dark:text-white text-sm transition duration-200">
                             1
                         </div>
                 }
             </div>
 
         </div>
-    )
-}
+    );
+};
 
 export default PageContainer;

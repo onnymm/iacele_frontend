@@ -31,7 +31,7 @@ const TableCell: (config: TableCellParams) => (React.JSX.Element) = ({
     width,
     record,
     recordConfig,
-    fields
+    fields,
 }) => {
 
     return (
@@ -45,7 +45,7 @@ const TableCell: (config: TableCellParams) => (React.JSX.Element) = ({
                 <CellComponent columnKey={columnKey} recordConfig={recordConfig} props={record} fields={fields} options={recordConfig.options} />
             </div>
         </td>
-    )
-}
+    );
+};
 
 export default TableCell;

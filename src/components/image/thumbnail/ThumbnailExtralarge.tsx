@@ -19,7 +19,7 @@ const ThumbnailExtralarge: (config: BaseImageComponent) => (React.JSX.Element) =
         <div className="rounded-full size-16">
             <Base64Image data={data} alt={alt} />
         </div>
-    )
-}
+    );
+};
 
 export default ThumbnailExtralarge;

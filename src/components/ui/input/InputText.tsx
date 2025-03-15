@@ -61,7 +61,7 @@ const InputText: (config: InputTextParams) => (React.JSX.Element) = ({
 }) => {
 
     // Valor controlado
-    const [ inputValue, setInputValue ] = useState<string>(value)
+    const [ inputValue, setInputValue ] = useState<string>(value);
 
     // Control de longitud
     useEffect(
@@ -72,7 +72,7 @@ const InputText: (config: InputTextParams) => (React.JSX.Element) = ({
                 setValue(inputValue);
             }
         }, [maxLength, inputValue, setValue]
-    )
+    );
 
     return (
         <InputTemplate
@@ -88,7 +88,7 @@ const InputText: (config: InputTextParams) => (React.JSX.Element) = ({
             visiblePlaceholder={visiblePlaceholder}
             icon={icon}
         />
-    )
-}
+    );
+};
 
 export default InputText;

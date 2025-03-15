@@ -29,7 +29,7 @@ const FieldDropdown: (config: FieldDropdownParams) => (React.JSX.Element) = ({
         <div ref={dropdownRef} className={`${show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} ${overflowed ? 'bottom-8' : 'top-8'} z-50 right-0 absolute transition-opacity duration-200`}>
             {children}
         </div>
-    )
-}
+    );
+};
 
 export default React.memo(FieldDropdown);

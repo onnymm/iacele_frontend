@@ -31,9 +31,9 @@ const useSidebar = () => {
 
         // Control de cierre de la barra lateral si ésta está bloqueada
         if ( !isSidebarLocked && !state ) {
-            internalSetIsSidebarOpen(state)
+            internalSetIsSidebarOpen(state);
         } else if ( state ) {
-            internalSetIsSidebarOpen(state)
+            internalSetIsSidebarOpen(state);
         }
     };
 

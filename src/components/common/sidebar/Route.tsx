@@ -25,35 +25,35 @@ interface RouteParams {
  *  - [ `undefined` ] `callback`:  Función a ejecutar por el botón cuando
  *  recibe un clic.
  */ 
-const Route = React.memo(({
+const Route: (config: RouteParams) => (React.JSX.Element) = ({
     height,
     isOpen,
     routes,
     listRef,
-    callback
-}: RouteParams) => {
+    callback,
+}) => {
 
     return (
         <div
             id="sidebar-dropdown-button"
             style={{'height': isOpen && height ? height : 0}}
-            className="flex flex-col gap-2 mx-8 px-4 text-gray-300/70 transition-height duration-300 overflow-y-hidden"
+            className="flex flex-col gap-2 mx-8 px-4 overflow-y-hidden text-gray-300/70 transition-height duration-300"
         >
-        <div ref={listRef} className="flex flex-col gap-2 py-2 w-full h-min">
-            {
-                routes.map(
-                    (route, routeKey) => {
-                        return (
-                            <button onClick={() => callback(route.route)} className={`${isBaseRoute(location.pathname, route.route) ? "text-white" : ""} text-start sm:hover:text-white active:text-white duration-300`} key={routeKey}>
-                                {route.name}
-                            </button>
-                        )
-                    }
-                )
-            }
+            <div ref={listRef} className="flex flex-col gap-2 py-2 w-full h-min">
+                {
+                    routes.map(
+                        (route, routeKey) => {
+                            return (
+                                <button onClick={() => callback(route.route)} className={`${isBaseRoute(location.pathname, route.route) ? "text-white" : ""} text-start sm:hover:text-white active:text-white duration-300`} key={routeKey}>
+                                    {route.name}
+                                </button>
+                            )
+                        }
+                    )
+                }
+            </div>
         </div>
-    </div>
     )
-})
+}
 
-export default Route;
+export default React.memo(Route);

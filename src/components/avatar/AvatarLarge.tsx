@@ -25,7 +25,7 @@ const AvatarLarge: (config: AvatarParams) => (React.JSX.Element) = ({
                 <span className="absolute bg-green-500 w-full h-full profile-status-image"/>
             }
         </div>
-    )
-}
+    );
+};
 
 export default AvatarLarge;

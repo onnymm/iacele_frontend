@@ -17,7 +17,7 @@ const SortingIndicator = (): (React.JSX.Element) => {
         <div className="right-2 absolute opacity-0 group-hover:opacity-100 min-w-4 h-4 transition-opacity duration-300 pointer-events-none">
             <ChevronUpDownIcon />
         </div>
-    )
-}
+    );
+};
 
 export default SortingIndicator;

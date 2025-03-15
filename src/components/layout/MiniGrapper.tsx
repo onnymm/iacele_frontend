@@ -24,7 +24,7 @@ const MiniGrapper: (config: MiniGrapperParams) => (React.JSX.Element) = ({
         <div className={`${groupDivisions ? 'group line-division' : ''} flex flex-col gap-2 border-gray-500/50 bg-gray-500/10 m-2 p-4 border rounded-lg sm:w-[320px] max-w-screen`}>
             { children }
         </div>
-    )
-}
+    );
+};
 
 export default MiniGrapper;

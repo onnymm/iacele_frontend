@@ -6,10 +6,10 @@ const char = (field: string): TableGenericWidget<string | number> => {
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 { String(content) }
             </span>
-        )
-    }
+        );
+    };
     return CharComponent;
-}
+};
 
 const integer = (field: string): TableGenericWidget<number> => {
     const IntegerComponent: TableGenericWidget<number> = ({
@@ -19,10 +19,10 @@ const integer = (field: string): TableGenericWidget<number> => {
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 { Number(content) }
             </span>
-        )
-    }
+        );
+    };
     return IntegerComponent;
-}
+};
 
 const badge = (field: string): TableGenericWidget<string | number> => {
     const BadgeComponent: TableGenericWidget<string | number> = ({
@@ -30,67 +30,67 @@ const badge = (field: string): TableGenericWidget<string | number> => {
     }) => {
         return (
             <div className="bg-current px-2 rounded-full w-min text-ellipsis whitespace-nowrap">
-                <span className="text-sm text-white">
+                <span className="text-white text-sm">
                     { String(content) }
                 </span>
             </div>
-        )
-    }
+        );
+    };
     return BadgeComponent;
 }
 
 const date = (field: string): TableGenericWidget<string> => {
     const DateComponent: TableGenericWidget<string> = ({
-        [ field ]: content
+        [ field ]: content,
     }) => {
-        const [ year, month, day ] = content.split("-")
+        const [ year, month, day ] = content.split("-");
         return (
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 {`${day}/${month}/${year}`}
             </span>
-        )
-    }
+        );
+    };
     return DateComponent;
 }
 
 const monetary = (field: string): TableGenericWidget<number> => {
     const MonetaryComponent: TableGenericWidget<number> = ({
-        [ field ]: content
+        [ field ]: content,
     }) => {
         return (
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 {Number(content).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})}
             </span>
-        )
-    }
+        );
+    };
     return MonetaryComponent;
-}
+};
 
 const float = (field: string): TableGenericWidget<number> => {
     const FloatComponent: TableGenericWidget<number> = ({
-        [ field ]: content
+        [ field ]: content,
     }) => {
         return (
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 {Number(content).toFixed(2)}
             </span>
-        )
-    }
+        );
+    };
     return FloatComponent;
-}
+};
 
 const percentage = (field: string): TableGenericWidget<number> => {
     const PercentageComponent: TableGenericWidget<number> = ({
-        [ field ]: content
+        [ field ]: content,
     }) => {
         return (
             <span className="w-full text-current text-ellipsis whitespace-nowrap">
                 {( Number(content) * 100 ).toFixed(2) + '%'}
             </span>
-        )
-    }
+        );
+    };
     return PercentageComponent;
-}
+};
 
 /**
  *  ## CommonComponent
@@ -129,4 +129,4 @@ export const commonComponent = {
     percentage: percentage,
     selection: char,
     check: char,
-}
+};

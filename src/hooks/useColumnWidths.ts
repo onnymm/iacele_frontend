@@ -27,7 +27,7 @@ export const useColumnWidths = (viewConfig: ViewConfig[]) => {
         (setting) => {
             initColumnWidths[setting.key] = null;
         }
-    )
+    );
 
     // Inicialización de estado
     const [ columnWidths, setColumnWiths ] = useState<ColumnWidths>(initColumnWidths);
@@ -36,15 +36,15 @@ export const useColumnWidths = (viewConfig: ViewConfig[]) => {
     const resizeColumn = (columnKey: string, width: number | null): void => {
 
         // Creación de copia de anchos de columnas
-        const columnWidthsCopy = { ...columnWidths }
+        const columnWidthsCopy = { ...columnWidths };
 
         // Actualización de valor de ancho de columna en columna manipulada
-        columnWidthsCopy[columnKey] = width
+        columnWidthsCopy[columnKey] = width;
 
         // Cambio de estado
-        setColumnWiths(columnWidthsCopy)
+        setColumnWiths(columnWidthsCopy);
     }
 
     // Retorno de estado y función de actualización de ancho de columnas
-    return { columnWidths, resizeColumn }
-}
+    return { columnWidths, resizeColumn };
+};

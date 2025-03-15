@@ -18,10 +18,10 @@ const tokenInterceptor = (config: AxiosRequestConfig): InternalAxiosRequestConfi
         }
 
         // Obtención del token desde el almacenamiento del dispositivo
-        const token = localStorage.getItem("userToken")
+        const token = localStorage.getItem("userToken");
 
         // Se agrega el token de autenticación al encabezado
-        config.headers['Authorization'] = `Bearer ${token}`
+        config.headers['Authorization'] = `Bearer ${token}`;
     }
 
     // Retorno del objeto de configuración para iniciar la solicitud a la URL

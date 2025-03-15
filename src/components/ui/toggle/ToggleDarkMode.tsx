@@ -25,7 +25,7 @@ const ToggleDarkMode: () => (React.JSX.Element) = () => {
             icon={SunIcon}
             iconOn={MoonIcon}
         />
-    )
-}
+    );
+};
 
 export default ToggleDarkMode;

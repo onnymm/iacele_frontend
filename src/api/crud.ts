@@ -25,12 +25,12 @@ export const read = async (
             params: {
                 'table_name': table,
                 'record_ids': ids,
-            }
+            },
         },
-    )
+    );
 
     // Retorno de la respuesta del backend
-    return response.data
+    return response.data;
 }
 
 /** 
@@ -57,10 +57,12 @@ export const update = async (
         {
             'record_id': id,
             'table_name': table,
-            'data_to_write': dataToSend
+            'data_to_write': dataToSend,
         },
-        {authenticate: true}
-    )
+        {
+            authenticate: true,
+        },
+    );
     
     // Retorno de la respuesta del backend
     return response.data;

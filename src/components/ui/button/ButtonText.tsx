@@ -39,7 +39,7 @@ const ButtonText: (config: ButtonTextParams) => (React.JSX.Element) = ({
         <ButtonTemplate className={className} type={type} onClick={onClick} disabled={disabled}>
             {children}
         </ButtonTemplate>
-    )
-}
+    );
+};
 
 export default ButtonText;

@@ -41,7 +41,7 @@ const buildSmartPagination = (
     if ( pages.length <= 7 ) return pages;
 
     // Matriz a retornar
-    const pagesToShow = []
+    const pagesToShow = [];
     
     // Validación de si la posición actual es superior o igual a 4
     const isSuperior = pages.slice(0, currentPosition).length >= 4;
@@ -61,6 +61,6 @@ const buildSmartPagination = (
 
     // Retorno de la matriz de selección de páginas
     return pagesToShow;
-}
+};
 
 export default buildSmartPagination;

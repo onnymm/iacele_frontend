@@ -60,12 +60,12 @@ const Select = <T extends string | number | boolean>(
 ): (React.JSX.Element) => {
 
     // Inicialización de estado de lista de opciones
-    const [ isOpen, setIsOpen ] = useState<boolean>(false)
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
     // Inicialización de referencia de lista de opciones para uso de clic afuera
-    const selectRef = useRef(null)
-    const wrapperRef = useRef<HTMLDivElement>(null)
-    const listboxRef = useRef<HTMLDivElement>(null)
+    const selectRef = useRef(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const listboxRef = useRef<HTMLDivElement>(null);
 
     // Uso de funcionalidad de clic afuera para la lista de opciones
     useClickOutside(selectRef, () => setIsOpen(false));
@@ -74,20 +74,20 @@ const Select = <T extends string | number | boolean>(
     useEffect(
         () => {
             if ( mode === "switch" || mode === "alwaysActive" ) {
-                setIsOpen(false)
+                setIsOpen(false);
             }
         }, [options, mode]
-    )
+    );
 
     // Se resetea el deslizamiento vertical en el momento en el que la lista
     //      opciones se despliega.
     useEffect(
         () => {
             if ( isOpen ) {
-                listboxRef.current?.scroll(0, 0)
+                listboxRef.current?.scroll(0, 0);
             }
         }, [isOpen]
-    )
+    );
 
     return (
         <div className="flex flex-col w-min pointer-events-none *:pointer-events-auto" ref={selectRef}>
@@ -99,13 +99,13 @@ const Select = <T extends string | number | boolean>(
                     </div>
                 </div>
             </ButtonTextIcon>
-            <div className="relative z-10">
+            <div className="z-10 relative">
                 <div ref={wrapperRef} className={`${isOpen ? "scale-y-100": "-translate-y-[50%]"} w-min transition duration-300 scale-y-0 absolute`}>
                     <Listbox items={options} setActive={setOptions} iconActive={iconActive} _listboxRef={listboxRef} />
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Select;

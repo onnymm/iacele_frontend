@@ -32,8 +32,8 @@ const userLogin: (
         headers: {
             "accept": "application/json",
             "Content-Type": 'application/x-www-form-urlencoded',
-        }
-    }
+        },
+    };
 
     // Configuración de datos
     const d = (
@@ -44,8 +44,8 @@ const userLogin: (
                 password,
                 scope: "",
                 client_id: "string",
-                client_secret: "string"
-            }
+                client_secret: "string",
+            },
         )
         .toString()
     );
@@ -62,6 +62,6 @@ const userLogin: (
         // Retorno de autenticación fallida
         return false;
     }
-}
+};
 
 export default userLogin;

@@ -56,27 +56,26 @@ const CalendarTool: (config: CalendarToolParams) => (React.JSX.Element) = ({
     // Estado, referencia y custom hook para mostrar el calendario
     const [ showCalendar, setShowCalendar ] = useState<boolean>(false);
     const widgetRef = useRef(null);
-    useClickOutside(widgetRef, () => setShowCalendar(false))
+    useClickOutside(widgetRef, () => setShowCalendar(false));
 
-    const originalValueRef = useRef<string | undefined>(recordValue as IACele.Types.Date)
+    const originalValueRef = useRef<string | undefined>(recordValue as IACele.Types.Date);
 
     useEffect(
         () => {
             if ( recordValue === originalValueRef.current ) {
-                setDisplayValue(parseValueToDisplay(recordValue))
+                setDisplayValue(parseValueToDisplay(recordValue));
             }
         }, [recordValue, parseValueToDisplay, setDisplayValue]
-    )
+    );
 
-    const dateSetterSetValue = useCallback<(val: string) => void>(
-        (val: string) => {
-            console.log(val, originalValueRef.current);
-            setDisplayValue(parseValueToDisplay(val))
-            if ( val !== originalValueRef.current ) setDataChanged(true);
-            setRecordValue(val)
-            setFormValue(name, val)
+    const dateSetterSetValue = useCallback<(value: string) => void>(
+        (value: string) => {
+            setDisplayValue(parseValueToDisplay(value));
+            if ( value !== originalValueRef.current ) setDataChanged(true);
+            setRecordValue(value);
+            setFormValue(name, value);
         }, [name, setFormValue, parseValueToDisplay, setDataChanged, setRecordValue, setDisplayValue]
-    )
+    );
 
     return (
         <div
@@ -92,7 +91,7 @@ const CalendarTool: (config: CalendarToolParams) => (React.JSX.Element) = ({
                 />
             </FieldDropdown>
         </div>
-    )
-}
+    );
+};
 
 export default CalendarTool;

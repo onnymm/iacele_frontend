@@ -15,7 +15,7 @@ const Base64Image: (config: BaseImageComponent) => (React.JSX.Element) = ({
 
     return (
         <img src={`data:image/jpeg;base64,${data}`} alt={alt} />
-    )
-}
+    );
+};
 
 export default Base64Image;

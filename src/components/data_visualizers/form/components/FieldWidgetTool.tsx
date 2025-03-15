@@ -31,7 +31,7 @@ const FieldWidgetTrigger: (config: FieldWidgetTriggerParams) => (React.JSX.Eleme
         >
             <Icon className={`${isFocused ? 'fill-main-500' : ''} hover:fill-main-500 transition duration-200`} />
         </div>
-    )
-}
+    );
+};
 
 export default FieldWidgetTrigger;

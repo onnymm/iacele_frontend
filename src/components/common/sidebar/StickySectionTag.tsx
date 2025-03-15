@@ -9,7 +9,7 @@
  *  Este componente no requiere parámetros de entrada.
  */ 
 const StickySectionTag: (config: TextInvolverComponent) => (React.JSX.Element) = ({
-    children
+    children,
 }) => {
 
     return (
@@ -18,7 +18,7 @@ const StickySectionTag: (config: TextInvolverComponent) => (React.JSX.Element) =
                 {children}
             </span>
         </div>
-    )
-}
+    );
+};
 
 export default StickySectionTag;

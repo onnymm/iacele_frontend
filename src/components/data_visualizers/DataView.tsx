@@ -36,13 +36,13 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
         (activeFilter: number | undefined) => {
             // Si hay un filtro, se establece éste
             if ( activeFilter !== undefined ) {
-                return filters.available[activeFilter]
+                return filters.available[activeFilter];
             // Si no existe un filtro, se establece el valor por defecto
             } else {
-                return filters.default
+                return filters.default;
             }
         }, [filters.available, filters.default]
-    )
+    );
 
     // // Estado de carga inicial
     // const [ initialLoad, setInitialLoad ] = useState<boolean>(false);
@@ -69,14 +69,14 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
     );
 
     // Inicialización de indicador de filtro para solicitud de datos al backend
-    const [ filter, setFilter ] = useState<{ criteria: CriteriaStructure } | DataFilter>( createOrUpdateFilter(activeFilter) )
+    const [ filter, setFilter ] = useState<{ criteria: CriteriaStructure } | DataFilter>( createOrUpdateFilter(activeFilter) );
 
     // Actualización de filtro cuando el componente Select cambia de llave
     useEffect(
         () => {
             setFilter( createOrUpdateFilter(activeFilter) )
         }, [createOrUpdateFilter, activeFilter]
-    )
+    );
 
     // Estados para mostrar u ocultar columnas de la vista de la tabla
     const toggleableColumns = useMemo<ViewConfig[]>(
@@ -126,24 +126,24 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
                 },
             )
         }, [backendPath, itemsPerPage, sortingFieldKey, page, ascending, filter, apiSearch]
-    )
+    );
 
     // Establecer carga a falso después de recibir los datos tras nueva solicitud
     useEffect(
         () =>{
             if ( data ) {
-                setLoading(false)
-                tableRef.current?.scrollTo(0, 0)
+                setLoading(false);
+                tableRef.current?.scrollTo(0, 0);
             }
         }, [data]
-    )
+    );
 
     // Cambio de página a 0 cada ver que los filtros cambien
     useEffect(
         () => {
             setPage(0);
         }, [activeFilter, searchText]
-    )
+    );
 
     if (data) {
         return (
@@ -162,8 +162,8 @@ const DataView: (config: DataViewParams) => React.JSX.Element | undefined = ({
                 </Header>
                 <Table tableRef={tableRef} loading={loading} data={data} viewConfig={viewConfig} sortingFieldKey={sortingFieldKey} ascending={ascending} visibleColumns={visibleColumns} setSortingColumn={setTableSortingField} noRecordsIcon={NoRecordsIcon} noRecordsMessage={noRecordsMessage} />
             </div>
-        )
+        );
     }
-}
+};
 
 export default DataView;

@@ -39,10 +39,10 @@ const ButtonIcon: (config: ButtonIconParams) => (React.JSX.Element) = ({
     return (
         <ButtonTemplate className={`${className} group-[.ui-layout-group]:w-12 group-[.ui-layout-group]:sm:w-10`} onClick={onClick} disabled={disabled} type={type}>
             <div className="size-7 sm:size-5">
-                <Icon className="duration-current fill-current" />
+                <Icon className="fill-current duration-current" />
             </div>
         </ButtonTemplate>
-    )
-}
+    );
+};
 
 export default ButtonIcon;

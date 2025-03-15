@@ -21,10 +21,10 @@ const ErrorPage = (): (React.JSX.Element) => {
     // Tipado del objeto retornado por el hook useRouteError
     interface errorObject {
         data: string;
-    }
+    };
 
     // Obtención de la función de cambio de ruta
-    const navigateTo = useNavigate()
+    const navigateTo = useNavigate();
 
     // Obtención del error
     const error = useRouteError() as errorObject;
@@ -49,7 +49,7 @@ const ErrorPage = (): (React.JSX.Element) => {
                 </Group>
             </CompactPage>
         </div>
-    )
-}
+    );
+};
 
 export default ErrorPage;

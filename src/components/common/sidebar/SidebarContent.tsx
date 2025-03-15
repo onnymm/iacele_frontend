@@ -16,32 +16,32 @@ const SidebarContent = () => {
 
     return (
         <div className="flex flex-col flex-grow gap-4">
-        {
-            sidebarMenu.map(
-                (section, sectionKey) => (
-                    // Se renderiza todo dentro de otro contenedor para
-                    //      utilizar el 100% de altura del contenedor padre
-                    //      que usa la propiedad flex-grow.
-                    <div className="w-full h-min"  key={sectionKey}>
-                        {/* Título de la sección */}
-                        <StickySectionTag>
-                            {section.name}
-                        </StickySectionTag>
-                        
-                        {/* Mapeo de grupos */}
-                        {
-                            section.groups.map(
-                                (group, groupKey) => (
-                                    <RouteGroup key={groupKey} {...group} />
+            {
+                sidebarMenu.map(
+                    (section, sectionKey) => (
+                        // Se renderiza todo dentro de otro contenedor para
+                        //      utilizar el 100% de altura del contenedor padre
+                        //      que usa la propiedad flex-grow.
+                        <div className="w-full h-min"  key={sectionKey}>
+                            {/* Título de la sección */}
+                            <StickySectionTag>
+                                {section.name}
+                            </StickySectionTag>
+                            
+                            {/* Mapeo de grupos */}
+                            {
+                                section.groups.map(
+                                    (group, groupKey) => (
+                                        <RouteGroup key={groupKey} {...group} />
+                                    )
                                 )
-                            )
-                        }
-                    </div>
+                            }
+                        </div>
+                    )
                 )
-            )
-        }
+            }
         </div>
-    )
-}
+    );
+};
 
 export default React.memo(SidebarContent);

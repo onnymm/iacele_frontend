@@ -51,12 +51,12 @@ const InputPassword: (config: InputPasswordParams) => (React.JSX.Element) = ({
     value,
     setValue,
     visiblePlaceholder,
-    onEnter
+    onEnter,
 }) => {
 
     return (
         <InputTemplate value={value} setValue={setValue} visiblePlaceholder={visiblePlaceholder} type={'password'} _iconOn={EyeSlashIcon} _iconOff={EyeIcon} icon={LockClosedIcon} onEnter={onEnter} />
-    )
-}
+    );
+};
 
 export default InputPassword;

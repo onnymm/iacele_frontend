@@ -28,7 +28,7 @@ const Check: (config: CheckParams) => (React.JSX.Element) = ({
     // Clases dinámicas para indicar el valor del estado
     const borderClassName = value ? 'border-main-500' : 'border-gray-500';
     const fillClassName = value ? 'scale-100' : 'scale-0';
-    const IconClassName = value ? 'opacity-100 delay-200' : 'opacity-0 delay-0'
+    const IconClassName = value ? 'opacity-100 delay-200' : 'opacity-0 delay-0';
 
     // Función de cambio de estado solo cuando el componente está activo.
     const onClickCallback = () => {
@@ -47,7 +47,7 @@ const Check: (config: CheckParams) => (React.JSX.Element) = ({
             {/* Ícono de la caja */}
             <CheckIcon className={`${IconClassName} transition duration-200 absolute size-6 fill-white pointer-events-none`} />
         </div>
-    )
-}
+    );
+};
 
 export default Check;

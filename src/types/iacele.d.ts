@@ -39,6 +39,7 @@ declare namespace IACele {
         // Avanzado
         declare namespace Core {
 
+            // Componente de entrada
             interface Input extends IACele.UI.Field {
                 displayValue: string | boolean; // Valor a mostrar en el campo.
                 isFocused: boolean; // El campo está enfocado.

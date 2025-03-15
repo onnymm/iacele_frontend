@@ -16,16 +16,16 @@ const useRecordValue = (
 ) => {
 
     // Inicialización del estado a usar
-    const [ value, setValue ] = useState<IACele.Types.ValueType>(dataValue ?? undefined)
+    const [ value, setValue ] = useState<IACele.Types.ValueType>(dataValue ?? undefined);
 
     // Función para cambiar el valor del estado de manera controlada
     const setRecordValue = useCallback(
         (newValue: IACele.Types.ValueType): (void) => {
-            setValue(newValue ?? undefined)
+            setValue(newValue ?? undefined);
         }, []
-    )
+    );
 
     return [ value, setRecordValue ] as const;
-}
+};
 
 export default useRecordValue;

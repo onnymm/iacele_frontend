@@ -1,10 +1,10 @@
 import { BeakerIcon, Cog6ToothIcon, HomeIcon, SparklesIcon, UserIcon } from "@heroicons/react/24/outline"
 
 // Delimitador de ancho de pantalla en pixeles
-export const screenWidthThereshold = 768
+export const screenWidthThereshold = 768;
 
 // Ancho de sidebar
-export const sidebarWidth = 640
+export const sidebarWidth = 640;
 
 // Menú de la barra lateral
 export const sidebarMenu: MenuSection[] = [
@@ -56,12 +56,12 @@ export const sidebarMenu: MenuSection[] = [
                 icon: BeakerIcon,
                 routes: '/uitests',
             }
-        ]
-    }
-]
+        ],
+    },
+];
 
 // Mensajes y leyendas
 export const COMMON_LEGEND = {
     NO_RECORDS_MESSAGE: "No hay registros.",
     CELL_RENDER_ERROR: 'N/A',
-}
+};

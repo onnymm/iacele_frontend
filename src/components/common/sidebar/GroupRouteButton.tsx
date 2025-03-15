@@ -40,7 +40,7 @@ const GroupRouteButton: (config: GroupRouteButtonParams) => (React.JSX.Element) 
     return (
             <button onClick={callback} className={`${isActiveLocation ? "shadow-md active:shadow-md backdrop-saturate-115 backdrop-brightness-125" : ""} flex flex-row items-center gap-2 sm:hover:shadow-md active:shadow-md sm:hover:backdrop-saturate-115 sm:hover:backdrop-brightness-125 active:backdrop-saturate-115 active:backdrop-brightness-125 px-4 rounded-md w-full h-12 sm:h-10 transition`}>
                 <div className="flex justify-center items-center min-w-9 sm:min-w-7 h-9 sm:h-7">
-                    <Icon className="text-current size-[75%]" />
+                    <Icon className="size-[75%] text-current" />
                 </div>
                 <span className="flex-grow text-start">{name}</span>
                 {typeof routes === 'object' &&
@@ -49,7 +49,7 @@ const GroupRouteButton: (config: GroupRouteButtonParams) => (React.JSX.Element) 
                     </div>
                 }
             </button>
-    )
-}
+    );
+};
 
 export default GroupRouteButton;

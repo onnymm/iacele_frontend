@@ -25,28 +25,28 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
 }) => {
 
     // Obtención de función de cambio de estado de barra lateral
-    const { setIsSidebarOpen } = useSidebar()
+    const { setIsSidebarOpen } = useSidebar();
 
     // Inicialización de función de navegación
     const navigateTo = useNavigate();
     // Referencia a contenedor de lista para obtener su altura
-    const listRef = useRef<HTMLDivElement>(null)
+    const listRef = useRef<HTMLDivElement>(null);
 
     // Inicialización de estado de lista de rutas abierta
-    const [ isOpen, setIsOpen ] = useState<boolean>(false)
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
     // Inicialización de estado para computar la altura del contenedor de lista de rutas
     const [ height, setHeight ] = useState<number>(0);
     // Inicialización de ruta activa
     const [ isActiveLocation, setIsActiveLocation ] = useState<boolean>(false);
 
     // Obtención de la ubicación actual de la URL
-    const location  = useLocation()
+    const location  = useLocation();
 
     // Función a ejecutar por rutas de grupo
     const routeCallback: (route: string) => (void) = (route) => {
 
         // Navegación a la ruta
-        navigateTo(route)
+        navigateTo(route);
         // Se intenta cerrar la barra lateral
         setIsSidebarOpen(false);
     }
@@ -60,7 +60,7 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
             routeCallback(routes);
         // Si el grupo es una lista de rutas, el botón despliega o contrae la lista de rutas
         } else {
-            setIsOpen( (prevState: boolean) => (!prevState) )
+            setIsOpen( (prevState: boolean) => (!prevState) );
         }
     }
 
@@ -70,10 +70,10 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
             // Si existe un elemento
             if ( listRef.current ) {
                 // Se toma la altura del contenedor de lista de rutas
-                setHeight(listRef.current.offsetHeight)
+                setHeight(listRef.current.offsetHeight);
             }
         }, [setHeight]
-    )
+    );
 
     // Validación si la ruta actual coincide con la ruta de este componente
     // o alguna de las rutas contenidas pertenece a este grupo de rutas
@@ -85,12 +85,12 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
                 // Si la ruta es base...
                 if ( isBaseRoute(location.pathname, routes) ) {
                     // Se cambia el estado de ubicación activa a verdadero
-                    setIsActiveLocation(true)
+                    setIsActiveLocation(true);
                 } else {
                     // Se cambia el estado de ubicación activa a falso
                     // Normalmente casi todos los casos terminan aquí pero se debe
                     // mantener el estado en falso de todos modos.
-                    setIsActiveLocation(false)
+                    setIsActiveLocation(false);
                 }
             
             // Si la ruta es un objeto, significa que es un grupo de rutas
@@ -103,18 +103,18 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
                         // Si alguna de las rutas del grupo es base de la ubicación actual
                         if ( isBaseRoute(location.pathname, route.route) ) {
                             // Se cambia el estado de ubicación activa a verdadero
-                            setIsActiveLocation(true)
+                            setIsActiveLocation(true);
                         } else {
                             // Se cambia el estado de ubicación activa a falso
                             // Normalmente casi todos los casos terminan aquí pero se debe
                             // mantener el estado en falso de todos modos.
-                            setIsActiveLocation(false)
+                            setIsActiveLocation(false);
                         }
                     }
-                )
+                );
             }
         }, [location, routes]
-    )
+    );
 
     return (
         <div className="flex flex-col w-full h-min">
@@ -126,7 +126,7 @@ const RouteGroup: (config: MenuGroup) => (React.JSX.Element) = ({
                 <Route height={height} isOpen={isOpen} listRef={listRef} routes={routes} callback={routeCallback} />
             }
         </div>
-    )
-}
+    );
+};
 
 export default RouteGroup;

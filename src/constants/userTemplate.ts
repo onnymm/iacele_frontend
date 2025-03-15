@@ -5,6 +5,6 @@ const userTemplate: CurrentUserData = {
     odoo_id: undefined,
     "create_date": "",
     "write_date": "",
-}
+};
 
 export default userTemplate;

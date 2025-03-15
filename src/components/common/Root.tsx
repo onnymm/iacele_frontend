@@ -34,7 +34,7 @@ const Root: () => (React.JSX.Element) = () => {
             {/* Barra lateral */}
             <Sidebar />
         </div>
-    )
-}
+    );
+};
 
 export default Root;

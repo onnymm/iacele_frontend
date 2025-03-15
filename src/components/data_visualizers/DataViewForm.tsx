@@ -31,7 +31,7 @@ const DataViewForm: (config: DataViewForm) => (React.JSX.Element | undefined) = 
 }) => {
 
     // Obtención de los datos del registro actual y sus estados de formulario
-    const { recordData, formData, setFormValue, reload, setReload, reloadData, undoChanges } = useRecordData(id, table)
+    const { recordData, formData, setFormValue, reload, setReload, reloadData, undoChanges } = useRecordData(id, table);
     // Estado indicador de cambios en el formulario
     const [ dataChanged, setDataChanged ] = useState<boolean>(false);
 
@@ -39,24 +39,24 @@ const DataViewForm: (config: DataViewForm) => (React.JSX.Element | undefined) = 
     const saveData = async (formData: IACele.View.Form.Record['data']) => {
 
         // Creación de objeto de envío de datos para sobreescribir
-        const dataToSend: DataRecord = {}
+        const dataToSend: DataRecord = {};
 
         // Se revisan los valores con cambios y se añaden éstos al formulario a enviar al backend
         Object.keys(formData).forEach(
             (key: string) => {
                 if ( formData[key] !== recordData?.data[key]  ) {
-                    dataToSend[key] = formData[key]
+                    dataToSend[key] = formData[key];
                 }
             }
-        )
+        );
 
         // Envío de datos a sobreescribir y obtención de respuesta del backend
-        const data = await update(id, table, dataToSend)
+        const data = await update(id, table, dataToSend);
 
         // Si la respuesta fue exitosa...
         if ( data ) {
             // Se vuelve a realizar una carga de los datos
-            reloadData()
+            reloadData();
             // Se establece el estado de cambios a falso
             setDataChanged(false);
         }
@@ -69,8 +69,8 @@ const DataViewForm: (config: DataViewForm) => (React.JSX.Element | undefined) = 
             <FormContext.Provider value={{ reload, setReload, dataChanged, setDataChanged, formData, readonly, recordData, saveData, setFormValue, undoChanges, }}>
                 {children}
             </FormContext.Provider>
-        )
+        );
     }
-}
+};
 
 export default DataViewForm;

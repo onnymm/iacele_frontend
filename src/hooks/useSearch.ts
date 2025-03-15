@@ -22,13 +22,13 @@ const useSearch: (searchScope: Record<string, SearchType> | undefined) => {
         () => {
 
             // Inicialización de la estructura de datos con arreglo vacío
-            const searchStructure: SearchStructure = { ...searchTemplate }
+            const searchStructure: SearchStructure = { ...searchTemplate };
 
             // Si el texto de búsqueda no está vacío y se proporcionó un alcance de búsqueda
             if ( searchText !== '' && searchScope ) {
 
                 // Se añade el texto de búsqueda
-                searchStructure.text = searchText
+                searchStructure.text = searchText;
 
                 // Se crea un objeto de búsqueda por cada campo y su tipo del alcance de búsqueda
                 Object.keys(searchScope).forEach(
@@ -38,9 +38,9 @@ const useSearch: (searchScope: Record<string, SearchType> | undefined) => {
                                 field: key,
                                 type: searchScope[key],
                             }
-                        )
+                        );
                     }
-                )
+                );
 
                 // Se establece el valor de la estructura de búsqueda como estado de búsqueda para el backend
                 setApiSearch(encodeAPISearch(searchStructure));
@@ -51,10 +51,10 @@ const useSearch: (searchScope: Record<string, SearchType> | undefined) => {
             }
         }, [searchText, searchScope]
 
-    )
+    );
 
     // Retorno de texto de búsqueda, función de cambio de estado de texto de búsqueda y estructura de búsqueda para el backend
-    return { searchText, setSearchText, apiSearch }
+    return { searchText, setSearchText, apiSearch };
 }
 
 export default useSearch;
@@ -70,7 +70,7 @@ const encodeAPISearch = (searchStructure: SearchStructure) => {
             }
             method = method + `{"field":"${param.field}","type":"${param.type}"}`
         }
-    )
+    );
 
-    return `{"text":"${searchStructure.text}","method":[${method}]}`
+    return `{"text":"${searchStructure.text}","method":[${method}]}`;
 }

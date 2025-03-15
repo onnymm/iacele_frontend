@@ -16,9 +16,9 @@ interface SortingDirectionParams {
  *  - [ `boolean | undefined}` ] `ascending`: Estado de dirección de
  *  ordenamiento, obtenido desde el Custok Hook {@link useSortingFields}.
  */ 
-const SortingDirection = ({
-    ascending
-}: SortingDirectionParams): (React.JSX.Element) => {
+const SortingDirection: (config: SortingDirectionParams) => (React.JSX.Element) = ({
+    ascending,
+}) => {
 
     return (
         <div className="right-2 absolute min-w-4 h-4 pointer-events-none">
@@ -27,7 +27,7 @@ const SortingDirection = ({
                 : <ChevronUpIcon />
             }
         </div>
-    )
-}
+    );
+};
 
 export default SortingDirection;

@@ -17,7 +17,7 @@ const Header: (config: GenericInvolverComponent) => (React.JSX.Element) = ({
         <div className="z-10 flex flex-wrap gap-2 h-min">
             {children}
         </div>
-    )
-}
+    );
+};
 
 export default Header;

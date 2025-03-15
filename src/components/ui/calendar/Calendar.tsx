@@ -3,7 +3,7 @@ import useCalendar from "../../../hooks/ui/useCalendar";
 import { shortDayNames } from "../../../constants/date";
 import StaticButton from "./components/StaticButton";
 import DayName from "./components/DayName";
-import CalendarButtonDay from "./components/DayBlock";
+import DayBlock from "./components/DayBlock";
 import useDate from "../../../hooks/form/useDate"; // eslint-disable-line
 
 interface CalendarParams {
@@ -36,7 +36,7 @@ const Calendar: (config: CalendarParams) => (React.JSX.Element) = ({
     const { calendar, visibleDays, changeMonth } = useCalendar(date);
 
     return (
-        <div className="flex flex-col gap-2 bg-white dark:bg-[#1f2f3f] shadow-md p-2 rounded-md w-min select-none">
+        <div className="flex flex-col gap-2 bg-white dark:bg-[#1f2f3f] shadow-md p-2 border border-gray-500/50 rounded-md w-min select-none">
             <div className="flex flex-row justify-between items-center px-2">
                 <StaticButton icon={ArrowLeftIcon} onClick={() => changeMonth(-1)} />
                 <span className="text-sm">{calendar.monthName()} {calendar.current.year}</span>
@@ -53,13 +53,13 @@ const Calendar: (config: CalendarParams) => (React.JSX.Element) = ({
                 {
                     visibleDays.map(
                         (monthDay, index) => (
-                            <CalendarButtonDay monthDay={monthDay} date={date} setDate={setDate} today={todayRef} key={index} />
+                            <DayBlock monthDay={monthDay} date={date} setDate={setDate} today={todayRef} key={index} />
                         )
                     )
                 }
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Calendar;

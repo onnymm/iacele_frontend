@@ -23,10 +23,10 @@ const ButtonLockSidebar: () => (React.JSX.Element) = () => {
             className={`${isSidebarLocked ? "bg-slate-900" : ""} hidden sm:block hover:bg-slate-900 rounded-md size-12 sm:size-10`}
         >
             <div className="p-2 size-full">
-                <LockClosedIcon className="size-8 sm:size-6 fill-white" />
+                <LockClosedIcon className="fill-white size-8 sm:size-6" />
             </div>
         </button>
-    )
-}
+    );
+};
 
 export default ButtonLockSidebar;

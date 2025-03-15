@@ -62,21 +62,21 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
         isFocused || displayValue !== ''
             ? 'translate-y-[-75%] scale-75 -translate-x-[12.5%]'
             : ''
-    )
+    );
 
     // Resaltar color del placeholder
     const highlight = (
         (isFocused)
             ? 'text-main-500'
             : 'dark:text-gray-400 text-gray-500'
-    )
+    );
 
     // Resaltar color del borde del campo
     const colorBorder = (
         (isFocused)
             ? 'border-main-500'
             : 'border-gray-500/50'
-    )
+    );
 
     // Estilización del símbolo de campo numérico
     const numberSymbol = (
@@ -87,14 +87,14 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
                 : type === 'date'
                     ? 'right-2'
                     : 'hidden'
-    )
+    );
 
     // Se muestra o se oculta símbolo de campo numérico
     const hideNumberSymbol = (
         !isFocused && displayValue === ''
             ? 'hidden'
             : ''
-    )
+    );
 
     // Símbolo a mostrar en campo numérico
     const symbolToShow = (
@@ -103,36 +103,36 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
             : type === 'percentage'
                 ? '%'
                 : ''
-    )
+    );
 
     // Espaciado inicial en input
     const startPadding = (
         type === 'monetary'
             ? 'pl-8'
             : ''
-    )
+    );
 
     // Función a ejecutar cuando el campo es desenfocado
     const fieldOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         // Se cambia el estado a desenfocado
-        setIsFocused(false)
+        setIsFocused(false);
         // Creación del valor formateado y corregido en caso de ser necesario
-        const formattedValue = formatRecordValue(event.target.value)
+        const formattedValue = formatRecordValue(event.target.value);
         // Se prepara el valor en los cambios del formulario para una posible escritura de éstos
         if ( formattedValue !== recordValue ) setFormValue(name, formattedValue);
         // Se establece el valor en el input
-        setRecordValue(formattedValue)
+        setRecordValue(formattedValue);
         // Se establece el valor a mostrar en el campo
-        setDisplayValue( parseValueToDisplay(formattedValue) )
-    }
+        setDisplayValue( parseValueToDisplay(formattedValue) );
+    };
 
     // Función a ejecutar cuando el valor del campo cambia
     const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // Se establece el valor a mostrar en el campo
-        setDisplayValue( event.target.value )
+        setDisplayValue( event.target.value );
         // Se actualiza el contexto para indicar que hay cambios en los datos
         setDataChanged(true);
-    }
+    };
 
     return (
         <div className='relative mt-4 pt-1 w-full'>
@@ -169,7 +169,7 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
                 />
             }
         </div>
-    )
-}
+    );
+};
 
 export default React.memo(KeyboardInput);

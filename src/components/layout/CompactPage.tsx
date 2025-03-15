@@ -19,7 +19,7 @@ const CompactPage: (config: GenericInvolverComponent) => (React.JSX.Element) = (
         <main className="flex justify-center items-center h-full">
             { children }
         </main>
-    )
-}
+    );
+};
 
 export default CompactPage;

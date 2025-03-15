@@ -34,14 +34,14 @@ const PageButton: (config: PageButtonParams) => (React.JSX.Element) = ({
                 className={`${!disabled ? "hover:bg-gray-500/20" : ""} flex justify-center items-center rounded-xl size-10 transition-colors duration-300`}
                 disabled={disabled}
             />
-        )
+        );
 
     // Si el tipo de valor es un texto se retorna un contenedor estático
     } else {
         return (
-            <div className="flex justify-center items-center transition-colors size-10" />
-        )
+            <div className="flex justify-center items-center size-10 transition-colors" />
+        );
     }
-}
+};
 
 export default PageButton;

@@ -42,7 +42,7 @@ const InputUser: (config: InputUserParams) => (React.JSX.Element) = ({
             autoCapitalize={'off'}
             onEnter={onEnter}
         />
-    )
-}
+    );
+};
 
 export default InputUser;

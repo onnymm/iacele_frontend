@@ -17,15 +17,15 @@ import FormContext from "../../../contexts/formContext";
 const ButtonSave: () => (React.JSX.Element | undefined) = () => {
 
     // Obtención de datos y estado del formulario y función de escritura de datos en el backend
-    const { formData, saveData, dataChanged , readonly } = useContext<FormDetail | undefined>(FormContext) as FormDetail;
+    const { formData, saveData, dataChanged , readonly } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
 
 
     // Si el formulario no es de solo lectura se renderiza el botón
     if ( !readonly ) {
 
         const saveFormData = () => {
-            saveData(formData)
-        }
+            saveData(formData);
+        };
 
         return (
             <div className="flex">
@@ -38,8 +38,8 @@ const ButtonSave: () => (React.JSX.Element | undefined) = () => {
                     </ButtonTextIcon>
                 </div>
             </div>
-        )
+        );
     }
-}
+};
 
 export default ButtonSave;

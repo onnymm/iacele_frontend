@@ -47,13 +47,13 @@ const TableColumn = ({
     resizeColumn,
 }: TableColumnParams): (React.JSX.Element) => {
 
-    const columnWidth = useRef<number | null>(null)
+    const columnWidth = useRef<number | null>(null);
 
     // Color de fondo
     const bgClassName = {
         true: "bg-main-300/50 hover:bg-main-200/50 dark:hover:bg-main-200/50",
         false: "bg-gray-200/50 hover:bg-gray-300/50 dark:bg-gray-500/50 dark:hover:bg-gray-100/40",
-    }
+    };
 
     // Referencia al contenedor redimensionable
     const resizableRef = useRef(null);
@@ -66,7 +66,7 @@ const TableColumn = ({
         () => {
             columnWidth.current = initialWidth.current;
         }, [initialWidth]
-    )
+    );
 
     return (
         <th
@@ -89,8 +89,8 @@ const TableColumn = ({
                 // resizeColumn={resizeColumn}
             />
         </th>
-    )
-}
+    );
+};
 
 export default TableColumn;
 
@@ -109,43 +109,45 @@ interface ColumnContentParams {
 }
 
 // Contenido de la columna
-const ColumnContent = React.memo(({
-    columnKey,
-    resizableRef,
-    resizerRef,
-    columnWidth,
-    initialWidth,
-    content,
-    canSort,
-    isSorting,
-    ascending,
-    setSortingColumn,
-    // resizeColumn,
-}: ColumnContentParams): (React.JSX.Element) => {
+const ColumnContent = React.memo<(config: ColumnContentParams) => (React.JSX.Element)>(
+    ({
+        columnKey,
+        resizableRef,
+        resizerRef,
+        columnWidth,
+        initialWidth,
+        content,
+        canSort,
+        isSorting,
+        ascending,
+        setSortingColumn,
+        // resizeColumn,
+    }) => {
 
-    return (
-        <div
-            className="relative flex flex-row items-center h-full overflow-hidden"
-            style={!initialWidth.current ? {width: '100%'} : undefined}
-        >
+        return (
             <div
-                ref={resizableRef}
-                style={initialWidth.current ? {width: columnWidth.current as number} : {width: '100%'}}
-                className="relative flex flex-row items-center gap-2 py-2 pr-10 pl-4 min-w-12 h-full overflow-hidden ui-table-column"
-                onClick={canSort ? () => setSortingColumn(columnKey) : () => (null)}
+                className="relative flex flex-row items-center h-full overflow-hidden"
+                style={!initialWidth.current ? {width: '100%'} : undefined}
             >
-                <span className="text-ellipsi">{content ? content : ""}</span>
+                <div
+                    ref={resizableRef}
+                    style={initialWidth.current ? {width: columnWidth.current as number} : {width: '100%'}}
+                    className="ui-table-column relative flex flex-row items-center gap-2 py-2 pr-10 pl-4 min-w-12 h-full overflow-hidden"
+                    onClick={canSort ? () => setSortingColumn(columnKey) : () => (null)}
+                >
+                    <span className="text-ellipsi">{content ? content : ""}</span>
 
+                </div>
+                    {/* Ícono del estatus de orden */}
+                    {canSort
+                        ? (isSorting
+                            ? <SortingDirection ascending={ascending} />
+                            : <SortingIndicator />
+                        )
+                        : undefined
+                    }
+                <div ref={resizerRef} className="-right-[1px] absolute bg-white/50 opacity-0 group-hover:opacity-100 w-1 h-[calc(100%_+_2px)] cursor-col-resize"/>
             </div>
-                {/* Ícono del estatus de orden */}
-                {canSort
-                    ? (isSorting
-                        ? <SortingDirection ascending={ascending} />
-                        : <SortingIndicator />
-                    )
-                    : undefined
-                }
-            <div ref={resizerRef} className="-right-[1px] absolute bg-white/50 opacity-0 group-hover:opacity-100 w-1 h-[calc(100%_+_2px)] cursor-col-resize"/>
-        </div>
-    )
-})
+        );
+    }
+);

@@ -164,12 +164,12 @@ const useSortingFields = (viewConfig: ViewConfig[]): {
                 (item) => {
                     item.active = false;
                 }
-            )
+            );
 
             // Búsqueda de la dirección de ordenamiento contraria a la actual
             const foundSortingDirection = sortingDirectionsCopy.find(
                 (item) => (item.key === !ascending)
-            )
+            );
 
             // Se establece la nueva dirección de ordenamiento a activa
             if ( foundSortingDirection ) {
@@ -181,7 +181,7 @@ const useSortingFields = (viewConfig: ViewConfig[]): {
             // Cambio de estado booleano de la dirección de ordenamiento
             setAscending( (prevState) => (!prevState) );
         }
-    }
+    };
 
     const setKanbanSortingField = (key: string): void => {
 

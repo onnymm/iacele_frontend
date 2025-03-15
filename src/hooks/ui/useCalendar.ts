@@ -17,20 +17,20 @@ const useCalendar = (initialDate: string) => {
     // Destructuración de valores correspondientes
     const [ year, month, day ] = initialDate.split('-');
     // Creación de valor para el objeto de calendario
-    const dateValue = new Date(Number(year), Number(month) - 1, Number(day))
+    const dateValue = new Date(Number(year), Number(month) - 1, Number(day));
 
     // Creación de instancia de calendario
-    const calendar = useRef<CalendarBuilder>(new CalendarBuilder(dateValue)).current
+    const calendar = useRef<CalendarBuilder>(new CalendarBuilder(dateValue)).current;
     // Estado para días visibles
-    const [ visibleDays, setVisibleDays ] = useState<IACele.UI.Core.CalendarDay[]>(calendar.calendarDays())
+    const [ visibleDays, setVisibleDays ] = useState<IACele.UI.Core.CalendarDay[]>(calendar.calendarDays());
 
     // Función para cambio de mes
     const changeMonth = (offset: number) => {
-        calendar.changeTo(offset)
-        setVisibleDays(calendar.calendarDays())
-    }
+        calendar.changeTo(offset);
+        setVisibleDays(calendar.calendarDays());
+    };
 
-    return { calendar, visibleDays, changeMonth }
-}
+    return { calendar, visibleDays, changeMonth };
+};
 
 export default useCalendar;

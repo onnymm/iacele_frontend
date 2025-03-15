@@ -25,14 +25,14 @@ const Login: () => (React.JSX.Element) = () => {
                 inputUser,
                 inputPassword,
                 setToken,
-            )
+            );
 
             if ( !loginResponse ) {
-                setLoginMessage("Usuario o contraseña inválidos")
+                setLoginMessage("Usuario o contraseña inválidos");
                 setSuccess(false);
             }
         }
-    }
+    };
 
     return (
         <CompactPage>
@@ -62,7 +62,7 @@ const Login: () => (React.JSX.Element) = () => {
 
             </MiniGrapper>
         </CompactPage>
-    )
-}
+    );
+};
 
 export default Login;

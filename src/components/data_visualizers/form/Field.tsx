@@ -25,7 +25,7 @@ const Field: (config: IACele.UI.Field) => (React.JSX.Element) = ({
 }) => {
 
     // Estado de solo lectura del formulario
-    const { readonly: formReadonly } = useContext(FormContext) as IACele.View.Form.Context ;
+    const { readonly: formReadonly } = useContext(FormContext) as IACele.View.Form.Context;
 
     // Si el formulario es solo lectura...
     if ( formReadonly ) {

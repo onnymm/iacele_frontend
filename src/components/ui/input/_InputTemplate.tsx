@@ -94,7 +94,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
     const [ focus, setFocus ] = useState(false);
 
     // Referencia del elemento
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLInputElement>(null);
 
     // Función de ejecución al haber un cambio en el valor del input
     const internalOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,11 +102,11 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
         // Si se provió una función de ejecución en cambio
         if ( onChange ) {
             // Se ejecuta la función provista
-            onChange(event)
+            onChange(event);
         }
 
         // Se establece el valor en el estado
-        setValue(event.target.value)
+        setValue(event.target.value);
     }
 
     const internalOnEnter: (event: React.KeyboardEvent<HTMLInputElement>) => (void) = (event) => {
@@ -116,7 +116,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
         }
         // Se desenfoca el elemento si `blurOnEnter` está activado.
         if ( blurOnEnter ) {
-            inputRef.current?.blur()
+            inputRef.current?.blur();
         }
     }
 
@@ -125,7 +125,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
 
         // Ejecución en tecla enter
         if ( event.key === "Enter" && onEnter ) {
-            internalOnEnter(event)
+            internalOnEnter(event);
         }
     }
 
@@ -135,7 +135,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
         password: "password",
         undefined: "text",
         number: "number",
-    }
+    };
 
     const [ showPassword, setShowPassword ] = useState(false);
     
@@ -147,53 +147,53 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
             : "password"
         )
         : inputTypeOptions[type]
-    )
+    );
 
     // Nombres de clase para espaciado en campos de tipo Contraseña
-    const letterSpacing = computedInputType === "password" ? "tracking-widest" : ""
+    const letterSpacing = computedInputType === "password" ? "tracking-widest" : "";
 
     // Clases para posicionamiento de placeholder visible
     const positionateVisiblePlaceholder = (
         focus || value
             ? "translate-y-[-25%] scale-75 -translate-x-[calc(12.5%)]"
             : ""
-    )
+    );
 
     // Clases para resaltar el placeholder visible
     const colorVisiblePlaceholder = (
         focus
             ? "text-main-500"
             : ""
-    )
+    );
 
     // Clases de padding left si el componente tiene ícono o no
     const hasIcon = (
         Icon
             ? "pl-12 sm:pl-10"
             : "pl-2"
-    )
+    );
 
     // Clases de padding right si el componente tiene estado o no
     const hasStatus = (
         inputTypeOptions[type] === "password" || loading !== undefined
             ? "pr-12 sm:pr-10"
             : "pr-2"
-    )
+    );
 
     const hasVisiblePlaceholder = (
         visiblePlaceholder
         ? "pt-4 sm:pt-3"
         : ""
-    )
+    );
 
     const internalOnBlur: (event: React.FocusEvent<HTMLInputElement>) => (void) = (event) => {
 
         setFocus(false);
 
         if ( onBlur ) {
-            onBlur(event)
+            onBlur(event);
         }
-    }
+    };
 
     return (
         <div className="group-[.ui-layout-group]:w-full relative flex flex-row gap-2 w-56 max-w-full">
@@ -203,7 +203,7 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
 
             <div className="relative w-full">
                 {/* Sección de indicadores visuales del campo */}
-                <div className="absolute flex flex-row pointer-events-none size-full">
+                <div className="absolute flex flex-row size-full pointer-events-none">
                     {/* Ícono */}
                     {Icon &&
                         <div className="z-10 flex justify-center items-center size-12 sm:size-10">
@@ -249,6 +249,6 @@ const InputTemplate: (config: _InputParams) => (React.JSX.Element) = ({
 
         </div>
     );
-}
+};
 
 export default InputTemplate;

@@ -19,7 +19,7 @@ const ThumbNailSmall: (config: BaseImageComponent) => (React.JSX.Element) = ({
         <div className="relative rounded-full max-w-6 h-6">
             <Base64Image data={data} alt={alt} />
         </div>
-    )
-}
+    );
+};
 
 export default ThumbNailSmall;

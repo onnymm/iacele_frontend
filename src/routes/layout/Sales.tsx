@@ -12,8 +12,8 @@ const RouteSales: () => (React.JSX.Element) = () => {
             noRecordsMessage="¡No hay comisiones!"
             searchScope={search}
         />
-    )
-}
+    );
+};
 
 export default RouteSales;
 
@@ -256,5 +256,5 @@ const viewConfig: ViewConfig[] = [
         displayName: 'Observaciones',
         type: 'char',
         tableVisible: true,
-    }
-]
+    },
+];

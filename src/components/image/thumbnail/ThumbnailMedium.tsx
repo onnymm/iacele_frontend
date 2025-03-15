@@ -19,7 +19,7 @@ const ThumbNailMedium: (config: BaseImageComponent) => (React.JSX.Element) = ({
         <div className="rounded-full max-w-9 h-9">
             <Base64Image data={data} alt={alt} />
         </div>
-    )
-}
+    );
+};
 
 export default ThumbNailMedium;

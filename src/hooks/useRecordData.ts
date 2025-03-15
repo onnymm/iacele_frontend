@@ -96,7 +96,7 @@ const useRecordData = (
                 )
             }
         ), []
-    )
+    );
 
     // Función para invocar una recarga de los datos
     const reloadData = useCallback<() => (void)>(

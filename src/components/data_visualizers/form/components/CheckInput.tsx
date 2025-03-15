@@ -40,12 +40,12 @@ const CheckInput: (config: CheckInputParams) => (React.JSX.Element) = ({
         callback: (prevState: boolean) => (boolean)
     ) => {
         // Se indica que hay cambios
-        setDataChanged(true)
+        setDataChanged(true);
         // Creación de nuevo valor a partir de función
-        const newState = callback(recordValue)
+        const newState = callback(recordValue);
         // Se establece el nuevo valor en el formulario y en el componente
-        setFormValue(name, newState)
-        setRecordValue(newState)
+        setFormValue(name, newState);
+        setRecordValue(newState);
     }
 
     // Función de cambio de estado solo cuando el componente está activo.
@@ -64,7 +64,7 @@ const CheckInput: (config: CheckInputParams) => (React.JSX.Element) = ({
             </div>
             <Check readonly={readonly} value={recordValue} setValue={updateValue as React.Dispatch<React.SetStateAction<boolean>>} />
         </div>
-    )
-}
+    );
+};
 
 export default CheckInput;

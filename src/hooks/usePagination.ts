@@ -42,7 +42,7 @@ const usePagination = (
     // Función de decremento de página
     const decreasePage = useCallback(
         () => {
-            setPage( (page: number) => (page === 0 ? page : page - 1) )
+            setPage( (page: number) => (page === 0 ? page : page - 1) );
         }, [setPage]
     )
 
@@ -50,7 +50,7 @@ const usePagination = (
         setPageIndex,
         increasePage,
         decreasePage,
-    }
-}
+    };
+};
 
 export default usePagination;

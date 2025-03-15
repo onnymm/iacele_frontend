@@ -28,21 +28,21 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
 }) => {
 
     // Función de parseo de valor
-    const parseValueToDisplay = useMemo(() => parseDisplayValue[type], [type])
+    const parseValueToDisplay = useMemo(() => parseDisplayValue[type], [type]);
 
     // Función de formateo de valor de input
-    const formatRecordValue = useMemo(() => parseTo[type], [type])
+    const formatRecordValue = useMemo(() => parseTo[type], [type]);
 
     // Obtención de los datos del registro y funciones de cambio  de estado
     const { recordData, setDataChanged, setFormValue, dataChanged, reload, setReload } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
     // Creación de estado de valor de campo actual
-    const [ recordValue, setRecordValue ] = useRecordValue(recordData.data[name])
+    const [ recordValue, setRecordValue ] = useRecordValue(recordData.data[name]);
 
     // Creación de dato estático que almacena el valor original proveniente del backend
-    const originalValue = useRef<string | number | undefined>(recordData.data[name] ?? undefined)
+    const originalValue = useRef<string | number | undefined>(recordData.data[name] ?? undefined);
 
     // Valor a mostrar en el campo
-    const [ displayValue, setDisplayValue ] = useState<string | boolean>(parseValueToDisplay(recordValue))
+    const [ displayValue, setDisplayValue ] = useState<string | boolean>(parseValueToDisplay(recordValue));
 
     // Estado de campo enfocado
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
@@ -50,10 +50,10 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     useEffect(
         () => {
             // Actualización de valor del campo si los datos provenientes del backend cambian
-            setRecordValue(recordData.data[name])
-            setDisplayValue(parseValueToDisplay(recordData.data[name]))
+            setRecordValue(recordData.data[name]);
+            setDisplayValue(parseValueToDisplay(recordData.data[name]));
         }, [recordData.data, name, setRecordValue, parseValueToDisplay]
-    )
+    );
 
     // Si el valor estático cambia significa que se hizo recarga de datos
     useEffect(
@@ -72,11 +72,11 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
             if ( dataChanged ) return;
             if ( Object.is(recordValue, originalValue.current) ) return;
             // Cambio del valor del registro
-            setRecordValue( originalValue.current )
+            setRecordValue( originalValue.current );
             // Cambio del valor mostrado
-            setDisplayValue( parseValueToDisplay(originalValue.current) )
+            setDisplayValue( parseValueToDisplay(originalValue.current) );
         }, [recordValue, dataChanged, parseValueToDisplay, setRecordValue]
-    )
+    );
 
     // Si se detecta un cambio en el estado del valor pero su valor es igual
     //      al original y el estado de carga es activo, se cambia el estado
@@ -88,7 +88,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                 setReload(false);
             }
         }, [recordValue, reload, setReload]
-    )
+    );
 
     if ( type === 'char' || type === 'float' || type === 'integer' || type === 'monetary' || type === 'percentage' || type === 'date' ) {
 
@@ -109,7 +109,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                     parseValueToDisplay={parseValueToDisplay}
                     setDataChanged={setDataChanged}
             />
-        )
+        );
 
     } else {
         return (
@@ -125,8 +125,8 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                 setFormValue={setFormValue}
                 isFocused={isFocused}
             />
-        )
+        );
     }
-}
+};
 
 export default InputForm;

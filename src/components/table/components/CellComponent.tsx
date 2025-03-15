@@ -30,27 +30,25 @@ interface TableCellRender {
  *  renderizar.
  *  - [ {@link DataField DataField[ ]} ] `fields`: Datos del tipo de campo a renderizar.
  */ 
-const CellComponent = React.memo<(config: TableCellRender) => (React.JSX.Element)>(
-    ({
-        columnKey,
-        props,
-        recordConfig,
-        fields,
-    }) => {
+const CellComponent: (config: TableCellRender) => (React.JSX.Element) = ({
+    columnKey,
+    props,
+    recordConfig,
+    fields,
+}) => {
 
-        // Inicialización del estilo del componente
-        const uiStyle = setComponentStyle(props[columnKey], recordConfig.options);
+    // Inicialización del estilo del componente
+    const uiStyle = setComponentStyle(props[columnKey], recordConfig.options);
 
-        // Construcción del componente a renderizar
-        const Component = buildCellComponent(recordConfig, fields);
+    // Construcción del componente a renderizar
+    const Component = buildCellComponent(recordConfig, fields);
 
-        return (
-            <div className={`${uiStyle} overflow-hidden text-ellipsis scrollbar-hide w-full`}>
-                <Component {...props} />
-            </div>
-        );
-    }
-);
+    return (
+        <div className={`${uiStyle} overflow-hidden text-ellipsis scrollbar-hide w-full`}>
+            <Component {...props} />
+        </div>
+    );
+};
 
 // Constructor del componente de la celda
 const buildCellComponent: (recordConfig: ViewConfig, fields: DataField[]) => TableGenericWidget<number> | TableGenericWidget<string> = (
@@ -69,17 +67,17 @@ const buildCellComponent: (recordConfig: ViewConfig, fields: DataField[]) => Tab
     // Obtención del campo especificado por el backend
     } else {
         // Búsqueda del registro del tipo de campo
-        const field = fields.find( (item) => (item.name === recordConfig.key) )
+        const field = fields.find( (item) => (item.name === recordConfig.key) );
 
         // Retorno del componente genérico
         if ( field ) {
-            return commonComponent[field.ttype](recordConfig.key)
+            return commonComponent[field.ttype](recordConfig.key);
 
         // Retorno de error en caso de no haber un tipo de campo especificado
         } else {
             return CellRenderError;
         }
     }
-}
+};
 
-export default CellComponent;
+export default React.memo(CellComponent);

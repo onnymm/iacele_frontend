@@ -55,12 +55,12 @@ const useResize = (
             document.removeEventListener(
                 'mousemove',
                 doResize
-            )
+            );
 
             // Se reinicia el estilo del cursor a su estado normal
             document.body.style.cursor = "";
         }, [resizableRef, doResize]
-    )
+    );
 
     // Función de inicio de redimensionamiento
     const startResize = useCallback(
@@ -79,19 +79,19 @@ const useResize = (
             document.addEventListener(
                 'mousemove',
                 doResize
-            )
+            );
 
             // Se añade el escuchador de evento cuando mouse deja de presionarse
             document.addEventListener(
                 'mouseup',
                 stopResize
-            )
+            );
 
             // Se cambia el estilo del cursor para que aplique en toda la
             //      pantalla. Este comportamiento es más natural.
             document.body.style.cursor = "col-resize";
         }, [resizableRef, doResize, stopResize]
-    )
+    );
 
     // Inicio del efecto
     useEffect(
@@ -114,9 +114,9 @@ const useResize = (
                         startResize
                     )
                 }
-            )
+            );
         }, [resizerRef, startResize]
-    )
+    );
 
     // Retorno de estado de ancho de columna
     return initialWidth;

@@ -37,20 +37,20 @@ const DateSetter: (config: DateSetterParams) => (React.JSX.Element) = ({
     // Restauración del valor cuando los datos del registro cambian
     useEffect(
         () => {
-            setDate(recordData.data[name])
+            setDate(recordData.data[name]);
         }, [recordData.data, setDate, name]
-    )
+    );
 
     // Se cambia el valor del formulario cuando una fecha es seleccioanada por el usuario
     useEffect(
         () => {
             setValue(date);
         }, [date, setValue]
-    )
+    );
 
     return (
         <Calendar date={date} setDate={setDate} todayRef={todayRef} />
-    )
-}
+    );
+};
 
 export default React.memo(DateSetter);

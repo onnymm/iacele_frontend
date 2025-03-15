@@ -20,11 +20,11 @@ const Fallback: (config: FallbackParams) => (React.JSX.Element) = ({
     return (
         <div className='relative flex flex-grow justify-center items-center bg-slate-200 dark:bg-slate-600 rounded-lg min-h-full transition-dark animate-pulse'>
             {/* Ícono con efecto de pulso */}
-            <Icon className='opacity-50 dark:opacity-60 dark:text-white transition-dark size-16' />
+            <Icon className='opacity-50 dark:opacity-60 size-16 dark:text-white transition-dark' />
             {/* Ícono estático */}
-            <Icon className='absolute opacity-60 dark:text-white transition-dark animate-ping size-12' />
+            <Icon className='absolute opacity-60 size-12 dark:text-white transition-dark animate-ping' />
         </div>
-    )
-}
+    );
+};
 
 export default Fallback;

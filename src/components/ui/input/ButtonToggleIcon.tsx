@@ -30,15 +30,15 @@ const ButtonToggleIcon: (config: ButtonToggleIconParams) => (React.JSX.Element) 
     value,
     setValue,
     iconOn,
-    iconOff
+    iconOff,
 }) => {
 
     return (
-        <button onClick={() => setValue(state => !state)} className="text-gray-500 hover:text-main-500 dark:hover:text-main-500 dark:text-gray-200 transition size-[50%]">
+        <button onClick={() => setValue(state => !state)} className="size-[50%] text-gray-500 hover:text-main-500 dark:hover:text-main-500 dark:text-gray-200 transition">
             <IconIndicator icon={value ? iconOn : iconOff} />
         </button>
-    )
-}
+    );
+};
 
 export default ButtonToggleIcon;
 
@@ -46,5 +46,5 @@ const IconIndicator: (config: IconIndicatorParams) => (React.JSX.Element) = ({ i
 
     return (
         <Icon className="fill-current"/>
-    )
-}
+    );
+};

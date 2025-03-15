@@ -22,12 +22,12 @@ const isBaseRoute: (location: string, route: string | MenuRoute[] | undefined) =
     const pattern = RegExp(`^(${route})/?`);
 
     // Evaluación de la ruta
-    const match = pattern.exec(location)
+    const match = pattern.exec(location);
 
     // Retorno de validación
     if ( match ) return match[1] === route;
 
     return false;
-}
+};
 
 export default isBaseRoute;

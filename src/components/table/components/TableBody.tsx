@@ -32,7 +32,7 @@ const TableBody = ({
 }: TableBodyParams): (React.JSX.Element) => {
 
     return (
-        <tbody className="p-t-10 rounded-lg overflow-hidden size-full">
+        <tbody className="p-t-10 rounded-lg size-full overflow-hidden">
             {
                 data.data.map(
                     (record, i) => (
@@ -41,7 +41,7 @@ const TableBody = ({
                 )
             }
         </tbody>
-    )
-}
+    );
+};
 
 export default TableBody;

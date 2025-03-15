@@ -16,7 +16,7 @@ const Content: () => (React.JSX.Element) = () => {
         <main id="app-content" className="flex-grow p-2 min-h-full max-h-full overflow-y-auto">
             <Outlet />
         </main>
-    )
-}
+    );
+};
 
 export default React.memo(Content);

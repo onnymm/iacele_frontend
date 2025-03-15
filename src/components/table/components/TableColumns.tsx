@@ -33,14 +33,14 @@ interface TableColumnsParams {
  *  - [ `undefined` ] `resizeColumn`: Función para redimensionar la columna,
  *  obtenida desde el Custom Hook {@link useResize}.
  */ 
-const TableColumns = ({
+const TableColumns: (config: TableColumnsParams) => (React.JSX.Element) = ({
     viewConfig,
     visibleColumns,
     sortingFieldKey,
     ascending,
     setSortingColumn,
     resizeColumn,
-}: TableColumnsParams): (React.JSX.Element) => {
+}) => {
 
     return (
         <thead role="rowgroup relative">
@@ -68,10 +68,10 @@ const TableColumns = ({
                         }
                     )
                 }
-                <th className="left-0 absolute border-gray-400/30 border rounded-lg w-full h-full pointer-events-none"></th>
+                <th className="left-0 absolute border border-gray-400/30 rounded-lg w-full h-full pointer-events-none"></th>
             </tr>
         </thead>
-    )
-}
+    );
+};
 
 export default TableColumns;

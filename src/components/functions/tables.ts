@@ -12,7 +12,7 @@ import { UI_CLASS_NAMES } from "../../settings/ui";
  */ 
 export const setComponentStyle: (
     property: string | number | boolean,
-    options: ValidationOptions | undefined
+    options: ValidationOptions | undefined,
 ) => ( string ) = (
     property,
     options,
@@ -37,4 +37,4 @@ export const setComponentStyle: (
     } else {
         return UI_CLASS_NAMES.NONE;
     }
-}
+};

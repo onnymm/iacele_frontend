@@ -17,7 +17,7 @@ const ButtonSidebarMenu: () => (React.JSX.Element) = () => {
 
     return (
         <label htmlFor="button-menu" className="flex flex-row justify-center items-center size-14 ui-label-button">
-            <button id="button-menu" onClick={() => setIsSidebarOpen(prevState => !prevState)} className="flex flex-col justify-center items-center size-10 ui-interactive sm:size-12">
+            <button id="button-menu" onClick={() => setIsSidebarOpen(prevState => !prevState)} className="flex flex-col justify-center items-center size-10 sm:size-12 ui-interactive">
                 <div className="flex flex-col items-center gap-[4px] p-2 w-10 h-min">
                     <span className="bg-[#1f2f3f] dark:bg-white opacity-70 rounded-full w-full h-[2px] transition duration-1000 delay-500"/>
                     <span className="bg-[#1f2f3f] dark:bg-white opacity-70 rounded-full w-full h-[2px] transition duration-500 delay-0"/>
@@ -25,7 +25,7 @@ const ButtonSidebarMenu: () => (React.JSX.Element) = () => {
                 </div>
             </button>
         </label>
-    )
-}
+    );
+};
 
 export default ButtonSidebarMenu;

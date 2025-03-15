@@ -11,7 +11,7 @@ import useBreakpoint from "../../../hooks/useBreakpoint";
 const Sidebar: () => (React.JSX.Element) = (() => {
 
     // Inicialición de referencia de la barra lateral
-    const sidebarRef = useRef<HTMLElement>(null)
+    const sidebarRef = useRef<HTMLElement>(null);
     // Obtención del estado de barra lateral desde el contexto
     const { isSidebarLocked, setIsSidebarLocked, isSidebarOpen, setIsSidebarOpen } = useContext(AppContext);
 
@@ -33,7 +33,7 @@ const Sidebar: () => (React.JSX.Element) = (() => {
             setIsSidebarLocked(false);
             setIsSidebarOpen(false);
         }, [isOverThereshold, setIsSidebarLocked, setIsSidebarOpen]
-    )
+    );
 
     // Manejo de clic fuera del componente
     useClickOutside(sidebarRef, handleClickOutside);

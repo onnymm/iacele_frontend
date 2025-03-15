@@ -19,7 +19,7 @@ const ThumbnailLarge: (config: BaseImageComponent) => (React.JSX.Element) = ({
         <div className="rounded-full max-w-12 h-12 overflow-hidden">
             <Base64Image data={data} alt={alt} />
         </div>
-    )
-}
+    );
+};
 
 export default ThumbnailLarge;

@@ -6,7 +6,7 @@ export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<
     'percentage': 'text',
     'boolean': 'checkbox',
     'date': 'text',
-}
+};
 
 /** 
  *  ## Funciones de validación de valor en campo
@@ -25,7 +25,7 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
             value !== ''
                 ? value
                 : undefined
-        )
+        );
     },
 
     integer: (value: string): IACele.Types.Integer => {
@@ -40,7 +40,7 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
                             : undefined
                 )
                 : undefined
-        )
+        );
     },
 
     float: (value: string): IACele.Types.Float => {
@@ -55,7 +55,7 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
                             : undefined
                 )
                 : undefined
-        )
+        );
     },
 
     monetary: (value: string): IACele.Types.Monetary => {
@@ -70,7 +70,7 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
                             : undefined
                 )
                 : undefined
-        )
+        );
     },
 
     percentage: (value: string): IACele.Types.Percentage => {
@@ -84,7 +84,7 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
                             : undefined
                 )
                 : undefined
-        )
+        );
     },
 
     date: (value: string): IACele.Types.Date => {
@@ -99,9 +99,9 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
                     )
                     : undefined
                 : undefined
-        )
+        );
     }
-}
+};
 
 /** 
  *  ## Parseo de valor a mostrar
@@ -149,4 +149,4 @@ const matchType = {
     float: /^\d+?\.(\d+)?$/,
     monetary: /^\$?\d+?\.?(\d+)?$/,
     percentage: /^\$?\d+?\.?(\d+)?%?$/,
-}
+};

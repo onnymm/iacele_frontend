@@ -28,7 +28,7 @@ const useClickOutside: (ref: React.MutableRefObject<HTMLElement | null>, callbac
                 callback();
             }
         },  [callback, ref]
-    )
+    );
 
     useEffect(
         () => {
@@ -36,7 +36,7 @@ const useClickOutside: (ref: React.MutableRefObject<HTMLElement | null>, callbac
             document.addEventListener(
                 'mousedown',
                 handleClick,
-            )
+            );
 
             // Se retorna la remoción del evento
             return (
@@ -47,9 +47,9 @@ const useClickOutside: (ref: React.MutableRefObject<HTMLElement | null>, callbac
                         handleClick,
                     )
                 }
-            )
+            );
         }, [handleClick]
-    )
-}
+    );
+};
 
 export default useClickOutside;

@@ -34,7 +34,7 @@ const Listbox =  <T extends string | number | boolean>(
 ): (React.JSX.Element) => {
 
     return (
-        <div className="border-gray-500/50 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border rounded-lg">
+        <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-500/50 rounded-lg">
             <div ref={_listboxRef ? _listboxRef : undefined} className="px-2 py-4 max-h-94 sm:max-h-50 overflow-y-scroll md:dsk-vertical-difuminate mob-vertical-difuminate scrollbar-hide">
                 {
                     items.map(
@@ -45,7 +45,7 @@ const Listbox =  <T extends string | number | boolean>(
                 }
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Listbox
+export default Listbox;

@@ -26,21 +26,21 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     const { recordData } = useContext<IACele.View.Form.Context | undefined>(FormContext) as IACele.View.Form.Context;
 
     // Obtención del valor para el campo
-    const recordValue = parseDisplayValue[type](recordData.data[name])
+    const recordValue = parseDisplayValue[type](recordData.data[name]);
 
     // Posicionamiento del símbolo de moneda
     const currencySymbolDisplay = (
         recordValue !== '' && type === 'monetary'
             ? 'pr-2'
             : 'hidden'
-    )
+    );
 
     // Posicionamiento del símbolo de porcentaje
     const percentageSymbolDisplay = (
         recordValue !== '' && type === 'percentage'
             ? 'absolute right-8'
             : 'hidden'
-    )
+    );
 
     return (
         <div className='relative mt-4 pt-1 pr-4 w-full scrollbar-hide'>
@@ -59,7 +59,7 @@ const InputFormReadonly: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                 <span className={`${percentageSymbolDisplay} select-none`}>%</span>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default InputFormReadonly;

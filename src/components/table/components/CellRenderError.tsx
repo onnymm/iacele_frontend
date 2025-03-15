@@ -15,7 +15,7 @@ const CellRenderError = (): (React.JSX.Element) => {
         <div className="size-full">
             { COMMON_LEGEND.CELL_RENDER_ERROR }
         </div>
-    )
-}
+    );
+};
 
 export default CellRenderError;
