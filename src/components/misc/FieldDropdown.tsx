@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import useDropdownOverflow from "../../hooks/ui/useDropdown";
 
-interface FieldDropDownParams extends GenericInvolverComponent {
+interface FieldDropdownParams extends GenericInvolverComponent {
     show: boolean; // Mostrar el componente.
 }
 
@@ -15,7 +15,7 @@ interface FieldDropDownParams extends GenericInvolverComponent {
 *   ### Parámetros de entrada
 *  - [ `boolean` ] `show`: Mostrar el componente.
 */  
-const FieldDropdown: (config: FieldDropDownParams) => (React.JSX.Element) = ({
+const FieldDropdown: (config: FieldDropdownParams) => (React.JSX.Element) = ({
     show,
     children
 }) => {
