@@ -47,6 +47,14 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
     // Estado de campo enfocado
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
 
+    useEffect(
+        () => {
+            // Actualización de valor del campo si los datos provenientes del backend cambian
+            setRecordValue(recordData.data[name])
+            setDisplayValue(parseValueToDisplay(recordData.data[name]))
+        }, [recordData.data, name, setRecordValue, parseValueToDisplay]
+    )
+
     // Si el valor estático cambia significa que se hizo recarga de datos
     useEffect(
         () => {
@@ -82,7 +90,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
         }, [recordValue, reload, setReload]
     )
 
-    if ( type === 'char' || type === 'float' || type === 'integer' || type === 'monetary' || type === 'percentage' ) {
+    if ( type === 'char' || type === 'float' || type === 'integer' || type === 'monetary' || type === 'percentage' || type === 'date' ) {
 
         return (
             <KeyboardInput
@@ -92,6 +100,7 @@ const InputForm: (config: IACele.UI.Field) => (React.JSX.Element) = ({
                     readonly={readonly}
                     isFocused={isFocused}
                     setIsFocused={setIsFocused}
+                    recordValue={recordValue}
                     displayValue={displayValue}
                     setDisplayValue={setDisplayValue}
                     formatRecordValue={formatRecordValue}

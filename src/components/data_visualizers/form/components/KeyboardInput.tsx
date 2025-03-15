@@ -1,6 +1,9 @@
+import React from "react";
 import { inputType } from "../../core";
+import CalendarTool from "../../../widgets/field/CalendarWidget";
 
 interface KeyboardInputParams extends IACele.UI.Core.Input {
+    recordValue: IACele.Types.ValueType;
     setDisplayValue: React.Dispatch<React.SetStateAction<string | boolean>>; // Función de cambio de estado de valor a mostrar en el campo.
     formatRecordValue: (value: string) => IACele.Types.ValueType; // Función para formatear el valor del campo.
     parseValueToDisplay: (value: IACele.Types.ValueType) => string | boolean; // Función para parsear el valor a mostrar en el campo.
@@ -44,6 +47,7 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
     readonly = false,
     displayValue,
     isFocused,
+    recordValue,
     setRecordValue,
     setDataChanged,
     setFormValue,
@@ -80,7 +84,9 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
             ? ''
             : type === 'percentage'
                 ? 'right-8'
-                : 'hidden'
+                : type === 'date'
+                    ? 'right-2'
+                    : 'hidden'
     )
 
     // Se muestra o se oculta símbolo de campo numérico
@@ -113,7 +119,7 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
         // Creación del valor formateado y corregido en caso de ser necesario
         const formattedValue = formatRecordValue(event.target.value)
         // Se prepara el valor en los cambios del formulario para una posible escritura de éstos
-        setFormValue(name, formattedValue)
+        if ( formattedValue !== recordValue ) setFormValue(name, formattedValue);
         // Se establece el valor en el input
         setRecordValue(formattedValue)
         // Se establece el valor a mostrar en el campo
@@ -122,8 +128,6 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
 
     // Función a ejecutar cuando el valor del campo cambia
     const fieldOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // Se establece el valor en el input
-        setRecordValue( formatRecordValue(event.target.value) )
         // Se establece el valor a mostrar en el campo
         setDisplayValue( event.target.value )
         // Se actualiza el contexto para indicar que hay cambios en los datos
@@ -151,8 +155,21 @@ const KeyboardInput: (config: KeyboardInputParams) => (React.JSX.Element) = ({
                 onFocus={() => setIsFocused(true)}
                 onBlur={fieldOnBlur}
             />
+            {type === 'date' && !readonly && typeof displayValue === 'string' &&
+                <CalendarTool
+                    setRecordValue={setRecordValue}
+                    setDisplayValue={setDisplayValue}
+                    parseValueToDisplay={parseValueToDisplay}
+                    setDataChanged={setDataChanged}
+                    setFormValue={setFormValue}
+                    displayValue={displayValue}
+                    recordValue={recordValue}
+                    name={name}
+                    isFocused={isFocused}
+                />
+            }
         </div>
     )
 }
 
-export default KeyboardInput;
+export default React.memo(KeyboardInput);

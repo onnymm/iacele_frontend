@@ -4,7 +4,8 @@ export const inputType: Record<IACele.Types.TypeName, React.InputHTMLAttributes<
     'float': 'number',
     'monetary': 'text',
     'percentage': 'text',
-    'boolean': 'checkbox'
+    'boolean': 'checkbox',
+    'date': 'text',
 }
 
 /** 
@@ -77,11 +78,26 @@ export const parseTo: Record<string, (value: string) => IACele.Types.ValueType> 
             value !== ''
                 ? (
                     matchType.percentage.test(value)
-                        ? Number(value.replace(/^\$?(\d+?)(\.)?((\d+)?)%?$/, '$1$2$3'))
+                        ? Number(value.replace(/^\$?(\d+?)(\.)?((\d+)?)%?/, '$1$2$3'))
                         : matchType.integer.test(value)
                             ? Number(value)
                             : undefined
                 )
+                : undefined
+        )
+    },
+
+    date: (value: string): IACele.Types.Date => {
+        return (
+            value !== ''
+                ? /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)
+                    ? (
+                        value
+                        .replace(/^(\d{1})\/(\d{1,2})\/(\d{4}$)/, '0$1/$2/$3')
+                        .replace(/^(\d{2})\/(\d{1})\/(\d{4}$)/, '$1/0$2/$3')
+                        .replace(/^(\d{2})\/(\d{2})\/(\d{4}$)/, '$3-$2-$1')
+                    )
+                    : undefined
                 : undefined
         )
     }
@@ -120,6 +136,10 @@ export const parseDisplayValue: Record<IACele.Types.TypeName, (value: IACele.Typ
     boolean: (value) => {
         if ( typeof value === 'boolean' ) return value;
         return false;
+    },
+    date: (value) => {
+        if ( typeof value === 'string' ) return value.replace(/^(\d{4})-(\d{1,2})-(\d{1,2})/, '$3/$2/$1');
+        return '';
     }
 };
 

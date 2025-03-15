@@ -16,17 +16,13 @@ declare namespace IACele {
         // Booleano
         type Boolean = boolean | undefined;
         // Fecha
-        type Date = {
-            year: number;
-            month: number;
-            day: number;
-        };
+        type Date = string | undefined;
 
         // Nombres de tipo de dato
-        type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage' | 'boolean';
+        type TypeName = 'char' | 'integer' | 'float' | 'monetary' | 'percentage' | 'boolean' | 'date';
 
         // Unión de tipos de dato
-        type ValueType = Integer | Char | Float | Monetary | Percentage | Boolean;
+        type ValueType = Integer | Char | Float | Monetary | Percentage | Boolean | Date;
     }
 
     // Interfaces para componentes complejos
