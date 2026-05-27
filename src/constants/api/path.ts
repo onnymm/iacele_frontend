@@ -1,5 +1,8 @@
 const PATH = {
-    TOKEN: '/token'
+    TOKEN: '/token',
+    ACCOUNT: {
+        ME: '/account/me',
+    },
 }
 
 export default PATH;

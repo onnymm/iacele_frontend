@@ -28,6 +28,30 @@ declare namespace IACele {
                 removeUserToken: () => void;
             };
 
+            interface UserData {
+                userData: Me;
+                setUserData: React.Dispatch<React.SetStateAction<Me>>
+                removeUserData: () => void;
+            };
+
+        };
+
+        interface Me {
+            'id': number;
+            'name': string;
+            'active': boolean;
+            'login': string;
+            'profile_picture': string | null;
+            'role_ids': {
+                'id': number;
+                'name': string;
+                'label': string;
+                'group_ids': {
+                    'id': number;
+                    'name': string;
+                    'label': string;
+                }[];
+            }[];
         };
 
     };
@@ -39,11 +63,16 @@ declare namespace IACele {
                 username: string,
                 password: string,
             ) => Promise<void>;
+
+            me: () => Promise<void>;
         };
 
         interface UserSession {
             setUserToken: (token: string) => void;
+            removeUserToken: () => void;
             setAppLoading: (loading: boolean) => void;
+            setUserData: (data: IACele.App.Me) => void;
+            removeUserData: () => void;
         };
 
     };
