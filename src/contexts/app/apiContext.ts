@@ -6,6 +6,9 @@ import Client from "../../api/client";
 const sessionTemplate = new UserSession(
     () => null,
     () => null,
+    () => null,
+    () => null,
+    () => null,
 );
 
 const APIContext = createContext<IACele.App.Context.API>({
