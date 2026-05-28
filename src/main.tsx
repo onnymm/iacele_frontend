@@ -1,9 +1,12 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
 import AuthProvider from './providers/AuthProvider.tsx'
+import Router from './router.tsx';
+import { BrowserRouter } from 'react-router';
 
 createRoot(document.getElementById('root')!).render(
     <AuthProvider>
-        <App />
+        <BrowserRouter>
+            <Router />
+        </BrowserRouter>
     </AuthProvider>
 );
