@@ -8,6 +8,15 @@ declare namespace IACele {
 
     };
 
+    declare namespace Application {
+
+        interface PageName {
+            pageName: string | null;
+            setPageName: React.Dispatch<React.SetStateAction<string | null>>;
+        };
+
+    };
+
     declare namespace API {
 
         declare namespace Request {
