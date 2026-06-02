@@ -8,6 +8,261 @@ declare namespace IACele {
 
     };
 
+    declare namespace Data {
+
+        declare namespace Shape {
+
+            interface FieldsMetadata {
+                id: TType.Integer<'not_null'>;
+                name: TType.Char<'not_null'>;
+                label: TType.Char<'not_null'>;
+                ttype: TType.Selection<TTypeName, 'not_null'>;
+                help_info: TType.Char;
+                related_model_id: TType.Many2One;
+                selection_ids: {
+                    id: TType.Integer<'not_null'>;
+                    name: TType.Char<'not_null'>;
+                    display_name: TType.Char<'not_null'>;
+                }[];
+                readonly: TType.Boolean<'not_null'>;
+                is_computed: TType.Boolean<'not_null'>;
+            };
+
+        };
+
+        type ModelName = (
+            | 'base.model'
+            | 'base.model.field'
+            | 'base.model.field.selection'
+            | 'base.users'
+            | 'base.users.role'
+            | 'base.user.groups'
+            | 'base.user.access'
+            | 'location.warehouse'
+            | 'resource.device.type'
+            | 'schedule.week'
+            | 'model.sync'
+            | 'resource.device'
+            | 'hr.employee'
+            | 'schedule.week.offset'
+            | 'assistance.registry.day'
+            | 'assistance.registry.event'
+            | 'assistance.registry.event.credentials'
+        );
+
+        type TTypeName = (
+            | 'integer'
+            | 'char'
+            | 'boolean'
+            | 'float'
+            | 'date'
+            | 'datetime'
+            | 'time'
+            | 'duration'
+            | 'selection'
+            | 'text'
+            | 'file'
+            | 'many2one'
+            | 'one2many'
+            | 'many2many'
+            | 'json'
+        );
+
+        type NullityKey = "not_null" | "null_";
+
+        interface _WithNullOption<T>{
+            'null_': T | null;
+            'not_null': T;
+        };
+
+        declare namespace _JSON {
+
+            type _Serializable = number | string | boolean | null;
+            type _JSONObject = Record<string, _Serializable>
+            type _ScalarOrArray<T> = T | T[]
+            type JSON = _ScalarOrArray<(_Serializable | _JSONObject)>
+
+        };
+
+        declare namespace TType {
+
+            type Integer<N extends NullityKey = 'null_'> = _WithNullOption<number>[N];
+            type Char<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Boolean<N extends NullityKey = 'null_'> = _WithNullOption<boolean>[N];
+            type Float<N extends NullityKey = 'null_'> = _WithNullOption<number>[N];
+            type Date<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Datetime<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Time<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Duration<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Selection<O extends string, N extends NullityKey = 'null_'> = _WithNullOption<O>[N];
+            type Text<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type File<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
+            type Many2One<N extends NullityKey = 'null_'> = _WithNullOption<[number, string]>[N];
+            type One2Many = number[];
+            type Many2Many = number[];
+            type JSON<N extends NullityKey = 'null_'> = _WithNullOption<_JSON.JSON>[N];
+
+        };
+
+        interface _CommonFieldsProperties {
+            id: TType.Integer<'not_null'>;
+            name: TType.Char<'not_null'>;
+            create_date: TType.Datetime<'not_null'>;
+            update_date: TType.Datetime<'not_null'>;
+            create_uid: TType.Many2One<'not_null'>;
+            update_uid: TType.Many2One<'not_null'>;
+            display_name: TType.Char<'not_null'>;
+        };
+
+        interface Model {
+
+            'base.model': {
+                state: TType.Selection<'base' | 'generic', 'not_null'>;
+                label: TType.Char<'not_null'>;
+                model: TType.Char<'not_null'>;
+                has_sequence: TType.Boolean<'not_null'>;
+                is_archivable: TType.Boolean<'not_null'>;
+                has_label: TType.Boolean<'not_null'>;
+                description: TType.Text;
+                field_ids: TType.One2Many;
+                related_field_ids: TType.One2Many;
+                transient: TType.Boolean<'not_null'>;
+            };
+
+            'base.model.field': {
+                state: TType.Selection<'base' | 'generic', 'not_null'>;
+                label: TType.Char<'not_null'>;
+                model_id: TType.Many2One<'not_null'>;
+                ttype: TType.Selection<TTypeName, 'not_null'>;
+                nullable: TType.Boolean<'not_null'>;
+                on_delete: TType.Selection<'cascade' | 'restrict' | 'set_null'>;
+                is_required: TType.Boolean<'not_null'>;
+                readonly: TType.Boolean<'not_null'>;
+                default_value: TType.JSON;
+                unique: TType.Boolean<'not_null'>;
+                help_info: TType.Text;
+                related_model_id: TType.Many2One;
+                related_field: TType.Char;
+                is_computed: TType.Boolean<'not_null'>;
+                selection_ids: TType.One2Many;
+            };
+
+            'base.model.field.selection': {
+                label: TType.Char<'not_null'>;
+                field_id: TType.Many2One<'not_null'>;
+            };
+
+            'base.users': {
+                active: TType.Boolean<'not_null'>;
+                login: TType.Char<'not_null'>;
+                password: TType.Char<'not_null'>;
+                profile_picture: TType.File;
+                role_ids: TType.Many2Many;
+            };
+
+            'base.users.role': {
+                label: TType.Char<'not_null'>;
+                group_ids: TType.Many2Many;
+            };
+
+            'base.user.groups': {
+                label: TType.Char<'not_null'>;
+                access_ids: TType.One2Many;
+            };
+
+            'base.user.access': {
+                model_id: TType.Many2One<'not_null'>;
+                perm_create: TType.Boolean<'not_null'>;
+                perm_read: TType.Boolean<'not_null'>;
+                perm_update: TType.Boolean<'not_null'>;
+                perm_delete: TType.Boolean<'not_null'>;
+                group_id: TType.Many2One<'not_null'>;
+            };
+
+            'location.warehouse': {
+                short_name: TType.Char<'not_null'>;
+                location_number: TType.Integer<'not_null'>;
+            };
+
+            'resource.device.type': {};
+
+            'schedule.week': {
+                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
+                start_time: TType.Time<'not_null'>;
+                end_time: TType.Time<'not_null'>;
+            };
+
+            'model.sync': {
+                last_sync: TType.Datetime<'not_null'>;
+                model_id: TType.Many2One<'not_null'>;
+            };
+
+            'resource.device': {
+                model: TType.Char;
+                brand: TType.Char;
+                serial_number: TType.Char;
+                firmware_version: TType.Char;
+                type_id: TType.Many2One<'not_null'>;
+                location_id: TType.Many2One;
+            };
+
+            'hr.employee': {
+                active: TType.Boolean<'not_null'>;
+                odoo_id: TType.Integer;
+                hire_date: TType.Date;
+                location_id: TType.Many2One;
+                user_id: TType.Many2One;
+            };
+
+            'schedule.week.offset': {
+                employee_id: TType.Many2One<'not_null'>;
+                start_offset: TType.Duration<'not_null'>;
+                end_offset: TType.Duration<'not_null'>;
+                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
+            };
+
+            'assistance.registry.day': {
+                date: TType.Date<'not_null'>;
+                employee_id: TType.Many2One<'not_null'>;
+                schedule_id: TType.Many2One;
+                offset_id: TType.Many2One;
+                event_ids: TType.One2Many;
+                start_time: TType.Time;
+                end_time: TType.Time;
+                lunch_time: TType.Duration;
+                weekday: TType.Char;
+                allowed_start: TType.Time;
+                allowed_end: TType.Time;
+                late_start: TType.Duration;
+                early_end: TType.Duration;
+                is_complete: TType.Boolean;
+                has_valid_events: TType.Boolean;
+            };
+
+            'assistance.registry.event': {
+                employee_id: TType.Many2One<'not_null'>;
+                original_registry_time: TType.Datetime<'not_null'>;
+                original_status: TType.Selection<'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                device_id: TType.Many2One;
+                from_api: TType.Boolean<'not_null'>;
+                registry_time_correction: TType.Datetime;
+                status_correction: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                day_id: TType.Many2One;
+                registry_time: TType.Datetime;
+                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                is_correction: TType.Boolean<'not_null'>;
+            };
+
+            'assistance.registry.event.credentials': {
+                token: TType.Char<'not_null'>;
+                cookie_uuid: TType.Char<'not_null'>;
+                site_id: TType.Char<'not_null'>;
+            };
+
+        };
+
+    };
+
     declare namespace App {
 
         interface Authentication {
@@ -65,6 +320,7 @@ declare namespace IACele {
             ) => Promise<void>;
 
             me: () => Promise<void>;
+
         };
 
         interface UserSession {
