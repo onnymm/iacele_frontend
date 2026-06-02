@@ -3,6 +3,9 @@ const PATH = {
     ACCOUNT: {
         ME: '/account/me',
     },
-}
+    METADATA: {
+        FIELDS: '/metadata/fields',
+    },
+};
 
 export default PATH;

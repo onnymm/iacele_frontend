@@ -28,6 +28,15 @@ class Client {
         this.session = session;
     };
 
+    fieldsMetadata = async <M extends IACele.Data.ModelName>(
+        params: IACele.API.Request.FieldsMetadata<M>) => {
+
+        return await this.post<IACele.API.Request.FieldsMetadata<M>, IACele.API.Response.FieldsMetadata>(
+            PATH.METADATA.FIELDS,
+            params,
+        );
+    };
+
     login = async (
         username: string,
         password: string,
@@ -109,18 +118,42 @@ class Client {
             return response;
         };
 
-        return this.execute(apiCall, onError);
+        return this.execute<R>(apiCall, onError);
     };
+
+    private post = async <S, R>(
+        path: string,
+        data: S,
+        onError: (e: APIError) => void = () => null,
+    ): Promise<R> => {
+
+        // Inicialización de función de solicitud de datos a la API
+        const apiCall = async () => {
+            // Solicitud de datos
+            const response = await iaCeleAxios.post<string, AxiosResponse<R>, S>(
+                this.toPath(path),
+                data,
+                { authenticate: true },
+            );
+
+            // Retorno de los datos obtenidos del endpoint
+            return response;
+        };
+
+        return this.execute<R>(apiCall, onError);
+    }
 
     private execute = async <T>(
         callback: () => Promise<AxiosResponse<T, any, {}>>,
         onError: (e: AxiosError<{detail: string}>) => void,
-    ) => {
+    ): Promise<T> => {
+
+        // Se establece el estado de carga en verdadero
+        this.session.setAppLoading(true);
 
         // Intento de solicitud
         try {
-            // Se establece el estado de carga en verdadero
-            this.session.setAppLoading(true);
+
             // Obtención de la respuesta de la solicitud a la API
             const response = await callback();
             // Se establece el estado de carga en falso
@@ -136,10 +169,14 @@ class Client {
                 onError(e);
                 // Se muestra el error
                 this.error(e);
+
             };
 
-        // Tras manejo de error...
+            // Se lanza el error para interrumpir la función
+            throw e;
+
         } finally {
+
             // Se establece el estado de carga en falso
             this.session.setAppLoading(false);
         };

@@ -8,6 +8,22 @@ declare namespace IACele {
 
     };
 
+    declare namespace API {
+
+        declare namespace Request {
+
+            type FieldsMetadata<M extends Data.ModelName> = _RequiresModelName<M>;
+
+        };
+
+        declare namespace Response {
+
+            type FieldsMetadata = IACele.Data.Shape.FieldsMetadata[];
+
+        };
+
+    };
+
     declare namespace Data {
 
         declare namespace Shape {
@@ -320,6 +336,10 @@ declare namespace IACele {
             ) => Promise<void>;
 
             me: () => Promise<void>;
+
+            fieldsMetadata: <
+                M extends IACele.Data._Core.ModelName,
+            >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
 
         };
 
