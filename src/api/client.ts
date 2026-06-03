@@ -40,6 +40,7 @@ class Client {
     login = async (
         username: string,
         password: string,
+        onError: () => void,
     ): Promise<void> => {
 
         // Creación de los datos
@@ -57,7 +58,8 @@ class Client {
             .toString()
         );
 
-        try {
+        // Función de inicio de sesión
+        const apiCall = async () => {
             // Obtención del token de autenticación del usuario
             const response = await iaCeleAxios.post<string, AxiosResponse<IACele.App.Authentication>, string>(
                 this.toPath(PATH.TOKEN),
@@ -69,10 +71,9 @@ class Client {
             const token = response.data['access_token'];
             // Asignación de token a la sesión
             this.session.setUserToken(token);
-
-        } catch {
-                // ;
         };
+
+        this.execute<void>(apiCall, onError);
     };
 
     me = async (): Promise<void> => {
@@ -115,7 +116,7 @@ class Client {
             );
 
             // Retorno de los datos obtenidos del endpoint
-            return response;
+            return response.data;
         };
 
         return this.execute<R>(apiCall, onError);
@@ -137,14 +138,14 @@ class Client {
             );
 
             // Retorno de los datos obtenidos del endpoint
-            return response;
+            return response.data;
         };
 
         return this.execute<R>(apiCall, onError);
     }
 
     private execute = async <T>(
-        callback: () => Promise<AxiosResponse<T, any, {}>>,
+        callback: () => Promise<T>,
         onError: (e: AxiosError<{detail: string}>) => void,
     ): Promise<T> => {
 
@@ -159,14 +160,14 @@ class Client {
             // Se establece el estado de carga en falso
             this.session.setAppLoading(false);
 
-            return response.data;
+            return response;
 
         // Si ocurre un error...
         } catch (e) {
             // Tipado para Axios
             if ( axios.isAxiosError(e) ) {
                 // Ejecución de función de manejo de error
-                onError(e);
+                onError(e as AxiosError<{detail: string}>);
                 // Se muestra el error
                 this.error(e);
 

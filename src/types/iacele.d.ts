@@ -342,6 +342,7 @@ declare namespace IACele {
             login: (
                 username: string,
                 password: string,
+                onError: (e: any) => void,
             ) => Promise<void>;
 
             me: () => Promise<void>;
