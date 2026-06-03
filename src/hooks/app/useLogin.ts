@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import useAPI from "./useAPI";
 import type { AxiosError } from "axios";
+import { useNavigate } from "react-router";
+import useUserToken from "./useUserToken";
 
 const useLogin = () => {
 
+    // Obtención de valor de token desde el contexto
+    const { userToken } = useUserToken();
     // Obtención de la instancia de conexión a la API
     const { api, appLoading } = useAPI();
+    // Obtención de función de navegación}
+    const navigateTo = useNavigate();
     // Inicialización de estados
     const [ user, setUser ] = useState<string>('');
     const [ password, setPassword ] = useState<string>('');
@@ -52,6 +58,16 @@ const useLogin = () => {
             // Intento de inicio de sesión
             api.login(user, password, onError);
         }, [api, user, password, onError]
+    );
+
+    useEffect(
+        () => {
+            // Si es estableció un valor de token...
+            if ( userToken ) {
+                // Se navega hacia el inicio
+                navigateTo('/');
+            };
+        }, [userToken, navigateTo]
     );
 
     return { user, setUser, password, setPassword, login, authenticationError, loading, errorDetail };

@@ -23,7 +23,7 @@ interface SubmitButtonParams extends IACele.Common.SupportsChildren {
     isLoading?: boolean;
 };
 
-const Login = () => {
+const LoginForm = () => {
 
     // Obtención de valores y funciones desde hook
     const { user, setUser, password, setPassword, login, authenticationError, loading, errorDetail } = useLogin();
@@ -98,7 +98,7 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginForm;
 
 const SubmitButton: React.FC<SubmitButtonParams> = ({
     isDisabled,
