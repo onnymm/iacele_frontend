@@ -1,37 +1,12 @@
-import { useCallback, useState } from "react";
-import useLocalValue from "./useLocalValue";
-import LOCAL_STORAGE from "../../constants/app/localStorage";
+import { useContext } from "react";
+import TokenContext from "@/contexts/app/tokenContext";
 
 const useUserToken = () => {
 
-    // Inicialización de funciones para almacenar el token en el navegador
-    const [ saveTokenOnLocalStorage, loadTokenFromLocalStorage, removeTokenOnLocalStorage ] = useLocalValue(LOCAL_STORAGE.USER_TOKEN);
-    // Inicialización de estado de token
-    const [ tokenValue, setTokenValue ] = useState<string | null>(loadTokenFromLocalStorage);
+    // Obtención de valores desde el contexto
+    const { userToken, setUserToken, removeUserToken } = useContext(TokenContext);
 
-    // Inicialización de función para obtener token y guardarlo en el almacenamiento local
-    const setUserToken = useCallback(
-        (value: string) => {
-
-            // Se establece el token en el estado
-            setTokenValue(value);
-            // Se guarda el token en el almacenamiento local
-            saveTokenOnLocalStorage(value);
-        }, [saveTokenOnLocalStorage]
-    );
-
-    // Inicialización de función para remover token
-    const removeUserToken = useCallback(
-        () => {
-
-            // Se establece el estado del token a null
-            setTokenValue(null);
-            // Se elimina el valor del token en el almacenamiento local
-            removeTokenOnLocalStorage();
-        }, [removeTokenOnLocalStorage]
-    );
-
-    return { userToken: tokenValue, setUserToken, removeUserToken };
+    return { userToken, setUserToken, removeUserToken };
 };
 
 export default useUserToken;
