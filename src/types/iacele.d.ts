@@ -23,11 +23,21 @@ declare namespace IACele {
 
             type FieldsMetadata<M extends Data.ModelName> = _RequiresModelName<M>;
 
+            interface Tree<M extends Data.ModelName> {
+                model_name: M,
+                fields: (keyof Data.ModelDefinition<M>)[]
+            };
+
         };
 
         declare namespace Response {
 
             type FieldsMetadata = IACele.Data.Shape.FieldsMetadata[];
+
+            interface Tree<M extends Data.ModelName> {
+                count: number;
+                data: Data.ModelDefinition<M>[];
+            };
 
         };
 
@@ -286,6 +296,11 @@ declare namespace IACele {
 
         };
 
+        type ModelDefinition<M extends ModelName> = (
+            & _CommonFieldsProperties
+            & Model[M]
+        );
+
     };
 
     declare namespace App {
@@ -350,6 +365,10 @@ declare namespace IACele {
             fieldsMetadata: <
                 M extends IACele.Data._Core.ModelName,
             >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
+
+            tree: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.Tree<M>,
+            ) => Promise<IACele.API.Response.Tree<M>>;
 
         };
 

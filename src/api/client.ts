@@ -29,7 +29,8 @@ class Client {
     };
 
     fieldsMetadata = async <M extends IACele.Data.ModelName>(
-        params: IACele.API.Request.FieldsMetadata<M>) => {
+        params: IACele.API.Request.FieldsMetadata<M>,
+    ) => {
 
         return await this.post<IACele.API.Request.FieldsMetadata<M>, IACele.API.Response.FieldsMetadata>(
             PATH.METADATA.FIELDS,
@@ -96,6 +97,31 @@ class Client {
         );
         // Se establecen los datos obtenidos
         this.session.setUserData(userData);
+    };
+
+    tree = async <M extends IACele.Data.ModelName>({
+        model_name: modelName,
+        fields,
+    }: IACele.API.Request.Tree<M>) => {
+
+        // Inicialización de objeto de datos
+        const data: IACele.API.Request.Tree<M> = {
+            'model_name': modelName,
+            'fields': fields,
+        };
+
+        // Función de búsqueda y lectura para árbol
+        const apiCall = () => {
+            // Obtención de los datos
+            const response = this.post<IACele.API.Request.Tree<M>, IACele.API.Response.Tree<M>>(
+                PATH.FRONTEND.TREE,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute(apiCall, () => {});
     };
 
     private get = async <S, R>(

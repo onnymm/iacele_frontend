@@ -6,6 +6,9 @@ const PATH = {
     METADATA: {
         FIELDS: '/metadata/fields',
     },
+    FRONTEND: {
+        TREE: '/frontend/tree',
+    },
 };
 
 export default PATH;
