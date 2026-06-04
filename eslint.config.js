@@ -23,6 +23,7 @@ export default defineConfig([
       '@typescript-eslint/no-empty-object-type': 'off',
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/immutability': 'off',
+      'react-hooks/incompatible-library': 'off',
     }
   },
 ])
