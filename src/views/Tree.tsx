@@ -1,5 +1,6 @@
 import useAPI from "@/hooks/app/useAPI";
-import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import useLoadModelMetadata from "@/hooks/views/useModelMetadata";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface TreeParams<M extends IACele.Data.ModelName> {
     modelName: M;
@@ -25,6 +26,10 @@ const useTree = <M extends IACele.Data.ModelName>(
 
     // Obtención de la instancia de conexión a la API
     const { api } = useAPI();
+    // Obtención de estado de carga de los metadatos de campos
+    const [ fieldsMetadataLoaded ] = useLoadModelMetadata<M>(modelName);
+    // Incialización de estado de datos
+    const [ data, setData ] = useState<IACele.API.Response.Tree<M> | null>(null);
 
     // Inicialización de lista de campos a leer
     const fieldsToRead: (keyof IACele.Data.ModelDefinition<M>)[] = useMemo(
@@ -47,15 +52,25 @@ const useTree = <M extends IACele.Data.ModelName>(
     // Inicialización de función de búsqueda y lectura de resultados
     const searchRead = useCallback(
         async () => {
+            // Obtención de los datos de registros desde la API
             const data = await api.tree({
                 'model_name': modelName,
                 'fields': fieldsToRead,
             })
             console.log(data);
+            // Se establece el valor del estado
+            setData(data);
         }, [api, fieldsToRead, modelName]
     );
 
-    return { fieldsToRead, suscribeFieldToRead, searchRead };
+    // Obtención de los datos
+    useEffect(
+        () => {
+            searchRead();
+        }, [searchRead]
+    );
+
+    return { fieldsToRead, suscribeFieldToRead, fieldsMetadataLoaded, data };
 };
 
 const Tree = <M extends IACele.Data.ModelName>({
@@ -63,7 +78,8 @@ const Tree = <M extends IACele.Data.ModelName>({
     children,
 }: TreeParams<M>) => {
 
-    const { fieldsToRead, suscribeFieldToRead, searchRead } = useTree<M>(modelName);
+    // Obtención de estados y funciones desde hook
+    const { fieldsToRead, suscribeFieldToRead, fieldsMetadataLoaded, data } = useTree<M>(modelName);
 
     useEffect(
         () => {
@@ -71,18 +87,15 @@ const Tree = <M extends IACele.Data.ModelName>({
         }, [fieldsToRead]
     );
 
-    useEffect(
-        () => {
-            searchRead();
-        }, [searchRead]
-    );
-
     return (
         <TreeContext.Provider value={{
             fieldsToRead,
-            suscribeFieldToRead: suscribeFieldToRead as (fieldName: any) => void
+            suscribeFieldToRead: suscribeFieldToRead as ( (fieldName: any) => void ),
         }}>
             {children({ Field })}
+            {fieldsMetadataLoaded && data &&
+                "Renderizado"
+            }
         </TreeContext.Provider>
     );
 };

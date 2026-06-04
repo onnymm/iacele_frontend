@@ -15,13 +15,23 @@ declare namespace IACele {
             setPageName: React.Dispatch<React.SetStateAction<string | null>>;
         };
 
+        type ModelsMetadata = Partial<Record<IACele.Data.ModelName, IACele.Data.Shape.FieldsMetadata[]>>;
+
     };
 
     declare namespace API {
 
         declare namespace Request {
 
-            type FieldsMetadata<M extends Data.ModelName> = _RequiresModelName<M>;
+            declare namespace _Definition {
+
+                interface _RequiresModelName<M extends Data.ModelName> {
+                    'model_name': M;
+                };
+
+            };
+
+            type FieldsMetadata<M extends Data.ModelName> = _Definition._RequiresModelName<M>;
 
             interface Tree<M extends Data.ModelName> {
                 model_name: M,
@@ -57,7 +67,7 @@ declare namespace IACele {
                 selection_ids: {
                     id: TType.Integer<'not_null'>;
                     name: TType.Char<'not_null'>;
-                    display_name: TType.Char<'not_null'>;
+                    label: TType.Char<'not_null'>;
                 }[];
                 readonly: TType.Boolean<'not_null'>;
                 is_computed: TType.Boolean<'not_null'>;

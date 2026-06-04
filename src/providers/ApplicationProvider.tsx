@@ -1,3 +1,4 @@
+import ModelsMetadataProvider from "./ModelsMetadataProvider";
 import PageNameProvider from "./PageNameProvider"
 
 const ApplicationProvider = ({
@@ -6,7 +7,9 @@ const ApplicationProvider = ({
 
     return (
         <PageNameProvider>
-            {children}
+            <ModelsMetadataProvider>
+                {children}
+            </ModelsMetadataProvider>
         </PageNameProvider>
     );
 };
