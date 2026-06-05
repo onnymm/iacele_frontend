@@ -35,7 +35,13 @@ declare namespace IACele {
 
             interface Tree<M extends Data.ModelName> {
                 model_name: M;
-                fields: (keyof Data.ModelDefinition<M>)[];
+                fields: (
+                    | keyof Data.ModelDefinition<M>
+                    | [
+                        keyof Data.ModelDefinition<M>,
+                        string[],
+                    ]
+                )[];
                 limit: number;
             };
 
@@ -48,6 +54,7 @@ declare namespace IACele {
             interface Tree<M extends Data.ModelName> {
                 count: number;
                 data: Data.ModelDefinition<M>[];
+                model_label: string;
             };
 
         };
@@ -144,8 +151,8 @@ declare namespace IACele {
             type Text<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
             type File<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
             type Many2One<N extends NullityKey = 'null_'> = _WithNullOption<[number, string]>[N];
-            type One2Many = number[];
-            type Many2Many = number[];
+            type One2Many = (number | {id: number; display_name: string;})[];
+            type Many2Many = (number | {id: number; display_name: string;})[];
             type JSON<N extends NullityKey = 'null_'> = _WithNullOption<_JSON.JSON>[N];
 
         };
