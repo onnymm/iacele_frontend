@@ -102,12 +102,14 @@ class Client {
     tree = async <M extends IACele.Data.ModelName>({
         model_name: modelName,
         fields,
+        limit,
     }: IACele.API.Request.Tree<M>) => {
 
         // Inicialización de objeto de datos
         const data: IACele.API.Request.Tree<M> = {
             'model_name': modelName,
             'fields': fields,
+            'limit': limit,
         };
 
         // Función de búsqueda y lectura para árbol

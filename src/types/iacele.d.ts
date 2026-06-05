@@ -34,8 +34,9 @@ declare namespace IACele {
             type FieldsMetadata<M extends Data.ModelName> = _Definition._RequiresModelName<M>;
 
             interface Tree<M extends Data.ModelName> {
-                model_name: M,
-                fields: (keyof Data.ModelDefinition<M>)[]
+                model_name: M;
+                fields: (keyof Data.ModelDefinition<M>)[];
+                limit: number;
             };
 
         };

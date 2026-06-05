@@ -3,6 +3,7 @@ import useLoadModelMetadata from "@/hooks/views/useModelMetadata";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface TreeParams<M extends IACele.Data.ModelName> {
     modelName: M;
@@ -30,6 +31,10 @@ interface ViewProps<TData, TValue> {
 interface TreeViewParams<M extends IACele.Data.ModelName> {
     modelName: M;
     data: IACele.API.Response.Tree<M>;
+};
+
+interface DynamicWidgetParams<T> {
+    value: T;
 };
 
 const useTree = <M extends IACele.Data.ModelName>(
@@ -68,6 +73,7 @@ const useTree = <M extends IACele.Data.ModelName>(
             const data = await api.tree({
                 'model_name': modelName,
                 'fields': fieldsToRead,
+                'limit': 40,
             })
             console.log(data);
             // Se establece el valor del estado
@@ -146,9 +152,15 @@ const TreeView = <M extends IACele.Data.ModelName>({
         ( fieldName ) => ({
             accessorKey: fieldName,
             header: fieldsMetadata(modelName, fieldName)['label'],
-            cell: ({ row }) => (
-                row.getValue(fieldName as string)
-            ),
+            cell: ({ row }) => {
+                // Obtención de metadatos
+                const { ttype } = fieldsMetadata(modelName, fieldName);
+
+                const Component = widget[ttype];
+                return (
+                    <Component value={row.getValue(fieldName as string)} />
+                )
+            }
         }),
     );
 
@@ -228,4 +240,122 @@ const View = <TData, TValue>({
             </TableBody>
         </Table>
     );
+};
+
+// ----------------------------------------------------------------------------
+
+const Widget = {
+
+    Integer: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Integer>) => {
+
+        return (
+            value
+        );
+    },
+
+    Char: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Char>) => {
+
+        return (
+            value
+        );
+    },
+
+    Boolean: ({
+        value = false,
+    }: DynamicWidgetParams<IACele.Data.TType.Boolean>) => {
+
+        if ( value === null ) {
+            value = false;
+        }
+
+        return (
+            <Checkbox checked={value} disabled />
+        );
+    },
+
+    Float: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Float>) => {
+
+        return (
+            value
+        );
+    },
+
+    Selection: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Selection<string>>) => {
+
+        return (
+            value
+        );
+    },
+
+    Text: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Text>) => {
+
+        return (
+            value
+        );
+    },
+
+    Many2One: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Many2One>) => {
+
+        return (
+            value !== null
+                ? <span className="font-bold text-primary">{value[1]}</span>
+                : null
+        );
+    },
+
+    JSON: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.JSON>) => {
+
+        return (
+            <span className="bg-neutral-700 shadow-sm px-2 border border-gray-300 rounded-sm ring-transparent font-mono text-green-500">
+                {
+                    value === null
+                        ? 'null'
+                        : typeof value === 'string'
+                            ? `"${value}"`
+                            : `${value}`
+                }
+            </span>
+        );
+    },
+
+    Generic: ({
+        value,
+    }: DynamicWidgetParams<IACele.Data.TType.Char>) => {
+
+        return value;
+    },
+
+};
+
+const widget: Record<IACele.Data.TTypeName, React.FC<DynamicWidgetParams<any>>> = {
+    'char': Widget.Char,
+    'boolean': Widget.Boolean,
+    'integer': Widget.Integer,
+    'float': Widget.Float,
+    'selection': Widget.Selection,
+    'text': Widget.Text,
+    'many2one': Widget.Many2One,
+    'json': Widget.JSON,
+
+    'date': Widget.Generic,
+    'datetime': Widget.Generic,
+    'time': Widget.Generic,
+    'duration': Widget.Generic,
+    'file': Widget.Generic,
+    'one2many': Widget.Generic,
+    'many2many': Widget.Generic,
 };
