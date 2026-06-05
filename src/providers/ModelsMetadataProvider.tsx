@@ -24,9 +24,9 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
             if ( fieldsMetadata === undefined ) {
                 // Obtención de metadatos
                 fieldsMetadata = await api.fieldsMetadata({ 'model_name': modelName });
+                // Se guardan los metadatos en la referencia
+                modelsMetadataRef.current[modelName] = fieldsMetadata;
             };
-            // Se guardan los metadatos en la referencia
-            modelsMetadataRef.current[modelName] = fieldsMetadata;
 
             // Se establece el estado a verdadero
             setLoaded(true);
