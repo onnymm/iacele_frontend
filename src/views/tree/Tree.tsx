@@ -18,14 +18,13 @@ interface RenderParams<M extends IACele.Data.ModelName> {
 };
 
 interface TreeContextParams<M extends IACele.Data.ModelName> {
-    fieldsToRead: FieldConfig<M>[];
+    fieldsConfig: FieldConfig<M>[];
     suscribeFieldToRead: (config: FieldConfig<M>) => void;
     label?: string;
 };
 
 interface FieldParams<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M>;
-    widget?: 'array_tags'
 };
 
 interface ViewProps<TData, TValue> {
@@ -42,12 +41,10 @@ interface DynamicWidgetParams<M extends IACele.Data.ModelName, T> {
     modelName: M;
     fieldName: keyof IACele.Data.ModelDefinition<M>;
     value: T;
-    widget?: 'array_tags';
 };
 
 interface FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
-    widget?: 'array_tags';
 };
 
 const useTree = <M extends IACele.Data.ModelName>(
@@ -62,7 +59,7 @@ const useTree = <M extends IACele.Data.ModelName>(
     const [ data, setData ] = useState<IACele.API.Response.Tree<M> | null>(null);
 
     // Inicialización de lista de campos a leer
-    const fieldsToRead: FieldConfig<M>[] = useMemo(
+    const fieldsConfig: FieldConfig<M>[] = useMemo(
         () => ([]), []
     );
 
@@ -70,7 +67,7 @@ const useTree = <M extends IACele.Data.ModelName>(
     const suscribeFieldToRead = useCallback(
         (config: FieldConfig<M>) => {
             // Se busca el valor del campo en el array
-            const foundValue = fieldsToRead.find( (suscribedConfig) => (
+            const foundValue = fieldsConfig.find( (suscribedConfig) => (
                 suscribedConfig.name === config.name
                 || (
                     (
@@ -83,9 +80,9 @@ const useTree = <M extends IACele.Data.ModelName>(
             // Si el nombre del campo no existe en el array...
             if ( !foundValue ) {
                 // Se añade éste
-                fieldsToRead.push(config);
+                fieldsConfig.push(config);
             };
-        }, [fieldsToRead]
+        }, [fieldsConfig]
     );
 
     // Inicialización de función de búsqueda y lectura de resultados
@@ -94,13 +91,13 @@ const useTree = <M extends IACele.Data.ModelName>(
             // Obtención de los datos de registros desde la API
             const data = await api.tree({
                 'model_name': modelName,
-                'fields': fieldsToRead.map((config) => (config.name)),
+                'fields': fieldsConfig.map((config) => (config.name)),
                 'limit': 40,
             })
 
             // Se establece el valor del estado
             setData(data);
-        }, [api, fieldsToRead, modelName]
+        }, [api, fieldsConfig, modelName]
     );
 
     // Obtención de los datos
@@ -110,7 +107,7 @@ const useTree = <M extends IACele.Data.ModelName>(
         }, [searchRead]
     );
 
-    return { fieldsToRead, suscribeFieldToRead, fieldsMetadataLoaded, data };
+    return { fieldsConfig, suscribeFieldToRead, fieldsMetadataLoaded, data };
 };
 
 const Tree = <M extends IACele.Data.ModelName>({
@@ -120,11 +117,11 @@ const Tree = <M extends IACele.Data.ModelName>({
 }: TreeParams<M>) => {
 
     // Obtención de estados y funciones desde hook
-    const { fieldsToRead, suscribeFieldToRead, fieldsMetadataLoaded, data } = useTree<M>(modelName);
+    const { fieldsConfig, suscribeFieldToRead, fieldsMetadataLoaded, data } = useTree<M>(modelName);
 
     return (
         <TreeContext.Provider value={{
-            fieldsToRead,
+            fieldsConfig,
             suscribeFieldToRead: suscribeFieldToRead as ( (fieldName: any) => void ),
             label,
         }}>
@@ -139,33 +136,20 @@ const Tree = <M extends IACele.Data.ModelName>({
 export default Tree;
 
 const TreeContext = createContext<TreeContextParams<any>>({
-    fieldsToRead: [],
+    fieldsConfig: [],
     suscribeFieldToRead: () => null,
     label: undefined,
 });
 
 const Field = <M extends IACele.Data.ModelName>({
     name,
-    widget
 }: FieldParams<M>) => {
 
     // Obtención de función de suscripción de campo
     const { suscribeFieldToRead } = useContext(TreeContext);
 
-    if ( !widget ) {
-        // Suscripción de campo
-        suscribeFieldToRead({name});
-    } else {
-        if ( widget === 'array_tags' ) {
-            suscribeFieldToRead({
-                name: [
-                    (name as string),
-                    ['display_name'],
-                ],
-                widget,
-            });
-        };
-    };
+    // Suscripción de campo
+    suscribeFieldToRead({name});
 
     return null;
 };
@@ -176,7 +160,7 @@ const TreeView = <M extends IACele.Data.ModelName>({
 }: TreeViewParams<M>) => {
 
     // Obtención de arreglo de campos a leer desde el contexto
-    const { fieldsToRead, label } = useContext(TreeContext);
+    const { fieldsConfig, label } = useContext(TreeContext);
     // Obtención de función de consulta de metadatos de campo
     const { fieldsMetadata } = useLoadModelMetadata<M>(modelName);
     // Cambio de nombre de página
@@ -188,7 +172,7 @@ const TreeView = <M extends IACele.Data.ModelName>({
         ColumnDef<IACele.Data.ModelDefinition<M>>
     >(
         // Iterable a usar
-        (fieldsToRead.map((config) => (config))),
+        (fieldsConfig.map((config) => (config))),
         // Función de mapeo
         ( config ) => {
             
@@ -200,18 +184,25 @@ const TreeView = <M extends IACele.Data.ModelName>({
 
             return ({
                 accessorKey: fieldName,
-                header: fieldsMetadata(modelName, fieldName)['label'],
+                header: (
+                    fieldsMetadata(
+                        modelName,
+                        fieldName,
+                    )['label']
+                ),
                 cell: ({ row }) => {
+
                     // Obtención de metadatos
                     const { ttype } = fieldsMetadata(modelName, fieldName);
 
+                    // Obtención de componente a renderizar
                     const Component = widget[ttype];
+
                     return (
                         <Component
                             value={row.getValue(fieldName as string)}
                             modelName={modelName}
                             fieldName={fieldName}
-                            widget={config.widget}
                         />
                     )
                 }
@@ -409,17 +400,18 @@ const Widget = {
         );
     },
 
+    ArrayTags: ({
+        value,
+    }: DynamicWidgetParams<any, IACele.Data.TType.One2Many>) => {
+
+        return (
+            <ArrayTags value={(value as {id: number; display_name: string;}[])} />
+        );
+    },
+
     Generic: ({
         value,
-        widget,
     }: DynamicWidgetParams<any, IACele.Data.TType.Char>) => {
-
-        // Si se especificó un widget
-        if ( widget === 'array_tags' ) {
-            return (
-                <ArrayTags value={(value as any as {id: number; display_name: string;}[])} />
-            );
-        };
 
         return value;
     },
@@ -463,6 +455,6 @@ const widget: Record<IACele.Data.TTypeName, React.FC<DynamicWidgetParams<any, an
     'time': Widget.Generic,
     'duration': Widget.Generic,
     'file': Widget.Generic,
-    'one2many': Widget.Generic,
-    'many2many': Widget.Generic,
+    'one2many': Widget.ArrayTags,
+    'many2many': Widget.ArrayTags,
 };
