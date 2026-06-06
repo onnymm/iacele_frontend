@@ -1,12 +1,20 @@
+import { useCallback, useState } from "react";
 import UserDataContext from "../contexts/app/userDataContext";
-import useUserData from "../hooks/app/useUserData";
+import userTemplate from "@/constants/api/userTemplate";
 
 const UserDataProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 
-    // Obtención de valor y funciones desde hook
-    const { userData, setUserData, removeUserData } = useUserData();
+    // Inicialización de estado de datos del usuario
+    const [ userData, setUserData ] = useState<IACele.App.Me>(userTemplate);
+
+    // Función para remover los datos del usuario
+    const removeUserData = useCallback(
+        () => {
+            setUserData(userTemplate);
+        }, []
+    );
 
     return (
         <UserDataContext.Provider value={{ userData, setUserData, removeUserData }}>
