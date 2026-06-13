@@ -164,7 +164,13 @@ const TreeView = <M extends IACele.Data.ModelName>({
     // Obtención de función de consulta de metadatos de campo
     const { fieldsMetadata } = useLoadModelMetadata<M>(modelName);
     // Cambio de nombre de página
-    useViewName(label ?? data['model_label']);
+    const { setViewName } = useViewName();
+
+    useEffect(
+        () => {
+            setViewName(label ?? data['model_label']);
+        }, [setViewName, label, data]
+    )
 
     // Inicialización de declaración de columnas de vista
     const columns: ColumnDef<IACele.Data.ModelDefinition<M>>[] = Array.from<
