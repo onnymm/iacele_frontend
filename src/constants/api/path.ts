@@ -3,11 +3,17 @@ const PATH = {
     ACCOUNT: {
         ME: '/account/me',
     },
+    CRUD: {
+        CREATE: '/crud/create',
+        UPDATE: '/crud/update',
+        DELETE: '/crud/delete',
+    },
     METADATA: {
         FIELDS: '/metadata/fields',
     },
     FRONTEND: {
         TREE: '/frontend/tree',
+        FORM: '/frontend/form',
     },
 };
 

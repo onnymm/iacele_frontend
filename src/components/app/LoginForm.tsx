@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import MiniForm from "../ui/layer/MiniForm"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
-import { Eye, EyeClosed, LockKeyhole, ShieldAlert, UserRound, type LucideProps } from 'lucide-react';
+import { Eye, EyeClosed, LockKeyhole, UserRound, type LucideProps } from 'lucide-react';
 import Group from "../ui/layer/Group";
 import { Button } from "../ui/button";
-import { Alert } from "../ui/alert";
 import useFocus from "@/hooks/ui/useFocus";
 import useLogin from "@/hooks/app/useLogin";
 import { Spinner } from "../ui/spinner";
+import Alert from "../ui/Alerts/Alert";
 
 interface InputParams {
+    id?: string;
     icon?: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
     placeholder?: string;
     onValueChange?: (value: string) => void;
@@ -26,7 +27,7 @@ interface SubmitButtonParams extends IACele.Common.SupportsChildren {
 const LoginForm = () => {
 
     // Obtención de valores y funciones desde hook
-    const { user, setUser, password, setPassword, login, authenticationError, loading, errorDetail } = useLogin();
+    const { user, setUser, password, setPassword, login, authenticationError, loading, detail } = useLogin();
     // Inicialización de estados
     const [ isSubmitDisabled, setIsSubmitDisabled ] = useState<boolean>(true);
     const [ isPasswordVisible, setIsPasswordVisible ] = useState<boolean>(false);
@@ -53,12 +54,14 @@ const LoginForm = () => {
         <MiniForm onSubmit={login}>
             <Group title="Ingresar">
                 <Input
+                    id="username"
                     icon={UserRound}
                     placeholder="Usuario"
                     onValueChange={setUser}
                     isInvalid={authenticationError}
                 />
                 <Input
+                    id="password"
                     icon={LockKeyhole}
                     placeholder="Contraseña"
                     onValueChange={setPassword}
@@ -84,16 +87,7 @@ const LoginForm = () => {
                 />
             </Group>
             <SubmitButton isDisabled={isSubmitDisabled} isLoading={loading}>Iniciar sesión</SubmitButton>
-
-            {errorDetail &&
-                <Alert className="flex justify-center bg-destructive/10 border-destructive" variant='destructive'>
-                    <div className="flex flex-row items-center gap-2">
-                        <ShieldAlert className="stroke-destructive size-5" />
-                        {errorDetail}
-                    </div>
-                </Alert>
-            }
-
+            <Alert detail={detail} />
         </MiniForm>
     );
 };
@@ -143,7 +137,7 @@ const Input = ({
     );
 
     return (
-        <InputGroup className={`${isInvalid ? 'border-destructive/50 text-destructive' : 'border-muted-foreground/50'} border-2`}>
+        <InputGroup className={`${isInvalid ? 'border-danger/50 text-danger' : 'border-muted-foreground/50'} border-2`}>
             <InputGroupInput
                 placeholder={placeholder}
                 onFocus={setFocusOn}

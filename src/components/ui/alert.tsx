@@ -9,8 +9,16 @@ const alertVariants = cva(
     variants: {
       variant: {
         default: "bg-card text-card-foreground",
-        destructive:
-          "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+        primary:
+          "bg-card text-primary bg-primary/10 border-primary *:data-[slot=alert-description]:text-primary/90 *:[svg]:text-current",
+        info:
+          "bg-card text-info bg-info/10 border-info *:data-[slot=alert-description]:text-info/90 *:[svg]:text-current",
+        success:
+          "bg-card text-success bg-success/10 border-success *:data-[slot=alert-description]:text-success/90 *:[svg]:text-current",
+        warning:
+          "bg-card text-warning bg-warning/10 border-warning *:data-[slot=alert-description]:text-warning/90 *:[svg]:text-current",
+        danger:
+          "bg-card text-danger bg-danger/10 border-danger *:data-[slot=alert-description]:text-danger/90 *:[svg]:text-current",
       },
     },
     defaultVariants: {
@@ -39,7 +47,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="alert-title"
       className={cn(
-        "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+        "group-has-[>svg]/alert:col-start-2 font-medium [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
         className
       )}
       {...props}
@@ -55,7 +63,7 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        "text-sm text-balance text-muted-foreground md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+        "[&_p:not(:last-child)]:mb-4 text-muted-foreground [&_a]:hover:text-foreground text-sm [&_a]:underline [&_a]:underline-offset-3 text-balance md:text-pretty",
         className
       )}
       {...props}
@@ -67,7 +75,7 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-action"
-      className={cn("absolute top-2.5 right-3", className)}
+      className={cn("top-2.5 right-3 absolute", className)}
       {...props}
     />
   )

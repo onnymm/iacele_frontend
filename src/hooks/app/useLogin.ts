@@ -1,10 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
 import useAPI from "./useAPI";
-import type { AxiosError } from "axios";
 import { useNavigate } from "react-router";
 import useUserToken from "./useUserToken";
+import useAlert from "../ui/useAlert";
+import { ServerOff, ShieldAlert } from "lucide-react";
 
 const useLogin = () => {
+
+    // Definición de opciones de detalle
+    const { detail, resetDetail, setAlertDetail } = useAlert<'password' | 'connection'>({
+        'password': {
+            icon: ShieldAlert,
+            variant: 'danger',
+        },
+        'connection': {
+            icon: ServerOff,
+            variant: 'danger',
+        },
+    });
 
     // Obtención de valor de token desde el contexto
     const { userToken } = useUserToken();
@@ -16,16 +29,18 @@ const useLogin = () => {
     const [ user, setUser ] = useState<string>('');
     const [ password, setPassword ] = useState<string>('');
     const [ authenticationError, setAuthenticationError ] = useState<boolean>(false);
-    const [ errorDetail, setErrorDetail ] = useState<string | undefined>(undefined);
     const [ loading, setLoading ] = useState<boolean>(false);
 
     // Función que se ejecuta tras haber un error
     const onError = useCallback(
-        (e: AxiosError<{detail: string}>) => {
-            // Se establece el error de autenticación en verdadero
-            setAuthenticationError(true);
-            setErrorDetail(e.response?.data.detail)
-        }, []
+        (e: {status?: number; detail?: string;}) => {
+            if ( e.status === 408 ) {
+                setAlertDetail('connection', 'No se puede conectar con el servidor.');
+            } else {
+                setAlertDetail('password', e.detail as string);
+                setAuthenticationError(true);
+            };
+        }, [setAlertDetail]
     );
 
     // Tras un error, cualquier cambio en los datos ejecutará...
@@ -33,9 +48,8 @@ const useLogin = () => {
         () => {
             // Remoción del indicador de error
             setAuthenticationError(false);
-            // Remoción del detalle de error
-            setErrorDetail(undefined);
-        }, [user, password]
+            resetDetail();
+        }, [user, password, resetDetail]
     );
 
     useEffect(
@@ -50,13 +64,13 @@ const useLogin = () => {
 
     // Función para inicio de sesión
     const login = useCallback(
-        (e: React.SubmitEvent) => {
+        async (e: React.SubmitEvent) => {
             // Prevención de comportamiento predeterminado
             e.preventDefault();
             // Se establece estado de carga
             setLoading(true);
             // Intento de inicio de sesión
-            api.login(user, password, onError);
+            await api.login(user, password, onError);
         }, [api, user, password, onError]
     );
 
@@ -70,7 +84,7 @@ const useLogin = () => {
         }, [userToken, navigateTo]
     );
 
-    return { user, setUser, password, setPassword, login, authenticationError, loading, errorDetail };
+    return { user, setUser, password, setPassword, login, authenticationError, loading, detail };
 };
 
 export default useLogin;

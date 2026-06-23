@@ -1,5 +1,5 @@
 import ModelsMetadataContext from "@/contexts/app/modelsMetadataContext";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 const useLoadModelMetadata = <M extends IACele.Data.ModelName>(
     modelName: M,
@@ -8,16 +8,26 @@ const useLoadModelMetadata = <M extends IACele.Data.ModelName>(
     // Obtención de función de carga desde el contexto
     const { getFieldsMetadata, fieldsMetadata } = useContext(ModelsMetadataContext);
     // Inicialización de estado de carga de los metadatos de campo
-    const [ loaded, setLoaded ] = useState<boolean>(false);
+    const [ metadataLoaded, setMetadataLoaded ] = useState<boolean>(false);
+
+    // Función para obtención de metadatos de un campo específico del modelo provisto
+    const getFieldMetadata = useCallback(
+        (
+            fieldName: keyof IACele.Data.ModelDefinition<M>,
+        ) => {
+            const fieldMetadata = fieldsMetadata(modelName, fieldName);
+            return fieldMetadata;
+        }, [fieldsMetadata, modelName]
+    );
 
     // Carga de los metadatos de campos del modelo
     useEffect(
         () => {
-            getFieldsMetadata(modelName, setLoaded);
+            getFieldsMetadata(modelName, setMetadataLoaded);
         }, [getFieldsMetadata, modelName]
     );
 
-    return { loaded, fieldsMetadata };
+    return { metadataLoaded, fieldsMetadata, getFieldMetadata };
 };
 
 export default useLoadModelMetadata;

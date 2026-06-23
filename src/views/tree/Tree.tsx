@@ -54,7 +54,7 @@ const useTree = <M extends IACele.Data.ModelName>(
     // Obtención de la instancia de conexión a la API
     const { api } = useAPI();
     // Obtención de estado de carga de los metadatos de campos
-    const { loaded: fieldsMetadataLoaded } = useLoadModelMetadata<M>(modelName);
+    const { metadataLoaded } = useLoadModelMetadata<M>(modelName);
     // Incialización de estado de datos
     const [ data, setData ] = useState<IACele.API.Response.Tree<M> | null>(null);
 
@@ -107,7 +107,7 @@ const useTree = <M extends IACele.Data.ModelName>(
         }, [searchRead]
     );
 
-    return { fieldsConfig, suscribeFieldToRead, fieldsMetadataLoaded, data };
+    return { fieldsConfig, suscribeFieldToRead, metadataLoaded, data };
 };
 
 const Tree = <M extends IACele.Data.ModelName>({
@@ -117,7 +117,7 @@ const Tree = <M extends IACele.Data.ModelName>({
 }: TreeParams<M>) => {
 
     // Obtención de estados y funciones desde hook
-    const { fieldsConfig, suscribeFieldToRead, fieldsMetadataLoaded, data } = useTree<M>(modelName);
+    const { fieldsConfig, suscribeFieldToRead, metadataLoaded, data } = useTree<M>(modelName);
 
     return (
         <TreeContext.Provider value={{
@@ -126,7 +126,7 @@ const Tree = <M extends IACele.Data.ModelName>({
             label,
         }}>
             {children({ Field })}
-            {fieldsMetadataLoaded && data &&
+            {metadataLoaded && data &&
                 <TreeView data={data} modelName={modelName} />
             }
         </TreeContext.Provider>

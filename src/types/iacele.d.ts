@@ -1,9 +1,19 @@
 declare namespace IACele {
 
+    declare namespace Typing {
+
+        type ScalarOrArray<T> = T | T[];
+
+    };
+
     declare namespace Common {
 
         interface SupportsChildren {
             children: React.ReactNode;
+        };
+
+        interface SupportsClasName {
+            className: string;
         };
 
     };
@@ -29,20 +39,68 @@ declare namespace IACele {
                     'model_name': M;
                 };
 
+                interface _RequiresFieldsSelection<M extends Data.ModelName> {
+                    'fields': Data.FieldsSelection<M>;
+                };
+
+                interface _RequiresRecordIDs {
+                    'record_ids': IACele.Typing.ScalarOrArray<number>;
+                };
+
+                interface _RequiresRecordsData <M extends Data.ModelName>{
+                    'data': Typing.ScalarOrArray<Partial<Data.ModelDefinition<M>>>;
+                };
+
+                interface _RequiresRecordData <M extends Data.ModelName>{
+                    'data': Partial<Data.ModelDefinition<M>>;
+                };
+
+                declare namespace Base {
+
+                    type Create<M extends Data.ModelName> = (
+                        & _Definition._RequiresModelName<M>
+                        & _RequiresRecordsData<M>
+                    );
+
+                    type Update<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresRecordIDs
+                        & _RequiresRecordData<M>
+                    );
+
+                    type Delete<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresRecordIDs
+                    );
+
+                    type Tree<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresFieldsSelection<M>
+                    );
+
+                    type Form<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresFieldsSelection<M>
+                    );
+
+                };
+
             };
 
             type FieldsMetadata<M extends Data.ModelName> = _Definition._RequiresModelName<M>;
 
-            interface Tree<M extends Data.ModelName> {
-                model_name: M;
-                fields: (
-                    | keyof Data.ModelDefinition<M>
-                    | [
-                        keyof Data.ModelDefinition<M>,
-                        string[],
-                    ]
-                )[];
-                limit: number;
+            type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
+
+            type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
+
+            type Delete<M extends Data.ModelName> = _Definition.Base.Delete<M>;
+
+            interface Tree<M extends Data.ModelName> extends _Definition.Base.Tree<M> {
+                'limit': number;
+            };
+
+            interface Form<M extends Data.ModelName> extends _Definition.Base.Form<M> {
+                'record_ids': number;
             };
 
         };
@@ -51,10 +109,21 @@ declare namespace IACele {
 
             type FieldsMetadata = IACele.Data.Shape.FieldsMetadata[];
 
+            type Create = number[];
+
+            type Update = true;
+
+            type Delete = true;
+
             interface Tree<M extends Data.ModelName> {
-                count: number;
-                data: Data.ModelDefinition<M>[];
-                model_label: string;
+                'count': number;
+                'data': Data.ModelDefinition<M>[];
+                'model_label': string;
+            };
+
+            interface Form<M extends Data.ModelName> {
+                'record': Data.ModelDefinition<M>;
+                'name': string;
             };
 
         };
@@ -62,6 +131,13 @@ declare namespace IACele {
     };
 
     declare namespace Data {
+
+        type RelatedFieldFieldsSelection<M extends ModelName> = [ FieldName<M>, string[] ];
+
+        type FieldsSelection<M extends ModelName> = (
+            | FieldName<M>
+            | RelatedFieldFieldsSelection<M>
+        )[];
 
         declare namespace Shape {
 
@@ -319,6 +395,8 @@ declare namespace IACele {
             & Model[M]
         );
 
+        type FieldName<M extends ModelName> = keyof ModelDefinition<M>;
+
     };
 
     declare namespace App {
@@ -384,9 +462,25 @@ declare namespace IACele {
                 M extends IACele.Data._Core.ModelName,
             >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
 
+            create: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Create<M>,
+            ) => Promise<IACele.API.Response.Create>;
+
+            update: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Update<M>,
+            ) => Promise<true>;
+
+            delete: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Delete<M>,
+            ) => Promise<true>;
+
             tree: <M extends IACele.Data.ModelName>(
                 params: IACele.API.Request.Tree<M>,
             ) => Promise<IACele.API.Response.Tree<M>>;
+
+            form: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.Form<M>,
+            ) => Promise<IACele.API.Response.Form<M>>;
 
         };
 
@@ -396,6 +490,55 @@ declare namespace IACele {
             setAppLoading: (loading: boolean) => void;
             setUserData: (data: IACele.App.Me) => void;
             removeUserData: () => void;
+        };
+
+    };
+
+    declare namespace UI {
+
+        type Variant = 'info' | 'primary' | 'success' | 'warning' | 'danger';
+
+        declare namespace Alert {
+
+            declare namespace _Definition {
+
+                interface AlertDetail {
+                    icon: React.FC<Common.SupportsClasName>;
+                    variant: Variant;
+                    message: string;
+                    display: true;
+                };
+
+                interface EmptyAlertDetail {
+                    icon: null;
+                    variant: undefined;
+                    message: undefined;
+                    display: false;
+                };
+
+                interface DetailBody {
+                    icon: React.FC<IACele.Common.SupportsClasName>;
+                    variant: Variant;
+                };
+
+                type AlertOptions<O extends string> = {
+                    [K in O]: DetailBody;
+                };
+
+            };
+            
+            type Options<O extends string> = _Definition.AlertOptions<O>;
+            
+            type Detail = _Definition.AlertDetail;
+            
+            type EmptyDetail = _Definition.EmptyAlertDetail;
+
+            interface Component {
+                detail: Detail | EmptyDetail;
+                onClose?: () => void;
+                canClose?: boolean;
+            };
+
         };
 
     };
