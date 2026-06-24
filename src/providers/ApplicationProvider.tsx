@@ -1,16 +1,13 @@
-import ModelsMetadataProvider from "./ModelsMetadataProvider";
-import PageNameProvider from "./PageNameProvider"
+import MainControlsProvider from "./MainControlsProvider";
 
 const ApplicationProvider = ({
     children,
 }: IACele.Common.SupportsChildren) => {
 
     return (
-        <PageNameProvider>
-            <ModelsMetadataProvider>
-                {children}
-            </ModelsMetadataProvider>
-        </PageNameProvider>
+        <MainControlsProvider>
+            {children}
+        </MainControlsProvider>
     );
 };
 

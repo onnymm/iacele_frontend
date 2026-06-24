@@ -1,17 +1,10 @@
-import { useContext } from "react";
-import UserDataContext from "./contexts/app/userDataContext";
-import APIContext from "./contexts/app/apiContext";
+import Navbar from "./components/common/navbar/Navbar";
 
 const App = () => {
 
-    const { userData } = useContext(UserDataContext);
-    const { appLoading } = useContext(APIContext);
-
     return (
         <>
-            <div>{userData.name}</div>
-            <div>En estado de carga: {`${appLoading}`}</div>
-            Iacele
+            <Navbar />
         </>
     );
 };
