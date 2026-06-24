@@ -1,9 +1,12 @@
-import axios, { AxiosError, type AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import tokenInterceptor from "../security/tokenInterceptor";
 import PATH from "../constants/api/path";
 
 // Error de API
-type APIError = AxiosError<{detail: string}>
+type APIError = {
+    status?: number;
+    detail?: string;
+};
 
 const iaCeleAxios = axios.create();
 
@@ -259,7 +262,7 @@ class Client {
 
     private execute = async <T>(
         callback: () => Promise<T>,
-        onError: (e: AxiosError<{detail: string}>) => void,
+        onError: (e: APIError) => void,
     ): Promise<T> => {
 
         // Se establece el estado de carga en verdadero
@@ -279,10 +282,23 @@ class Client {
         } catch (e) {
             // Tipado para Axios
             if ( axios.isAxiosError(e) ) {
-                // Ejecución de función de manejo de error
-                onError(e as AxiosError<{detail: string}>);
+                if ( e.code === 'ERR_NETWORK' ) {
+                    onError({
+                        status: 408,
+                        detail: 'Hubo un error al intentar conectarse al servidor.',
+                    })
+                } else {
+                    // Ejecución de función de manejo de error
+                    onError({
+                        status: 404,
+                        detail: e.response?.data.detail,
+                    });
+                };
                 // Se muestra el error
-                this.error(e);
+                this.error({
+                    status: e.status,
+                    detail: e.response?.data.detail,
+                });
 
             };
 
@@ -302,7 +318,7 @@ class Client {
     ) => {
 
         // Impresión del error en la consola
-        console.log(error.response?.data.detail);
+        console.log(error.detail);
     }
 
     private toPath = (
