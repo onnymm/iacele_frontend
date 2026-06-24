@@ -39,8 +39,12 @@ declare namespace IACele {
                     'model_name': M;
                 };
 
+                interface _SupportsSearchCriteria<M extends Data.ModelName> {
+                    'search_criteria'?: Data.CriteriaStructure<M>;
+                };
+
                 interface _RequiresFieldsSelection<M extends Data.ModelName> {
-                    'fields': Data.FieldsSelection<M>;
+                    'fields'?: Data.FieldsSelection<M>;
                 };
 
                 interface _RequiresRecordIDs {
@@ -55,11 +59,29 @@ declare namespace IACele {
                     'data': Partial<Data.ModelDefinition<M>>;
                 };
 
+                interface _SupportsSorting <M extends Data.ModelName>{
+                    'sortby'?: Typing.ScalarOrArray<Data.FieldName<M>>;
+                    'ascending'?: Typing.ScalarOrArray<boolean>;
+                };
+
+                interface _SupportsSlicing {
+                    'offset'?: number;
+                    'limit'?: number;
+                };
+
                 declare namespace Base {
 
                     type Create<M extends Data.ModelName> = (
-                        & _Definition._RequiresModelName<M>
+                        & _RequiresModelName<M>
                         & _RequiresRecordsData<M>
+                    );
+
+                    type SearchRead<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _SupportsSearchCriteria<M>
+                        & _RequiresFieldsSelection<M>
+                        & _SupportsSorting<M>
+                        & _SupportsSlicing
                     );
 
                     type Update<M extends Data.ModelName> = (
@@ -91,6 +113,8 @@ declare namespace IACele {
 
             type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
 
+            type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
+
             type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
 
             type Delete<M extends Data.ModelName> = _Definition.Base.Delete<M>;
@@ -110,6 +134,8 @@ declare namespace IACele {
             type FieldsMetadata = IACele.Data.Shape.FieldsMetadata[];
 
             type Create = number[];
+
+            type SearchRead<M extends Data.ModelName> = Data.ModelDefinition<M>[]
 
             type Update = true;
 
@@ -147,7 +173,7 @@ declare namespace IACele {
                 label: TType.Char<'not_null'>;
                 ttype: TType.Selection<TTypeName, 'not_null'>;
                 help_info: TType.Char;
-                related_model_id: TType.Many2One;
+                related_model: ModelName;
                 selection_ids: {
                     id: TType.Integer<'not_null'>;
                     name: TType.Char<'not_null'>;
@@ -227,10 +253,20 @@ declare namespace IACele {
             type Text<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
             type File<N extends NullityKey = 'null_'> = _WithNullOption<string>[N];
             type Many2One<N extends NullityKey = 'null_'> = _WithNullOption<[number, string]>[N];
-            type One2Many = (number | {id: number; display_name: string;})[];
-            type Many2Many = (number | {id: number; display_name: string;})[];
+            type One2Many<V extends _ArrayTTypeVariantOption = 'ids'> = _ArrayTTypeVariant[V][];
+            type Many2Many<V extends _ArrayTTypeVariantOption = 'ids'> = _ArrayTTypeVariant[V][];
             type JSON<N extends NullityKey = 'null_'> = _WithNullOption<_JSON.JSON>[N];
 
+        };
+
+        type _ArrayTTypeVariantOption = 'ids' | 'tuples';
+
+        interface _ArrayTTypeVariant {
+            'ids': number;
+            'tuples': {
+                id: number;
+                display_name: string;
+            };
         };
 
         interface _CommonFieldsProperties {
@@ -397,6 +433,42 @@ declare namespace IACele {
 
         type FieldName<M extends ModelName> = keyof ModelDefinition<M>;
 
+        type CriteriaStructure<M extends ModelName> = _Definition.CriteriaStructure.CriteriaStructure<M>;
+
+        declare namespace _Definition {
+
+            declare namespace CriteriaStructure {
+
+                type LogicOperator = '|' | '&';
+
+                type ComparisonOperator = (
+                    | '='
+                    | '!='
+                    | '>'
+                    | '<'
+                    | '>='
+                    | '<='
+                    | '><'
+                    | 'in'
+                    | 'not in'
+                    | 'ilike'
+                    | 'not ilike'
+                    | '~'
+                    | '~*'
+                );
+
+                type SerializableScalar = number | string | boolean | null;
+
+                type Serializable = Typing.ScalarOrArray<SerializableScalar>;
+
+                type Triplet<M extends ModelName> = [FieldName<M>, ComparisonOperator, Serializable];
+
+                type CriteriaStructure<M extends ModelName> = (LogicOperator | Triplet<M>)[];
+
+            };
+
+        };
+
     };
 
     declare namespace App {
@@ -465,6 +537,10 @@ declare namespace IACele {
             create: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Create<M>,
             ) => Promise<IACele.API.Response.Create>;
+
+            searchRead: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.SearchRead<M>,
+            ) => Promise<IACele.API.Response.SearchRead<M>>;
 
             update: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Update<M>,

@@ -5,6 +5,7 @@ const PATH = {
     },
     CRUD: {
         CREATE: '/crud/create',
+        SEARCH_READ: '/crud/search_read',
         UPDATE: '/crud/update',
         DELETE: '/crud/delete',
     },
