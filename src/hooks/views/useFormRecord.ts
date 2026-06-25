@@ -38,12 +38,6 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     const [ existingChanges, setExistingChanges ] = useState<boolean>(false);
     // Inicialización de objeto de datos para usarse en modificación de registro
     const [ dataToUpdate, setDataToUpdate ] = useState<Partial<IACele.Data.ModelDefinition<M>>>({});
-    useEffect(
-        () => {
-            console.log(dataToUpdate);
-            console.log(recordInDatabase);
-        }, [dataToUpdate, recordInDatabase]
-    )
     // Inicialización del estado de modo de formulario
     const [ createMode, setCreateMode ] = useState<boolean>(
         () => ( recordId === 0 )
@@ -88,10 +82,6 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
             value: IACele.Data.ModelDefinition<M>[F],
         ) => {
 
-            // // Se copia el objeto del registro del formulario
-            // const recordCopy = { ...formRecord };
-            // // Se establece el nuevo valor
-            // recordCopy[name] = value;
             // Se reasigna el estado
             setFormRecord(
                 (prev) => {
@@ -219,17 +209,17 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
 
     // Creación de la función de guardar (Creación o modificación)
     const saveChanges = useCallback(
-        () => {
+        async () => {
 
             // Si el formulario está en modo creación...
             if ( createMode ) {
                 // Se ejecuta la función de creación
-                createRecord();
+                await createRecord();
 
             // Si el formulario está en modo de lectura
             } else {
                 // Se ejecuta la función de modificación
-                updateRecord();
+                await updateRecord();
             };
         }, [createMode, createRecord, updateRecord]
     );
@@ -278,6 +268,9 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
 
     return {
         loaded,
+        reload,
+        recordId,
+        createMode,
         suscribeFieldToRead,
         setFormRecordField,
         newRecord,

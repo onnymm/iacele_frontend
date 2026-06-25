@@ -16,6 +16,9 @@ const PATH = {
         TREE: '/frontend/tree',
         FORM: '/frontend/form',
     },
+    SERVER: {
+        ACTION: '/server/action',
+    },
 };
 
 export default PATH;

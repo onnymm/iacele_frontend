@@ -35,6 +35,10 @@ declare namespace IACele {
 
             declare namespace _Definition {
 
+                interface RequiresName {
+                    name: string;
+                };
+
                 interface _RequiresModelName<M extends Data.ModelName> {
                     'model_name': M;
                 };
@@ -45,6 +49,10 @@ declare namespace IACele {
 
                 interface _RequiresFieldsSelection<M extends Data.ModelName> {
                     'fields'?: Data.FieldsSelection<M>;
+                };
+
+                interface _RequiresRecordID {
+                    'record_id': number;
                 };
 
                 interface _RequiresRecordIDs {
@@ -70,6 +78,12 @@ declare namespace IACele {
                 };
 
                 declare namespace Base {
+
+                    type Action<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresRecordID
+                        & RequiresName
+                    );
 
                     type Create<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
@@ -111,6 +125,8 @@ declare namespace IACele {
 
             type FieldsMetadata<M extends Data.ModelName> = _Definition._RequiresModelName<M>;
 
+            type Action<M extends Data.ModelName> = _Definition.Base.Action<M>;
+
             type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
 
             type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
@@ -132,6 +148,8 @@ declare namespace IACele {
         declare namespace Response {
 
             type FieldsMetadata = IACele.Data.Shape.FieldsMetadata[];
+
+            type Action = true;
 
             type Create = number[];
 
@@ -533,6 +551,10 @@ declare namespace IACele {
             fieldsMetadata: <
                 M extends IACele.Data._Core.ModelName,
             >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
+
+            action: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.Action<M>,
+            ) => Promise<true>;
 
             create: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Create<M>,

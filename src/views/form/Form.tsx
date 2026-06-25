@@ -23,12 +23,15 @@ interface FieldConfig<M extends IACele.Data.ModelName> {
 
 interface FormChildren <M extends IACele.Data.ModelName> {
     Page: React.FC<IACele.Common.SupportsChildren>;
+    Header: React.FC<IACele.Common.SupportsChildren>;
+    Action: React.FC<ActionParams>;
     Sheet: React.FC<IACele.Common.SupportsChildren>;
     Field: React.FC<FieldConfig<M>>;
     Group: React.FC<GroupParams>;
 };
 
 interface RecordFormContextParams<M extends IACele.Data.ModelName> {
+    modelName: M;
     suscribeFieldToRead: (config: FieldConfig<M>) => void;
     formRecord: IACele.Data.ModelDefinition<M>;
     loaded: boolean,
@@ -40,8 +43,11 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
         value: IACele.Data.ModelDefinition<M>[F],
     ) => void;
     existingChanges: boolean;
-    saveChanges: () => void;
+    saveChanges: () => Promise<void>;
     undoChanges: () => void;
+    reload: () => void;
+    recordId: number;
+    createMode: boolean;
 };
 
 interface Many2OneOption {
@@ -50,6 +56,14 @@ interface Many2OneOption {
 };
 
 type DurationValue = [number, number, number] | [null, null, null];
+
+type Decoration = 'default' | 'info' | 'primary' | 'success' | 'warning' | 'danger';
+
+interface ActionParams {
+    name: string;
+    label: string;
+    decoration?: Decoration;
+};
 
 const Form = <M extends IACele.Data.ModelName>({
     modelName,
@@ -67,10 +81,14 @@ const Form = <M extends IACele.Data.ModelName>({
         saveChanges,
         undoChanges,
         existingChanges,
+        reload,
+        recordId,
+        createMode,
     } = useFormRecord(modelName);
 
     return (
         <RecordFormContext.Provider value={{
+            modelName,
             suscribeFieldToRead: suscribeFieldToRead as (config: FieldConfig<any>) => void,
             formRecord,
             loaded,
@@ -79,9 +97,12 @@ const Form = <M extends IACele.Data.ModelName>({
             existingChanges,
             saveChanges,
             undoChanges,
+            reload,
+            recordId,
+            createMode,
         }}>
             <div className="flex flex-row w-full h-min min-h-full">
-                {children({ Page, Sheet, Group, Field })}
+                {children({ Page, Sheet, Group, Field, Action, Header })}
                 <MainControls>
                     <div className="flex flex-row gap-2">
                         <SaveButton />
@@ -91,10 +112,60 @@ const Form = <M extends IACele.Data.ModelName>({
             </div>
         </RecordFormContext.Provider>
     );
-
 };
 
 export default Form;
+
+const Header: React.FC<IACele.Common.SupportsChildren> = ({
+    children,
+}) => {
+
+    return (
+        <div className="flex flex-wrap gap-2">
+            {children}
+        </div>
+    );
+};
+
+const Action = <M extends IACele.Data.ModelName>({
+    name,
+    label,
+    decoration = 'default'
+}: ActionParams) => {
+
+    const { api, appLoading } = useAPI();
+    const { reload, saveChanges, recordId, createMode, modelName } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+
+    const execute = useCallback(
+        async () => {
+            // Si el formulario está en modo creación...
+            if ( createMode ) {
+                // Se guardan los cambios primero para obtener la ID de registro
+                await saveChanges();
+            };
+
+            // Ejecución de la acción
+            await api.action({
+                'model_name': modelName,
+                'record_id': recordId,
+                'name': name,
+            });
+            // Se vuelve a cargar el registro
+            reload();
+        }, [createMode, saveChanges, api, modelName, recordId, name, reload]
+    );
+
+    return (
+        <Button
+            disabled={appLoading}
+            onClick={execute}
+            className="cursor-pointer"
+            variant={decoration}
+        >
+            {label}
+        </Button>
+    );
+};
 
 const SaveButton = <M extends IACele.Data.ModelName>() => {
 
@@ -946,12 +1017,16 @@ const Group: React.FC<GroupParams> = ({
 };
 
 const RecordFormContext = createContext<RecordFormContextParams<any>>({
+    modelName: null,
     suscribeFieldToRead: () => {},
     formRecord: {},
     loaded: false,
     getFieldMetadata: () => (null) as any,
     setFormRecordField: () => {},
     existingChanges: false,
-    saveChanges: () => {},
+    saveChanges: async () => {},
     undoChanges: () => {},
+    createMode: true,
+    recordId: 0,
+    reload: () => {},
 });

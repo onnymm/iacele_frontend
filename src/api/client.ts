@@ -41,6 +41,16 @@ class Client {
         );
     };
 
+    action = async <M extends IACele.Data.ModelName>(
+        params: IACele.API.Request.Action<M>,
+    ) => {
+
+        return await this.post<IACele.API.Request.Action<M>, IACele.API.Response.Action>(
+            PATH.SERVER.ACTION,
+            params,
+        );
+    };
+
     create = async <M extends IACele.Data.ModelName>(
         data: IACele.API.Request.Create<M>,
     ): Promise<IACele.API.Response.Create> => {
