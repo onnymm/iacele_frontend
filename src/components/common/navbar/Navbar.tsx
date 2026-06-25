@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import DarkModeSwitch from "@/components/ui/dark-mode-switch/DarkModeSwitch";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import MainControlsContext from "@/contexts/ui/mainControlsContext";
 import useUserData from "@/hooks/app/useUserData";
 import useUserToken from "@/hooks/app/useUserToken";
@@ -37,24 +38,33 @@ export default Navbar;
 
 const NavbarProfile = () => {
 
+    // Obtención de los datos del usuario de la sesión
     const { userData } = useUserData();
 
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <div>{userData.name}</div>
+            </PopoverTrigger>
+            <PopoverContent>
+                <div className="flex flex-row justify-between items-center">
+                    Modo oscuro
+                    <DarkModeSwitch />
+                </div>
+                <LogoutButton />
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+const LogoutButton = () => {
+
+    // Obtención de función de remoción de token
     const { removeUserToken } = useUserToken();
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger className="border" asChild>
-                <div>{userData.name}</div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>
-                        <Button variant='destructive' onClick={removeUserToken}>
-                            Cerrar sesión
-                        </Button>
-                    </DropdownMenuLabel>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <Button variant='danger' onClick={removeUserToken}>
+            Cerrar sesión
+        </Button>
     );
 };
