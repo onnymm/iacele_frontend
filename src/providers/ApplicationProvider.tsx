@@ -1,3 +1,4 @@
+import DarkModeProvider from "./DarkModeProvider";
 import MainControlsProvider from "./MainControlsProvider";
 
 const ApplicationProvider = ({
@@ -5,9 +6,11 @@ const ApplicationProvider = ({
 }: IACele.Common.SupportsChildren) => {
 
     return (
-        <MainControlsProvider>
-            {children}
-        </MainControlsProvider>
+        <DarkModeProvider>
+            <MainControlsProvider>
+                {children}
+            </MainControlsProvider>
+        </DarkModeProvider>
     );
 };
 
