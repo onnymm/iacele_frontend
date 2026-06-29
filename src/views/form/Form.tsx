@@ -14,6 +14,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 interface FormParams <M extends IACele.Data.ModelName>{
     modelName: M,
+    create?: boolean;
     children: (params: FormChildren<M>) => React.ReactNode; 
 };
 
@@ -32,6 +33,7 @@ interface FormChildren <M extends IACele.Data.ModelName> {
 
 interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     modelName: M;
+    create: boolean;
     suscribeFieldToRead: (config: FieldConfig<M>) => void;
     formRecord: IACele.Data.ModelDefinition<M>;
     loaded: boolean,
@@ -48,6 +50,8 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     reload: () => void;
     recordId: number;
     createMode: boolean;
+    newRecord: () => void;
+    existingNewData: boolean;
 };
 
 interface Many2OneOption {
@@ -67,6 +71,7 @@ interface ActionParams {
 
 const Form = <M extends IACele.Data.ModelName>({
     modelName,
+    create = true,
     children,
 }: FormParams<M>) => {
 
@@ -77,18 +82,21 @@ const Form = <M extends IACele.Data.ModelName>({
         suscribeFieldToRead,
         getFieldMetadata,
         // deleteRecord,
-        // newRecord,
+        newRecord,
         saveChanges,
         undoChanges,
         existingChanges,
         reload,
         recordId,
         createMode,
+        existingNewData,
+        // viewDataName,
     } = useFormRecord(modelName);
 
     return (
         <RecordFormContext.Provider value={{
             modelName,
+            create,
             suscribeFieldToRead: suscribeFieldToRead as (config: FieldConfig<any>) => void,
             formRecord,
             loaded,
@@ -100,11 +108,14 @@ const Form = <M extends IACele.Data.ModelName>({
             reload,
             recordId,
             createMode,
+            newRecord,
+            existingNewData,
         }}>
             <div className="flex flex-row w-full h-min min-h-full">
                 {children({ Page, Sheet, Group, Field, Action, Header })}
                 <MainControls>
                     <div className="flex flex-row gap-2">
+                        <NewRecordButton />
                         <SaveButton />
                         <UndoChangesButton />
                     </div>
@@ -167,13 +178,28 @@ const Action = <M extends IACele.Data.ModelName>({
     );
 };
 
+const NewRecordButton = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de valores desde el contexto
+    const { createMode, create, newRecord } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+
+    // Si el modo de creación no está establecido...
+    if ( !createMode && create ) {
+        return (
+            <Button onClick={newRecord} variant='primary'>
+                Nuevo
+            </Button>
+        );
+    };
+};
+
 const SaveButton = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde el contexto
-    const { existingChanges, saveChanges } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { existingChanges, saveChanges, existingNewData, createMode } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Si existen cambios a guardar...
-    if ( existingChanges ) {
+    if ( existingChanges || ( existingNewData && createMode ) ) {
         return (
             <Button onClick={saveChanges} variant='success' size='icon'>
                 <Save className="stroke-white" />
@@ -185,10 +211,10 @@ const SaveButton = <M extends IACele.Data.ModelName>() => {
 const UndoChangesButton = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde el contexto
-    const { existingChanges, undoChanges } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { existingChanges, undoChanges, existingNewData, createMode } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Si existen cambios a guardar...
-    if ( existingChanges ) {
+    if ( existingChanges || ( existingNewData && createMode) ) {
         return (
             <Button onClick={undoChanges} variant='default' size='icon'>
                 <Undo2 className="stroke-white" />
@@ -333,6 +359,20 @@ const preprocess = {
     ),
 };
 
+const useScalarFormValue: <T>(value: any) => T = (
+    value,
+) => {
+
+    // Evaluación del valor
+    const recordValue = (
+        value !== undefined
+            ? value
+            : null
+    );
+
+    return recordValue;
+};
+
 const IntegerField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
@@ -340,7 +380,7 @@ const IntegerField = <M extends IACele.Data.ModelName>() => {
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.Integer;
+    const recordValue = useScalarFormValue<IACele.Data.TType.Integer>(formRecord[name]);
 
     // Función para establecer el valor
     const setValue = useCallback(
@@ -373,7 +413,7 @@ const CharField = <M extends IACele.Data.ModelName>() => {
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.Char;
+    const recordValue = useScalarFormValue<IACele.Data.TType.Char>(formRecord[name]);
 
     // Función para establecer el valor
     const setValue = useCallback(
@@ -404,7 +444,7 @@ const BooleanField = <M extends IACele.Data.ModelName>() => {
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.Boolean;
+    const recordValue = useScalarFormValue<IACele.Data.TType.Boolean>(formRecord[name]);
 
     // Función para establecer el valor
     const setValue = useCallback(
@@ -677,7 +717,11 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.Many2One;
+    const recordValue = (
+        formRecord[name] !== undefined
+            ? formRecord[name]
+            : null
+    ) as IACele.Data.TType.Many2One;
 
     // Función para establecer el valor
     const setValue = useCallback(
@@ -794,7 +838,8 @@ const useDuration = (recordValue: string | null) => {
     // Función para parsear valor entrante como nulo o cadena de texto en tupla de nulos o números
     const parseValue = useCallback(
         (): DurationValue => {
-            if ( recordValue === null ) return ([null, null, null]);
+            if ( recordValue === null || recordValue === undefined ) return ([null, null, null]);
+            console.log(recordValue);
             return (
                 (recordValue as string)
                 .split(':')
@@ -917,6 +962,20 @@ const DurationField = <M extends IACele.Data.ModelName>() => {
     );
 };
 
+const useArrayFormValue: <T extends Array<any>>(value: any) => T = (
+    value,
+) => {
+
+    // Evaluación del valor
+    const recordValue = (
+        value !== undefined
+            ? value
+            : []
+    );
+
+    return recordValue;
+};
+
 const RecordTags = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
@@ -924,7 +983,7 @@ const RecordTags = <M extends IACele.Data.ModelName>() => {
     const { formRecord } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.One2Many<'tuples'>;
+    const recordValue = useArrayFormValue<IACele.Data.TType.One2Many<'tuples'>>(formRecord[name]);
 
     return (
         <div className="flex flex-wrap gap-2">
@@ -1018,6 +1077,7 @@ const Group: React.FC<GroupParams> = ({
 
 const RecordFormContext = createContext<RecordFormContextParams<any>>({
     modelName: null,
+    create: false,
     suscribeFieldToRead: () => {},
     formRecord: {},
     loaded: false,
@@ -1029,4 +1089,6 @@ const RecordFormContext = createContext<RecordFormContextParams<any>>({
     createMode: true,
     recordId: 0,
     reload: () => {},
+    newRecord: () => {},
+    existingNewData: false,
 });
