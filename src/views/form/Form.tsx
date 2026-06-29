@@ -839,7 +839,6 @@ const useDuration = (recordValue: string | null) => {
     const parseValue = useCallback(
         (): DurationValue => {
             if ( recordValue === null || recordValue === undefined ) return ([null, null, null]);
-            console.log(recordValue);
             return (
                 (recordValue as string)
                 .split(':')

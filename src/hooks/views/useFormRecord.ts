@@ -44,13 +44,21 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     const [ dataToUpdate, setDataToUpdate ] = useState<Partial<IACele.Data.ModelDefinition<M>>>({});
     // Inicialización de lista de campos a leer
     const fieldsConfig = useRef<FieldConfig<M>[]>([]);
-    // Inicialización de indicador de datos cargados
-    const loaded = useMemo(
-        () => ( dataLoaded && metadataLoaded ),
-        [dataLoaded, metadataLoaded]
-    );
     // Inicialización del estado de modo de formulario
     const createMode = recordId === 0;
+    // Inicialización de indicador de datos cargados
+    const loaded = useMemo(
+        () => (
+            dataLoaded && metadataLoaded
+            && (
+                // Si el modo es creación, no se requieren datos iniciales
+                createMode
+                // Si el modo no es creación se requieren datos iniciales
+                || ( !createMode && Boolean(Object.keys(formRecord).length) )
+            )
+        ),
+        [dataLoaded, metadataLoaded, createMode, formRecord]
+    );
 
     // Inicialización de función para añadir nombres de campos a leer
     const suscribeFieldToRead = useCallback(
