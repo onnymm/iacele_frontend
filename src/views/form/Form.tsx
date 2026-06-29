@@ -989,7 +989,7 @@ const RecordTags = <M extends IACele.Data.ModelName>() => {
             {
                 recordValue.map(
                     (record) => (
-                        <Badge id={String(record['id'])} className="select-none">
+                        <Badge key={String(record['id'])} className="select-none">
                             {record['display_name']}
                         </Badge>
                     )
