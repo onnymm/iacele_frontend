@@ -15,7 +15,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 interface FormParams <M extends IACele.Data.ModelName>{
     modelName: M,
     create?: boolean;
-    children: (params: FormChildren<M>) => React.ReactNode; 
+    children: (params: FormChildren<M>) => React.ReactNode;
+    contextData?: Partial<IACele.Data.ModelDefinition<M>>;
 };
 
 interface FieldConfig<M extends IACele.Data.ModelName> {
@@ -73,6 +74,7 @@ const Form = <M extends IACele.Data.ModelName>({
     modelName,
     create = true,
     children,
+    contextData = {},
 }: FormParams<M>) => {
 
     const {
@@ -92,6 +94,18 @@ const Form = <M extends IACele.Data.ModelName>({
         existingNewData,
         // viewDataName,
     } = useFormRecord(modelName);
+
+    useEffect(
+        () => {
+            if ( loaded && createMode && !Object.keys(formRecord).length ) {
+                (Object.keys(contextData) as IACele.Data.FieldName<M>[]).forEach(
+                    (k) => {
+                        setFormRecordField(k, contextData[k] as any);
+                    }
+                );
+            };
+        }, [loaded, contextData, setFormRecordField, createMode, formRecord]
+    );
 
     return (
         <RecordFormContext.Provider value={{
@@ -748,8 +762,7 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
         }, [recordValue]
     );
 
-    // Inicialización de estado de opciones a seleccionar
-    const [ options, setOptions ] = useState<Many2OneOption[]>(
+    const computeValue = useCallback(
         () => {
             // Si el valor del formulario es nulo, se retorna una lista vacía
             if ( recordValue === null ) return ([]);
@@ -763,7 +776,20 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
                 },
             ];
             return recordInOptions;
-        }
+        }, [recordValue]
+    );
+
+    // Inicialización de estado de opciones a seleccionar
+    const [ options, setOptions ] = useState<Many2OneOption[]>(computeValue);
+
+    // Uso de efecto para recomputar cuando el valor del registro cambie
+    useEffect(
+        () => {
+            // Si el valor es numérico no se puede computar un valor de opciones
+            if ( typeof recordValue === 'number' ) return;
+            // Cómputo de opciones
+            setOptions(computeValue);
+        }, [recordValue, computeValue]
     );
 
     // Función para obtener registros y usarlos como opciones seleccionables en el componente
