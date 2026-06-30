@@ -2,6 +2,7 @@ import MainControls from "@/components/common/navbar/MainControls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
@@ -11,6 +12,9 @@ import useAPI from "@/hooks/app/useAPI";
 import useFormRecord from "@/hooks/views/useFormRecord";
 import { CircleQuestionMark, Save, Undo2, X } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import ViewDataContext from "@/contexts/routes/viewDataContext";
+import type VIEW from "../Views";
+import useView from "../useView";
 
 interface FormParams <M extends IACele.Data.ModelName>{
     modelName: M,
@@ -30,6 +34,7 @@ interface FormChildren <M extends IACele.Data.ModelName> {
     Sheet: React.FC<IACele.Common.SupportsChildren>;
     Field: React.FC<FieldConfig<M>>;
     Group: React.FC<GroupParams>;
+    Wizard: React.FC<WizardParams>;
 };
 
 interface RecordFormContextParams<M extends IACele.Data.ModelName> {
@@ -126,7 +131,7 @@ const Form = <M extends IACele.Data.ModelName>({
             existingNewData,
         }}>
             <div className="flex flex-row w-full h-min min-h-full">
-                {children({ Page, Sheet, Group, Field, Action, Header })}
+                {children({ Page, Sheet, Group, Field, Action, Header, Wizard })}
                 <MainControls>
                     <div className="flex flex-row gap-2">
                         <NewRecordButton />
@@ -1079,8 +1084,11 @@ const Sheet: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 
+    // Obtención de tipo de renderización
+    const { display } = useContext(ViewDataContext)
+
     return (
-        <div className="group bg-card shadow-md pt-2 pb-4 border border-gray-500/20 rounded-lg w-full h-full min-h-screen grow">
+        <div className={`${display === 'screen' ? 'min-h-screen': ''} group bg-card shadow-md pt-2 pb-4 border border-gray-500/20 rounded-lg w-full h-full grow`}>
             <div className="grid grid-cols-1 md:grid-cols-2 h-min">
                 {children}
             </div>
@@ -1126,3 +1134,32 @@ const RecordFormContext = createContext<RecordFormContextParams<any>>({
     newRecord: () => {},
     existingNewData: false,
 });
+
+interface WizardParams {
+    viewDataName: keyof typeof VIEW;
+    label: string;
+    decoration?: Decoration;
+};
+
+const Wizard = ({
+    viewDataName,
+    label,
+    decoration,
+}: WizardParams) => {
+
+    // Obtención de vista a renderizar
+    const { View } = useView(viewDataName);
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button className="cursor-pointer" variant={decoration}>{label}</Button>
+            </DialogTrigger>
+            <DialogContent className="w-[calc(85%)]">
+                <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
+                    <View />
+                </ViewDataContext.Provider>
+            </DialogContent>
+        </Dialog>
+    );
+};

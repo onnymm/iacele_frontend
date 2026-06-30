@@ -15,7 +15,13 @@ type InputParams <O extends Record<any, any>> = {
     [K in keyof O]: QueryParamParser<O[K]>;
 };
 
-const DataView = () => {
+interface ViewParams {
+    display?: IACele.UI.View.DisplayOption;
+};
+
+const DataView = ({
+    display = 'screen',
+}: ViewParams) => {
 
     // Obtención de parámetros de query
     const { id: recordId, name: viewDataName } = useGetParams<ViewQueryParams>({
@@ -26,7 +32,7 @@ const DataView = () => {
     const View = VIEW[viewDataName];
 
     return (
-        <ViewDataContext.Provider value={{ viewDataName, recordId }}>
+        <ViewDataContext.Provider value={{ viewDataName, recordId, display }}>
             <View />
         </ViewDataContext.Provider>
     );

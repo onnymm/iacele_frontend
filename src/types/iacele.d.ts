@@ -596,6 +596,12 @@ declare namespace IACele {
 
         type Variant = 'info' | 'primary' | 'success' | 'warning' | 'danger';
 
+        declare namespace View {
+
+            type DisplayOption = 'screen' | 'window';
+
+        };
+
         declare namespace Alert {
 
             declare namespace _Definition {
