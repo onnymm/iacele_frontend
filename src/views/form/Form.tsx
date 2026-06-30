@@ -824,7 +824,11 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
     );
 };
 
-const useDuration = (recordValue: string | null) => {
+const useDuration = <M extends IACele.Data.ModelName>(recordValue: string | null) => {
+    
+    // Obtención de valores desde los contextos
+    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Mapeo de índices
     const INDEX = useMemo(
@@ -832,31 +836,53 @@ const useDuration = (recordValue: string | null) => {
             HOURS: 0,
             MINUTES: 1,
             SECONDS: 2,
-        }), []
+        } as const), []
+    );
+
+    const NullValue = useMemo(
+        () => (
+            [null, null, null] as [null, null, null]
+        ), []
     );
 
     // Función para parsear valor entrante como nulo o cadena de texto en tupla de nulos o números
-    const parseValue = useCallback(
-        (): DurationValue => {
-            if ( recordValue === null || recordValue === undefined ) return ([null, null, null]);
+    const toTuple = useCallback(
+        (formValue: string | null): DurationValue => {
+            if ( formValue === null || formValue === undefined ) return (NullValue);
             return (
-                (recordValue as string)
+                (formValue as string)
                 .split(':')
                 .map(
                     (value) => (Number(value))
                 ) as DurationValue
             );
-        }, [recordValue]
+        }, [NullValue]
     );
 
     // Inicialización de estado de valor como array
-    const [ arrayValue, setArrayValue ] = useState<DurationValue>(parseValue);
+    const [ arrayValue, setArrayValue ] = useState<DurationValue>(toTuple(recordValue));
 
     // Efecto para actualizar el valor del array cada vez que el valor del formulario cambia
     useEffect(
         () => {
-            setArrayValue(parseValue);
-        }, [recordValue, parseValue]
+            setArrayValue(toTuple(recordValue));
+        }, [recordValue, toTuple]
+    );
+
+    const parseF = useCallback(
+        (arr: DurationValue) => {
+            return (
+                arr[INDEX.HOURS] === null
+                    ? null
+                    : arr.map(
+                        (value) => ((
+                            (value as number) <= 9
+                                ? `0${value}`
+                                : value
+                        ))
+                    ).join(':')
+            );
+        }, [INDEX.HOURS]
     );
 
     // Función para cambiar el valor de horas, minutos o segundos del valor como array
@@ -884,7 +910,8 @@ const useDuration = (recordValue: string | null) => {
                     ) as DurationValue
                 )
             );
-        }, []
+            setFormRecordField(name, parseF(arrayValue) as any);
+        }, [setFormRecordField, name, arrayValue, parseF]
     );
 
     // Función para borrar el valor
@@ -894,27 +921,11 @@ const useDuration = (recordValue: string | null) => {
         }, []
     );
 
-    // Valor parseado para ser enviado a creación o actualización
-    const parsedValue = useMemo(
-        () => (
-            arrayValue[INDEX.HOURS] === null
-                ? null
-                : arrayValue.map(
-                    (value) => ((
-                        (value as number) <= 9
-                            ? `0${value}`
-                            : value
-                    ))
-                ).join(':')
-        ), [arrayValue, INDEX]
-    );
-
     return {
         value: arrayValue,
         INDEX,
         deleteValue,
         setValue,
-        parsedValue,
     };
 };
 
@@ -922,20 +933,18 @@ const DurationField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
     const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
-    const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { formRecord } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
-    const recordValue = formRecord[name] as IACele.Data.TType.Duration;
+    const recordValue = useMemo(
+        () => (
+            formRecord[name] as IACele.Data.TType.Duration
+        ),
+        [formRecord, name]
+    );
 
     // Obtención de valores y funciones desde el hook
-    const { INDEX, value, setValue, deleteValue, parsedValue } = useDuration(recordValue);
-
-    // Actualización del valor del registro cada vez que el valor parseado cambie
-    useEffect(
-        () => {
-            setFormRecordField(name, parsedValue as any)
-        }, [parsedValue, setFormRecordField, name]
-    );
+    const { INDEX, value, setValue, deleteValue } = useDuration<M>(recordValue);
 
     return (
         <div className="flex flex-row gap-2">
