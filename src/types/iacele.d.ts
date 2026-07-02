@@ -220,6 +220,7 @@ declare namespace IACele {
             | 'schedule.week.offset'
             | 'assistance.registry.day'
             | 'assistance.registry.event'
+            | 'assistance.registry.event.correction'
             | 'assistance.registry.event.credentials'
         );
 
@@ -433,7 +434,13 @@ declare namespace IACele {
                 day_id: TType.Many2One;
                 registry_time: TType.Datetime;
                 status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
-                is_correction: TType.Boolean<'not_null'>;
+                has_corrections: TType.Boolean<'not_null'>;
+            };
+
+            'assistance.registry.event.correction': {
+                event_id: TType.Many2One<'not_null'>;
+                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                registry_time: TType.Datetime;
             };
 
             'assistance.registry.event.credentials': {

@@ -33,7 +33,7 @@ const DataView = ({
 
     return (
         <ViewDataContext.Provider value={{ viewDataName, recordId, display }}>
-            <View />
+            <View.View />
         </ViewDataContext.Provider>
     );
 };

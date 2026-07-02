@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import useAPI from "../app/useAPI";
 import { useNavigate } from "react-router";
 import useViewName from "../app/useViewPage";
@@ -7,6 +7,7 @@ import useLoadModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 import useUpdateQueryParams from "./useUpdateQueryParams";
+import ViewDataContext from "@/contexts/routes/viewDataContext";
 
 interface FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
@@ -16,6 +17,7 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     modelName: M,
 ) => {
 
+    const { display } = useContext(ViewDataContext);
     // Obtención de la ID del registro y nombre de la vista
     const { recordId, viewDataName } = useDataView();
     // Obtención de función para actualización de parámetros de query
@@ -119,12 +121,15 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
                 'data': formRecord,
             });
 
-            // Redireccionamiento a ID creada
-            updateQueryParams({
-                [QUERY_PARAMS.VIEW.ID]: recordId,
-                [QUERY_PARAMS.VIEW.NAME]: viewDataName,
-            });
-        }, [api, formRecord, modelName, updateQueryParams, viewDataName]
+            // Si el tipo de renderización es de pantalla...
+            if ( display === 'screen' ) {
+                // Redireccionamiento a ID creada
+                updateQueryParams({
+                    [QUERY_PARAMS.VIEW.ID]: recordId,
+                    [QUERY_PARAMS.VIEW.NAME]: viewDataName,
+                });
+            };
+        }, [api, formRecord, modelName, display, updateQueryParams, viewDataName]
     );
 
     // Inicialización de función de actualización de registro en la base de datos

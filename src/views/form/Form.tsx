@@ -2,7 +2,7 @@ import MainControls from "@/components/common/navbar/MainControls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
@@ -34,7 +34,7 @@ interface FormChildren <M extends IACele.Data.ModelName> {
     Sheet: React.FC<IACele.Common.SupportsChildren>;
     Field: React.FC<FieldConfig<M>>;
     Group: React.FC<GroupParams>;
-    Wizard: React.FC<WizardParams>;
+    Wizard: React.FC<WizardParams<M>>;
 };
 
 interface RecordFormContextParams<M extends IACele.Data.ModelName> {
@@ -58,6 +58,7 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     createMode: boolean;
     newRecord: () => void;
     existingNewData: boolean;
+    parent: IACele.Data.ModelDefinition<M>;
 };
 
 interface Many2OneOption {
@@ -79,7 +80,6 @@ const Form = <M extends IACele.Data.ModelName>({
     modelName,
     create = true,
     children,
-    contextData = {},
 }: FormParams<M>) => {
 
     const {
@@ -100,11 +100,17 @@ const Form = <M extends IACele.Data.ModelName>({
         // viewDataName,
     } = useFormRecord(modelName);
 
+    // Obtención de datos de contexto por si se está renderizando un formulario anidado
+    const { contextData } = useContext<ContextDataContextParams<M>>(ContextDataContext)
+
     useEffect(
         () => {
-            if ( loaded && createMode && !Object.keys(formRecord).length ) {
+            // Si los datos ya fueron cargados, el modo es creación, el formulario está vacío y existen datos de contexto...
+            if ( loaded && createMode && !Object.keys(formRecord).length && contextData ) {
+                // Iteración por cada llave de los datos de contexto
                 (Object.keys(contextData) as IACele.Data.FieldName<M>[]).forEach(
                     (k) => {
+                        // Se establecen los datos de contexto
                         setFormRecordField(k, contextData[k] as any);
                     }
                 );
@@ -129,22 +135,47 @@ const Form = <M extends IACele.Data.ModelName>({
             createMode,
             newRecord,
             existingNewData,
+            parent: formRecord,
         }}>
             <div className="flex flex-row w-full h-min min-h-full">
                 {children({ Page, Sheet, Group, Field, Action, Header, Wizard })}
-                <MainControls>
-                    <div className="flex flex-row gap-2">
-                        <NewRecordButton />
-                        <SaveButton />
-                        <UndoChangesButton />
-                    </div>
-                </MainControls>
+                <FormControls />
             </div>
         </RecordFormContext.Provider>
     );
 };
 
 export default Form;
+
+const FormControls = () => {
+
+    // Obtención de tipo de renderización
+    const { display } = useContext(ViewDataContext);
+    // Obtención de función para establecer el estado de comando de modal
+    const { setCommand } = useContext(ContextDataContext);
+    // Obtención de función para guardar cambios
+    const { saveChanges } = useContext(RecordFormContext)
+
+    // Se establece la función de guardar cambios en el estado de comando
+    useEffect(
+        () => {
+            setCommand(() => (saveChanges));
+        }, [setCommand, saveChanges]
+    );
+
+    // Si el tipo de renderización es de pantalla...
+    if ( display === 'screen' ) {
+        return (
+            <MainControls>
+                <div className="flex flex-row gap-2">
+                    <NewRecordButton />
+                    <SaveButton />
+                    <UndoChangesButton />
+                </div>
+            </MainControls>
+        );
+    };
+};
 
 const Header: React.FC<IACele.Common.SupportsChildren> = ({
     children,
@@ -1133,33 +1164,94 @@ const RecordFormContext = createContext<RecordFormContextParams<any>>({
     reload: () => {},
     newRecord: () => {},
     existingNewData: false,
+    parent: undefined,
 });
 
-interface WizardParams {
-    viewDataName: keyof typeof VIEW;
+type Related<K extends keyof typeof VIEW> = (
+    (typeof VIEW)[K]['modelName'] extends IACele.Data.ModelName
+        ? (typeof VIEW)[K]['modelName']
+        : never
+);
+
+interface WizardParams <M extends IACele.Data.ModelName, V extends keyof typeof VIEW= keyof typeof VIEW, >{
+    viewDataName: V;
     label: string;
     decoration?: Decoration;
+    contextData?: Partial<IACele.Data.ModelDefinition<Related<V>>> | ((ctx: IACele.Data.ModelDefinition<M>) => Partial<IACele.Data.ModelDefinition<Related<V>>>)
 };
 
-const Wizard = ({
+const Wizard = <M extends IACele.Data.ModelName>({
     viewDataName,
     label,
     decoration,
-}: WizardParams) => {
+    contextData: contextDataOrCallback,
+}: WizardParams<M>) => {
 
     // Obtención de vista a renderizar
     const { View } = useView(viewDataName);
+    // Obtención de estado de carga asíncrona de la aplicación
+    const { appLoading } = useAPI();
+    // Obtención de los datos del formulario padre y función de recarga del contexto de formulario padre
+    const { parent, reload } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+
+    // Obtención o cómputo de los datos de contexto para el formulario del modal
+    const contextData = (
+        typeof contextDataOrCallback === 'function'
+            ? contextDataOrCallback(parent)
+            : contextDataOrCallback
+    );
+
+    // Inicialización de estado de modal abierto
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
+
+    // Inicialización de función de comando a actualizar
+    const [ command, setCommand ] = useState<() => Promise<void>>(
+        () => (async () => {})
+    );
+
+    // Función para ejecutar comando cuando el botón se presiona
+    const execute = useCallback(
+        async () => {
+            // Ejecución asíncrona del comando
+            await command();
+            // Se cierra el modal
+            setIsOpen(false);
+            // Se recarga el formulario padre
+            reload();
+        }, [command, reload]
+    );
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button className="cursor-pointer" variant={decoration}>{label}</Button>
-            </DialogTrigger>
-            <DialogContent className="w-[calc(85%)]">
-                <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
-                    <View />
-                </ViewDataContext.Provider>
-            </DialogContent>
-        </Dialog>
+        <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
+            <ContextDataContext.Provider value={{ contextData, setCommand }} >
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                    <DialogTrigger asChild>
+                        <Button className="cursor-pointer" variant={decoration}>{label}</Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
+                        <DialogTitle>Hola</DialogTitle>
+                        <View.View />
+                        <DialogFooter>
+                            <Button variant="success" onClick={execute} className="w-48">
+                                {
+                                    appLoading
+                                        ? <Spinner />
+                                        : 'Aceptar'
+                                }
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </ContextDataContext.Provider>
+        </ViewDataContext.Provider>
     );
 };
+
+interface ContextDataContextParams <M extends IACele.Data.ModelName>{
+    contextData?: Partial<IACele.Data.ModelDefinition<M>>;
+    setCommand: React.Dispatch<React.SetStateAction<() => Promise<void>>>;
+};
+
+const ContextDataContext = createContext<ContextDataContextParams<any>>({
+    setCommand: () => {},
+});
