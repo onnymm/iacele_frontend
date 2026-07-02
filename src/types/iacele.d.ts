@@ -473,7 +473,6 @@ declare namespace IACele {
                     | '<'
                     | '>='
                     | '<='
-                    | '><'
                     | 'in'
                     | 'not in'
                     | 'ilike'

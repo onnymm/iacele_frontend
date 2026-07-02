@@ -38,7 +38,6 @@ abstract class ScalarTType<
     name: F;
     completeValue: T | null | undefined;
     viewValue: T | null = null as T;
-    setFormRecordField: (name: F, value: IACele.Data.ModelDefinition<M>[F]) => void;
     abstract scalarType: ST;
 
     equals = (value: any) => (this.completeValue === value);
@@ -66,12 +65,10 @@ abstract class ScalarTType<
     constructor (
         name: F,
         value: T | undefined,
-        setFormRecordField: (name: F, value: IACele.Data.ModelDefinition<M>[F]) => void,
     ) {
 
         this.name = name;
         this.completeValue = value;
-        this.setFormRecordField = setFormRecordField;
         this.computeViewValue();
     };
 
@@ -118,17 +115,14 @@ abstract class ArrayTType<
     name: F;
     completeValue: IACele.Data.ModelDefinition<M>[] | undefined;
     viewValue: IACele.Data.ModelDefinition<M>[] = [];
-    setFormRecordField: (name: F, value: IACele.Data.ModelDefinition<M>[F]) => void;
 
     constructor (
         name: F,
         value: IACele.Data.ModelDefinition<M>[] | undefined,
-        setFormRecordField: (name: F, value: IACele.Data.ModelDefinition<M>[F]) => void,
     ) {
 
         this.name = name;
         this.completeValue = value;
-        this.setFormRecordField = setFormRecordField;
         this.computeViewValue();
     };
 
@@ -452,7 +446,7 @@ const TType = {
     'json': JSON,
 } as const;
 
-interface X {
+interface BaseTType {
     equals: (value: any) => boolean;
     notEqual: (value: any) => boolean;
     gt: (value: any) => boolean;
@@ -470,31 +464,175 @@ interface X {
     completeValue: any;
 };
 
-type Y<M extends IACele.Data.ModelName> = {
-    [F in IACele.Data.FieldName<M>]: X;
+type RecordFormData<M extends IACele.Data.ModelName> = {
+    [F in IACele.Data.FieldName<M>]: BaseTType;
 };
 
 class RecordEvaluator<M extends IACele.Data.ModelName> {
+
+    private formData: RecordFormData<M>;
+
+    private op: Record<
+        IACele.Data._Definition.CriteriaStructure.ComparisonOperator,
+        (o: BaseTType) => ( (value: any) => boolean )
+    > = {
+        '=': (obj) => obj.equals,
+        '!=': (obj) => obj.notEqual,
+        '>': (obj) => obj.gt,
+        '<': (obj) => obj.lt,
+        '>=': (obj) => obj.ge,
+        '<=': (obj) => obj.le,
+        'in': (obj) => obj.isin,
+        'not in': (obj) => obj.notIn,
+        'ilike': (obj) => obj.ilike,
+        'not ilike': (obj) => obj.notIlike,
+        '~': (obj) => obj.regex,
+        '~*': (obj) => obj.regexI,
+    };
+
+    private join: Record<
+        IACele.Data._Definition.CriteriaStructure.LogicOperator,
+        ( (a: boolean, b: boolean) => (boolean) )
+    > = {
+        '&': (a, b) => (a && b),
+        '|': (a, b) => (a || b),
+    };
+
+    LOGIC_OPERATORS: (IACele.Data._Definition.CriteriaStructure.LogicOperator | boolean )[] = ['|', '&'];
 
     constructor (
         data: IACele.Data.ModelDefinition<M>,
         metadata: IACele.Data.Shape.FieldsMetadata[],
     ) {
 
-        const formData: Y<M> = {} as Y<M>;
+        // Inicialización del objeto de validación
+        this.formData = {} as RecordFormData<M>;
 
+        // Iteración por cada nombre de campo
         ( Object.keys(data) as IACele.Data.FieldName<M>[] )
         .forEach(
             (fieldName) => {
-                const fieldMetadata = metadata.find( (m) => (m.name === fieldName) ) as IACele.Data.Shape.FieldsMetadata
-                formData[fieldName] = new TType[fieldMetadata.ttype](
+                // Obtención de los metadatos del campo
+                const fieldMetadata = metadata.find( (m) => (m.name === fieldName) ) as IACele.Data.Shape.FieldsMetadata;
+                // Inicialización de una instancia de campo
+                this.formData[fieldName] = new TType[fieldMetadata.ttype](
                     fieldName as any,
-                    formData[fieldName] as any,
-                    () => null,
+                    this.formData[fieldName] as any,
                 );
             }
         );
     };
-}
+
+    evaluate = (
+        evaluationCriteria: IACele.Data.CriteriaStructure<M>,
+    ) => {
+
+        // Resolución de tripletas de condición
+        let arrayResult = this.resolveTriplets(evaluationCriteria);
+
+        // Mientras la longitod del criterio sea mayor a 1
+        while ( arrayResult.length > 1 ) {
+            // Iteración por la longitud del criterio
+            for ( let i = 0; i <= arrayResult.length; i++ ) {
+
+                // Asignación de valores
+                const a = arrayResult[i];
+                const b = arrayResult[i + 1];
+                const c = arrayResult[i + 2];
+
+                // Evaluación de valores
+                const aIsOp = this.isLogicOperator(a)
+                const bIsBool = typeof b === 'boolean';
+                const cIsBool = typeof c === 'boolean';
+
+                // Si las tres condiciones de los valores se cumplen...
+                if ( aIsOp && bIsBool && cIsBool ) {
+                    // Obtención de la unión de los dos booleanos
+                    const evaluation = this.join[a](b, c);
+                    // Obtención del índice superior
+                    const supIndex = Math.min(i + 3, arrayResult.length);
+
+                    // Obtención de la rebanada inicial del criterio
+                    const initialSlice = arrayResult.slice(0, i);
+                    // Obtención de la rebanada final del criterio
+                    const finalSlice = arrayResult.slice(supIndex);
+
+                    // Reasignación del resultado del array
+                    arrayResult = [ ...initialSlice, evaluation, ...finalSlice ];
+
+                    // Se interrumpe el ciclo
+                    break;
+                };
+
+            };
+        };
+
+        // Destructuración del resultado final
+        const [ expression ] = (arrayResult as [boolean]);
+
+        return expression;
+    };
+
+    private getOperation = <O extends BaseTType>(
+        op: IACele.Data._Definition.CriteriaStructure.ComparisonOperator,
+        obj: O,
+    ): ( (value: any) => (boolean) ) => {
+
+        // Obtención del método de evaluación
+        const operatorCallback = this.op[op](obj);
+
+        return operatorCallback;
+    };
+
+    private evaluateField = <F extends IACele.Data.FieldName<M>>(
+        name: F,
+        op: IACele.Data._Definition.CriteriaStructure.ComparisonOperator,
+        value: any,
+    ) => {
+
+        // Obtención de la instancia de campo a evaluar
+        const fieldInstance = this.formData[name];
+        // Obtención del método de evaluación
+        const operatorCallback = this.getOperation(op, fieldInstance);
+        // Evaluación con el valor
+        const result = operatorCallback(value);
+
+        return result;
+    };
+
+    private isLogicOperator = (
+        element: IACele.Data._Definition.CriteriaStructure.LogicOperator | boolean,
+    ): element is IACele.Data._Definition.CriteriaStructure.LogicOperator => {
+
+        return this.LOGIC_OPERATORS.indexOf(element) !== -1;
+    };
+
+    private resolveTriplets = (evaluationCriteria: IACele.Data.CriteriaStructure<M>) => {
+
+        // Inicialización del resultado en array
+        const arrayResult: (
+            | IACele.Data._Definition.CriteriaStructure.LogicOperator
+            | IACele.Data._Definition.CriteriaStructure.Triplet<M>
+            | boolean
+        )[] = [ ...evaluationCriteria ];
+
+        // Iteración por cada elemento del resultado en array
+        arrayResult.forEach(
+            (element, index) => {
+                // Si el elemento es una tripleta...
+                if ( typeof element === 'object' ) {
+                    // Destructuración de los elementos correspondientes
+                    const [ fieldName, op, value ] = element;
+                    // Evaluación del resultado
+                    const evaluationResult = this.evaluateField(fieldName, op, value);
+                    // Asignación del resultado de la evaluación
+                    arrayResult[index] = evaluationResult;
+                };
+            }
+        );
+
+        return arrayResult as (IACele.Data._Definition.CriteriaStructure.LogicOperator | boolean)[];
+    };
+};
 
 export default RecordEvaluator;
