@@ -15,6 +15,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ViewDataContext from "@/contexts/routes/viewDataContext";
 import type VIEW from "../Views";
 import useView from "../useView";
+import type RecordEvaluator from "@/core/ttypes";
 
 interface FormParams <M extends IACele.Data.ModelName>{
     modelName: M,
@@ -59,6 +60,7 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     newRecord: () => void;
     existingNewData: boolean;
     parent: IACele.Data.ModelDefinition<M>;
+    evaluator: RecordEvaluator<M>;
 };
 
 interface Many2OneOption {
@@ -97,6 +99,7 @@ const Form = <M extends IACele.Data.ModelName>({
         recordId,
         createMode,
         existingNewData,
+        evaluator,
         // viewDataName,
     } = useFormRecord(modelName);
 
@@ -136,6 +139,7 @@ const Form = <M extends IACele.Data.ModelName>({
             newRecord,
             existingNewData,
             parent: formRecord,
+            evaluator,
         }}>
             <div className="flex flex-row w-full h-min min-h-full">
                 {children({ Page, Sheet, Group, Field, Action, Header, Wizard })}
@@ -1165,6 +1169,7 @@ const RecordFormContext = createContext<RecordFormContextParams<any>>({
     newRecord: () => {},
     existingNewData: false,
     parent: undefined,
+    evaluator: null as any,
 });
 
 type Related<K extends keyof typeof VIEW> = (

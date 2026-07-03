@@ -1,3 +1,11 @@
+type RecordFormData<M extends IACele.Data.ModelName> = {
+    [F in IACele.Data.FieldName<M>]: BaseTType;
+};
+
+type EvaluationFormData<M extends IACele.Data.ModelName> = {
+    [K in keyof IACele.Data.ModelDefinition<M>]: Partial<IACele.Data.ModelDefinition<M>>[K] | null;
+};
+
 const isDefined = <T>(value: T | null | undefined): value is T => {
 
     return (
@@ -464,10 +472,6 @@ interface BaseTType {
     completeValue: any;
 };
 
-type RecordFormData<M extends IACele.Data.ModelName> = {
-    [F in IACele.Data.FieldName<M>]: BaseTType;
-};
-
 class RecordEvaluator<M extends IACele.Data.ModelName> {
 
     private formData: RecordFormData<M>;
@@ -501,7 +505,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
     LOGIC_OPERATORS: (IACele.Data._Definition.CriteriaStructure.LogicOperator | boolean )[] = ['|', '&'];
 
     constructor (
-        data: IACele.Data.ModelDefinition<M>,
+        data: EvaluationFormData<M>,
         metadata: IACele.Data.Shape.FieldsMetadata[],
     ) {
 
@@ -516,8 +520,8 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
                 const fieldMetadata = metadata.find( (m) => (m.name === fieldName) ) as IACele.Data.Shape.FieldsMetadata;
                 // Inicialización de una instancia de campo
                 this.formData[fieldName] = new TType[fieldMetadata.ttype](
-                    fieldName as any,
-                    this.formData[fieldName] as any,
+                    fieldName as keyof IACele.Data._CommonFieldsProperties,
+                    data[fieldName] as any,
                 );
             }
         );

@@ -1,6 +1,6 @@
 import ModelsMetadataContext from "@/contexts/app/modelsMetadataContext";
 import useAPI from "@/hooks/app/useAPI";
-import { useCallback, useRef } from "react"
+import { useCallback, useMemo } from "react"
 
 const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
@@ -10,7 +10,9 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
     const { api } = useAPI();
 
     // Inicialización de referencia
-    const modelsMetadataRef = useRef<IACele.Application.ModelsMetadata>({});
+    const modelsMetadataRef = useMemo<IACele.Application.ModelsMetadata>(
+        () => ({}), []
+    );
 
     // Función para obtención de metadatos de modelo
     const getFieldsMetadata = useCallback(
@@ -19,18 +21,18 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
             setLoaded: React.Dispatch<React.SetStateAction<boolean>>,
         ) => {
             // Obtención de metadatos desde la referencia
-            let fieldsMetadata = modelsMetadataRef.current[modelName];
+            let fieldsMetadata = modelsMetadataRef[modelName];
             // Si no existen los metadatos...
             if ( fieldsMetadata === undefined ) {
                 // Obtención de metadatos
                 fieldsMetadata = await api.fieldsMetadata({ 'model_name': modelName });
                 // Se guardan los metadatos en la referencia
-                modelsMetadataRef.current[modelName] = fieldsMetadata;
+                modelsMetadataRef[modelName] = fieldsMetadata;
             };
 
             // Se establece el estado a verdadero
             setLoaded(true);
-        }, [api]
+        }, [modelsMetadataRef, api]
     );
 
     // Inicialización de función de obtención de metadatos de campo
@@ -42,7 +44,7 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
 
             // Obtención de los metadatos de campo
             const field = (
-                (modelsMetadataRef.current[modelName] as IACele.Data.Shape.FieldsMetadata[])
+                (modelsMetadataRef[modelName] as IACele.Data.Shape.FieldsMetadata[])
                 .find(
                     (fieldMetadata) => (fieldMetadata.name === fieldName)
                 ) as IACele.Data.Shape.FieldsMetadata
@@ -53,7 +55,7 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
     );
 
     return (
-        <ModelsMetadataContext.Provider value={{ modelsMetadataRef, getFieldsMetadata, fieldsMetadata }}>
+        <ModelsMetadataContext.Provider value={{ modelsMetadata: modelsMetadataRef, getFieldsMetadata, fieldsMetadata }}>
             {children}
         </ModelsMetadataContext.Provider>
     );
