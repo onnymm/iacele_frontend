@@ -127,18 +127,20 @@ const VIEW = {
                                 <Field name="status" />
                                 <Field name="registry_time" />
                             </Group>
-                            <Group label="Correciones">
-                                <Field name="status_correction" />
-                                <Field name="registry_time_correction" />
+                            <Group label="Detalles">
                                 <Group>
                                     <Field name="from_api" />
                                     <Field name="has_corrections" />
                                 </Group>
+                                <Field name="day_id" />
                             </Group>
-                            <Group label="Datos originales">
+                            <Group label="Correciones" invisible={[['has_corrections', '=', false]]}>
+                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} />
+                                <Field name="registry_time_correction" invisible={[['registry_time_correction', '=', null]]} />
+                            </Group>
+                            <Group label="Datos originales" invisible={[['has_corrections', '=', false]]}>
                                 <Field name="original_status" />
                                 <Field name="original_registry_time" />
-                                <Field name="day_id" />
                             </Group>
                         </Sheet>
                     </Page>

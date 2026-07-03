@@ -24,9 +24,18 @@ interface FormParams <M extends IACele.Data.ModelName>{
     contextData?: Partial<IACele.Data.ModelDefinition<M>>;
 };
 
-interface FieldConfig<M extends IACele.Data.ModelName> {
+interface _SupportsInvisibleParams<M extends IACele.Data.ModelName> {
+    invisible?: IACele.Data.CriteriaStructure<M>;
+};
+
+interface _FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
 };
+
+type FieldConfig<M extends IACele.Data.ModelName> = (
+    & _FieldConfig<M>
+    & _SupportsInvisibleParams<M>
+);
 
 interface FormChildren <M extends IACele.Data.ModelName> {
     Page: React.FC<IACele.Common.SupportsChildren>;
@@ -34,14 +43,14 @@ interface FormChildren <M extends IACele.Data.ModelName> {
     Action: React.FC<ActionParams>;
     Sheet: React.FC<IACele.Common.SupportsChildren>;
     Field: React.FC<FieldConfig<M>>;
-    Group: React.FC<GroupParams>;
+    Group: React.FC<GroupParams<M>>;
     Wizard: React.FC<WizardParams<M>>;
 };
 
 interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     modelName: M;
     create: boolean;
-    suscribeFieldToRead: (config: FieldConfig<M>) => void;
+    suscribeFieldToRead: (config: _FieldConfig<M>) => void;
     formRecord: IACele.Data.ModelDefinition<M>;
     loaded: boolean,
     getFieldMetadata: <M extends IACele.Data.ModelName>(
@@ -60,7 +69,7 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
     newRecord: () => void;
     existingNewData: boolean;
     parent: IACele.Data.ModelDefinition<M>;
-    evaluator: RecordEvaluator<M>;
+    evaluator: RecordEvaluator<M> | null;
 };
 
 interface Many2OneOption {
@@ -125,7 +134,7 @@ const Form = <M extends IACele.Data.ModelName>({
         <RecordFormContext.Provider value={{
             modelName,
             create,
-            suscribeFieldToRead: suscribeFieldToRead as (config: FieldConfig<any>) => void,
+            suscribeFieldToRead: suscribeFieldToRead as (config: _FieldConfig<any>) => void,
             formRecord,
             loaded,
             getFieldMetadata: getFieldMetadata as (fieldName: any) => IACele.Data.Shape.FieldsMetadata,
@@ -277,8 +286,29 @@ const UndoChangesButton = <M extends IACele.Data.ModelName>() => {
     };
 };
 
+const SupportsInvisible = <M extends IACele.Data.ModelName>({
+    invisible,
+    children,
+}: _SupportsInvisibleParams<M> & IACele.Common.SupportsChildren) => {
+
+    // Obtención de valores desde el contexto
+    const { evaluator } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+
+    // Evaluación de si el componente es visible
+    const isComponentInvisible = useMemo(
+        () => (invisible && evaluator ? evaluator.evaluate(invisible) : false),
+        [evaluator, invisible]
+    );
+
+    // Si se determina que el componente es invisible no se retorna nada
+    if ( isComponentInvisible ) return null;
+
+    return (children);
+};
+
 const Field = <M extends IACele.Data.ModelName>({
     name,
+    invisible,
 }: FieldConfig<M>) => {
 
     // Obtención de valores desde el contexto
@@ -293,14 +323,16 @@ const Field = <M extends IACele.Data.ModelName>({
 
     if ( loaded ) {
         return (
-            <FormScalarFieldWrapper name={name} />
+            <SupportsInvisible invisible={invisible}>
+                <FormScalarFieldWrapper name={name} />
+            </SupportsInvisible>
         );
     };
 };
 
 const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
     name,
-}: FieldConfig<M>) => {
+}: _FieldConfig<M>) => {
 
     // Obtención de función de cambio de valor
     const { getFieldMetadata } = useContext<RecordFormContextParams<M>>(RecordFormContext);
@@ -1131,24 +1163,32 @@ const Sheet: React.FC<IACele.Common.SupportsChildren> = ({
     );
 };
 
-interface GroupParams extends IACele.Common.SupportsChildren {
+type _GroupParams<M extends IACele.Data.ModelName> = (
+    & _SupportsInvisibleParams<M>
+    & IACele.Common.SupportsChildren
+);
+
+interface GroupParams<M extends IACele.Data.ModelName> extends _GroupParams<M>  {
     label?: string;
 };
 
-const Group: React.FC<GroupParams> = ({
+const Group = <M extends IACele.Data.ModelName>({
     children,
     label,
-}) => {
+    invisible,
+}: GroupParams<M>) => {
 
     return (
-        <div className="flex flex-col px-4 group-[.ui-group]:px-0 py-2 group-[.ui-group]:pb-0">
-            <p className="group-[.ui-group]:hidden opacity-50 pb-1 border-gray-500/50 border-b h-5 font-semibold text-xs uppercase select-none">
-                {label}
-            </p>
-            <div className="group ui-group flex flex-col gap-x-4 group-[.ui-group]:grid group-[.ui-group]:grid-cols-2 py-1">
-                {children}
+        <SupportsInvisible invisible={invisible}>
+            <div className="flex flex-col px-4 group-[.ui-group]:px-0 py-2 group-[.ui-group]:pb-0">
+                <p className="group-[.ui-group]:hidden opacity-50 pb-1 border-gray-500/50 border-b h-5 font-semibold text-xs uppercase select-none">
+                    {label}
+                </p>
+                <div className="group ui-group flex flex-col gap-x-4 group-[.ui-group]:grid group-[.ui-group]:grid-cols-2 py-1">
+                    {children}
+                </div>
             </div>
-        </div>
+        </SupportsInvisible>
     );
 };
 

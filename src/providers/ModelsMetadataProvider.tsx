@@ -10,7 +10,7 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
     const { api } = useAPI();
 
     // Inicialización de referencia
-    const modelsMetadataRef = useMemo<IACele.Application.ModelsMetadata>(
+    const modelsMetadata = useMemo<IACele.Application.ModelsMetadata>(
         () => ({}), []
     );
 
@@ -21,18 +21,18 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
             setLoaded: React.Dispatch<React.SetStateAction<boolean>>,
         ) => {
             // Obtención de metadatos desde la referencia
-            let fieldsMetadata = modelsMetadataRef[modelName];
+            let fieldsMetadata = modelsMetadata[modelName];
             // Si no existen los metadatos...
             if ( fieldsMetadata === undefined ) {
                 // Obtención de metadatos
                 fieldsMetadata = await api.fieldsMetadata({ 'model_name': modelName });
                 // Se guardan los metadatos en la referencia
-                modelsMetadataRef[modelName] = fieldsMetadata;
+                modelsMetadata[modelName] = fieldsMetadata;
             };
 
             // Se establece el estado a verdadero
             setLoaded(true);
-        }, [modelsMetadataRef, api]
+        }, [modelsMetadata, api]
     );
 
     // Inicialización de función de obtención de metadatos de campo
@@ -44,18 +44,18 @@ const ModelsMetadataProvider: React.FC<IACele.Common.SupportsChildren> = ({
 
             // Obtención de los metadatos de campo
             const field = (
-                (modelsMetadataRef[modelName] as IACele.Data.Shape.FieldsMetadata[])
+                (modelsMetadata[modelName] as IACele.Data.Shape.FieldsMetadata[])
                 .find(
                     (fieldMetadata) => (fieldMetadata.name === fieldName)
                 ) as IACele.Data.Shape.FieldsMetadata
             );
 
             return field;
-        }, [modelsMetadataRef]
+        }, [modelsMetadata]
     );
 
     return (
-        <ModelsMetadataContext.Provider value={{ modelsMetadata: modelsMetadataRef, getFieldsMetadata, fieldsMetadata }}>
+        <ModelsMetadataContext.Provider value={{ modelsMetadata, getFieldsMetadata, fieldsMetadata }}>
             {children}
         </ModelsMetadataContext.Provider>
     );
