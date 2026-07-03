@@ -6,7 +6,7 @@ const useLoadModelMetadata = <M extends IACele.Data.ModelName>(
 ) => {
 
     // Obtención de función de carga desde el contexto
-    const { getFieldsMetadata, fieldsMetadata } = useContext(ModelsMetadataContext);
+    const { getFieldsMetadata, fieldsMetadata, modelsMetadata } = useContext(ModelsMetadataContext);
     // Inicialización de estado de carga de los metadatos de campo
     const [ metadataLoaded, setMetadataLoaded ] = useState<boolean>(false);
 
@@ -27,7 +27,10 @@ const useLoadModelMetadata = <M extends IACele.Data.ModelName>(
         }, [getFieldsMetadata, modelName]
     );
 
-    return { metadataLoaded, fieldsMetadata, getFieldMetadata };
+    // Obtención de los metadatos del modelo
+    const modelMetadata: Partial<Record<IACele.Data.ModelName, IACele.Data.Shape.FieldsMetadata[]>>[M] = modelsMetadata[modelName];
+
+    return { metadataLoaded, fieldsMetadata, getFieldMetadata, modelMetadata };
 };
 
 export default useLoadModelMetadata;

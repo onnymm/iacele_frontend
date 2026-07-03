@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 interface ModelsMetadataContextParams {
-    modelsMetadataRef: React.RefObject<Partial<Record<IACele.Data.ModelName, IACele.Data.Shape.FieldsMetadata[]>>>;
+    modelsMetadata: Partial<Record<IACele.Data.ModelName, IACele.Data.Shape.FieldsMetadata[]>>;
     getFieldsMetadata: <M extends IACele.Data.ModelName>(
         modelName: M,
         setLoaded: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,7 +13,7 @@ interface ModelsMetadataContextParams {
 };
 
 const ModelsMetadataContext = createContext<ModelsMetadataContextParams>({
-    modelsMetadataRef: {current: {}},
+    modelsMetadata: {},
     getFieldsMetadata: async () => {},
     fieldsMetadata: () => ({} as any),
 });

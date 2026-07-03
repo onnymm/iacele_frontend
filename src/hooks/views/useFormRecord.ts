@@ -8,9 +8,14 @@ import useDataView from "../routes/useDataView";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 import useUpdateQueryParams from "./useUpdateQueryParams";
 import ViewDataContext from "@/contexts/routes/viewDataContext";
+import RecordEvaluator from "@/core/ttypes";
 
 interface FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
+};
+
+type EvaluationFormData<M extends IACele.Data.ModelName> = {
+    [K in keyof IACele.Data.ModelDefinition<M>]: Partial<IACele.Data.ModelDefinition<M>>[K] | null;
 };
 
 const useFormRecord = <M extends IACele.Data.ModelName>(
@@ -23,7 +28,7 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     // Obtención de función para actualización de parámetros de query
     const { updateQueryParams } = useUpdateQueryParams();
     // Obtención de metadatos del modelo
-    const { metadataLoaded, getFieldMetadata } = useLoadModelMetadata(modelName);
+    const { metadataLoaded, getFieldMetadata, modelMetadata } = useLoadModelMetadata(modelName);
     // Obtención de función para cambio de nombre de vista
     const { setViewName } = useViewName();
     // Obtención de estado y función de recarga
@@ -34,6 +39,8 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     const navigateTo = useNavigate();
     // Inicialización de estado de estado de edición
     const [ formRecord, setFormRecord ] = useState<Partial<IACele.Data.ModelDefinition<M>>>({});
+
+    const [ evaluator, setEvaluator ] = useState<RecordEvaluator<M> | null>(null);
     // Inicialización de estado de carga
     const [ dataLoaded, setDataLoaded ] = useState<boolean>(false);
     // Inicialización de estado de datos del registro de la base de datos
@@ -51,7 +58,7 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     // Inicialización de indicador de datos cargados
     const loaded = useMemo(
         () => (
-            dataLoaded && metadataLoaded
+            dataLoaded && metadataLoaded && evaluator !== null
             && (
                 // Si el modo es creación, no se requieren datos iniciales
                 createMode
@@ -59,7 +66,47 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
                 || ( !createMode && Boolean(Object.keys(formRecord).length) )
             )
         ),
-        [dataLoaded, metadataLoaded, createMode, formRecord]
+        [dataLoaded, metadataLoaded, evaluator, createMode, formRecord]
+    );
+
+    // Función para actualización instancia de evaluación de datos de registro
+    const updateEvaluator = useCallback(
+        () => {
+            // Si no existen metadatos aún...
+            if ( modelMetadata === undefined ) {
+                // Se establece el valor como nulo
+                setEvaluator(null);
+            // Si ya existen metadatos del modelo ...
+            } else {
+                // Inicialización de objeto de datos para validación
+                const dataForValidation: Partial<EvaluationFormData<M>> = {};
+                // Iteración por cada elemento de los metadatos
+                modelMetadata.forEach(
+                    (md) => {
+                        // Obtención del valor
+                        const value = formRecord[md.name as IACele.Data.FieldName<M>];
+                        // Obtención de cada valor del formulario sustituyendo indefinidos por null
+                        dataForValidation[md.name as any as keyof EvaluationFormData<M>] = (
+                            value !== undefined
+                                ? value
+                                : null
+                            ) as any;
+                    }
+                );
+
+                // Inicialización de nueva instancia de evaluador
+                const evaluatorInstance = new RecordEvaluator(dataForValidation as EvaluationFormData<M>, modelMetadata);
+                // Se establece la instancia como valor de estado
+                setEvaluator(evaluatorInstance);
+            };
+        }, [formRecord, modelMetadata]
+    );
+
+    // Efecto para actualizar el evaluador cada vez que la función se actualiza
+    useEffect(
+        () => {
+            updateEvaluator();
+        }, [updateEvaluator]
     );
 
     // Inicialización de función para añadir nombres de campos a leer
@@ -98,7 +145,10 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
                     [name]: value,
                 })
             );
-        }, []
+
+            // Actualización del evaluador
+            updateEvaluator();
+        }, [updateEvaluator]
     );
 
     // Creación de la función para cambiar el modo del formulario
@@ -256,6 +306,7 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
 
                     // Se establece el estado de registro en base de datos
                     setRecordInDatabase({ ...data.record });
+
                     // Se establece el nombre de la vista
                     setViewName(data.name);
                 } else {
@@ -306,6 +357,7 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
         getFieldMetadata,
         existingChanges,
         existingNewData,
+        evaluator: evaluator as RecordEvaluator<M>,
     };
 };
 
