@@ -528,8 +528,12 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
     };
 
     evaluate = (
-        evaluationCriteria: IACele.Data.CriteriaStructure<M>,
+        evaluationCriteria: IACele.Data.CriteriaStructure<M> | boolean,
     ) => {
+
+        if ( typeof evaluationCriteria === 'boolean' ) {
+            return evaluationCriteria;
+        };
 
         // Resolución de tripletas de condición
         let arrayResult = this.resolveTriplets(evaluationCriteria);

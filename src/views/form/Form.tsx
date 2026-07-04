@@ -17,6 +17,8 @@ import type VIEW from "../Views";
 import useView from "../useView";
 import type RecordEvaluator from "@/core/ttypes";
 
+type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
+
 interface FormParams <M extends IACele.Data.ModelName>{
     modelName: M,
     create?: boolean;
@@ -25,22 +27,28 @@ interface FormParams <M extends IACele.Data.ModelName>{
 };
 
 interface _SupportsInvisibleParams<M extends IACele.Data.ModelName> {
-    invisible?: IACele.Data.CriteriaStructure<M>;
+    invisible?: BooeanOrConditionalStatement<M>;
+};
+
+interface _SupportsReadonlyParams<M extends IACele.Data.ModelName> {
+    readonly?: BooeanOrConditionalStatement<M>;
 };
 
 interface _FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
+    readonly?: BooeanOrConditionalStatement<M>;
 };
 
 type FieldConfig<M extends IACele.Data.ModelName> = (
     & _FieldConfig<M>
     & _SupportsInvisibleParams<M>
+    & _SupportsReadonlyParams<M>
 );
 
 interface FormChildren <M extends IACele.Data.ModelName> {
     Page: React.FC<IACele.Common.SupportsChildren>;
     Header: React.FC<IACele.Common.SupportsChildren>;
-    Action: React.FC<ActionParams>;
+    Action: React.FC<ActionParams<M>>;
     Sheet: React.FC<IACele.Common.SupportsChildren>;
     Field: React.FC<FieldConfig<M>>;
     Group: React.FC<GroupParams<M>>;
@@ -81,11 +89,16 @@ type DurationValue = [number, number, number] | [null, null, null];
 
 type Decoration = 'default' | 'info' | 'primary' | 'success' | 'warning' | 'danger';
 
-interface ActionParams {
+interface ActionParamsv0 {
     name: string;
     label: string;
     decoration?: Decoration;
 };
+
+type ActionParams<M extends IACele.Data.ModelName> = (
+    & ActionParamsv0
+    & _SupportsInvisibleParams<M>
+);
 
 const Form = <M extends IACele.Data.ModelName>({
     modelName,
@@ -201,14 +214,35 @@ const Header: React.FC<IACele.Common.SupportsChildren> = ({
     );
 };
 
+const SupportsInvisible = <M extends IACele.Data.ModelName>({
+    invisible,
+    children,
+}: _SupportsInvisibleParams<M> & IACele.Common.SupportsChildren) => {
+
+    // Obtención de valores desde el contexto
+    const { evaluator } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+
+    // Evaluación de si el componente es visible
+    const isComponentInvisible = useMemo(
+        () => (invisible && evaluator ? evaluator.evaluate(invisible) : false),
+        [evaluator, invisible]
+    );
+
+    // Si se determina que el componente es invisible no se retorna nada
+    if ( isComponentInvisible ) return null;
+
+    return (children);
+};
+
 const Action = <M extends IACele.Data.ModelName>({
     name,
     label,
-    decoration = 'default'
-}: ActionParams) => {
+    decoration = 'default',
+    invisible,
+}: ActionParams<M>) => {
 
     const { api, appLoading } = useAPI();
-    const { reload, saveChanges, recordId, createMode, modelName } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { reload, saveChanges, recordId, createMode, modelName, loaded } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     const execute = useCallback(
         async () => {
@@ -229,16 +263,20 @@ const Action = <M extends IACele.Data.ModelName>({
         }, [createMode, saveChanges, api, modelName, recordId, name, reload]
     );
 
-    return (
-        <Button
-            disabled={appLoading}
-            onClick={execute}
-            className="cursor-pointer"
-            variant={decoration}
-        >
-            {label}
-        </Button>
-    );
+    if ( loaded ) {
+        return (
+            <SupportsInvisible invisible={invisible}>
+                <Button
+                    disabled={appLoading}
+                    onClick={execute}
+                    className="cursor-pointer"
+                    variant={decoration}
+                    >
+                    {label}
+                </Button>
+            </SupportsInvisible>
+        );
+    };
 };
 
 const NewRecordButton = <M extends IACele.Data.ModelName>() => {
@@ -286,29 +324,46 @@ const UndoChangesButton = <M extends IACele.Data.ModelName>() => {
     };
 };
 
-const SupportsInvisible = <M extends IACele.Data.ModelName>({
-    invisible,
-    children,
-}: _SupportsInvisibleParams<M> & IACele.Common.SupportsChildren) => {
+const useReadonly = <M extends IACele.Data.ModelName>(
+    readonly: IACele.Data.CriteriaStructure<M> | boolean | undefined,
+) => {
 
     // Obtención de valores desde el contexto
-    const { evaluator } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { getFieldMetadata, evaluator, createMode } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    // Obtención de valores desde los contextos
+    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
 
     // Evaluación de si el componente es visible
-    const isComponentInvisible = useMemo(
-        () => (invisible && evaluator ? evaluator.evaluate(invisible) : false),
-        [evaluator, invisible]
+    const isComponentReadonly = useMemo(
+        () => (readonly !== undefined && evaluator ? evaluator.evaluate(readonly) : false),
+        [evaluator, readonly]
     );
 
-    // Si se determina que el componente es invisible no se retorna nada
-    if ( isComponentInvisible ) return null;
+    const staticReadonly = useMemo(
+        () => {
+            const metadata = getFieldMetadata(name);
+            const isReadonlyField = metadata['readonly'];
+            const isComputedField = metadata['is_computed'];
+            return (
+                (isReadonlyField || isComputedField)
+                && !createMode
+            );
+        }, [getFieldMetadata, name, createMode]
+    );
 
-    return (children);
+    const isReadonly = (
+        staticReadonly
+            ? true
+            : isComponentReadonly
+    )
+
+    return { isReadonly };
 };
 
 const Field = <M extends IACele.Data.ModelName>({
     name,
     invisible,
+    readonly,
 }: FieldConfig<M>) => {
 
     // Obtención de valores desde el contexto
@@ -324,7 +379,7 @@ const Field = <M extends IACele.Data.ModelName>({
     if ( loaded ) {
         return (
             <SupportsInvisible invisible={invisible}>
-                <FormScalarFieldWrapper name={name} />
+                <FormScalarFieldWrapper name={name} readonly={readonly} />
             </SupportsInvisible>
         );
     };
@@ -332,6 +387,7 @@ const Field = <M extends IACele.Data.ModelName>({
 
 const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
     name,
+    readonly,
 }: _FieldConfig<M>) => {
 
     // Obtención de función de cambio de valor
@@ -347,7 +403,11 @@ const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
 
     return (
         <div>
-            <FormFieldContext.Provider value={{ name: name as keyof IACele.Data.ModelDefinition<M>, metadata }}>
+            <FormFieldContext.Provider value={{
+                name: name as keyof IACele.Data.ModelDefinition<M>,
+                metadata,
+                readonly,
+            }}>
                 <FieldLabel />
                 <FieldComponent />
             </FormFieldContext.Provider>
@@ -462,8 +522,9 @@ const useScalarFormValue: <T>(value: any) => T = (
 const IntegerField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = useScalarFormValue<IACele.Data.TType.Integer>(formRecord[name]);
@@ -488,6 +549,7 @@ const IntegerField = <M extends IACele.Data.ModelName>() => {
             inputMode="numeric"
             onChange={setValue}
             value={value}
+            disabled={isReadonly}
         />
     );
 };
@@ -495,8 +557,9 @@ const IntegerField = <M extends IACele.Data.ModelName>() => {
 const CharField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = useScalarFormValue<IACele.Data.TType.Char>(formRecord[name]);
@@ -519,6 +582,7 @@ const CharField = <M extends IACele.Data.ModelName>() => {
         <Input
             onChange={setValue}
             value={value}
+            disabled={isReadonly}
         />
     );
 };
@@ -526,8 +590,9 @@ const CharField = <M extends IACele.Data.ModelName>() => {
 const BooleanField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = useScalarFormValue<IACele.Data.TType.Boolean>(formRecord[name]);
@@ -551,6 +616,7 @@ const BooleanField = <M extends IACele.Data.ModelName>() => {
         <Checkbox
             checked={value}
             onCheckedChange={setValue}
+            disabled={isReadonly}
         />
     );
 };
@@ -558,8 +624,9 @@ const BooleanField = <M extends IACele.Data.ModelName>() => {
 const FloatField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Float;
@@ -603,6 +670,7 @@ const FloatField = <M extends IACele.Data.ModelName>() => {
             inputMode="numeric"
             onChange={setValue}
             value={inputValue}
+            disabled={isReadonly}
         />
     );
 };
@@ -610,8 +678,9 @@ const FloatField = <M extends IACele.Data.ModelName>() => {
 const DateField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Date;
@@ -636,6 +705,7 @@ const DateField = <M extends IACele.Data.ModelName>() => {
             value={value}
             onChange={setValue}
             step={1}
+            disabled={isReadonly}
         />
     );
 };
@@ -643,8 +713,9 @@ const DateField = <M extends IACele.Data.ModelName>() => {
 const DatetimeField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Datetime;
@@ -669,6 +740,7 @@ const DatetimeField = <M extends IACele.Data.ModelName>() => {
             value={value}
             onChange={setValue}
             step={1}
+            disabled={isReadonly}
         />
     );
 };
@@ -676,8 +748,9 @@ const DatetimeField = <M extends IACele.Data.ModelName>() => {
 const TimeField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Time;
@@ -702,6 +775,7 @@ const TimeField = <M extends IACele.Data.ModelName>() => {
             value={value}
             onChange={setValue}
             step={1}
+            disabled={isReadonly}
         />
     );
 };
@@ -709,8 +783,9 @@ const TimeField = <M extends IACele.Data.ModelName>() => {
 const SelectionField = <M extends IACele.Data.ModelName> () => {
 
     // Obtención de valores desde los contextos
-    const { name, metadata } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, metadata, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Selection<string>;
@@ -731,7 +806,7 @@ const SelectionField = <M extends IACele.Data.ModelName> () => {
 
     return (
         <div className="flex flex-row gap-2">
-            <Select onValueChange={setValue} value={value}>
+            <Select onValueChange={setValue} value={value} disabled={isReadonly}>
                 <SelectTrigger className="w-full">
                     <SelectValue className="bg-green-500" placeholder="Selecciona un valor"/>
                 </SelectTrigger>
@@ -750,7 +825,7 @@ const SelectionField = <M extends IACele.Data.ModelName> () => {
                     }
                 </SelectContent>
             </Select>
-            <Button size='icon' variant={"secondary"} onClick={() => setValue(null)}>
+            <Button size='icon' variant={"secondary"} onClick={() => setValue(null)} disabled={isReadonly}>
                 <X className="stroke-foreground" />
             </Button>
         </div>
@@ -760,8 +835,9 @@ const SelectionField = <M extends IACele.Data.ModelName> () => {
 const TextField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = formRecord[name] as IACele.Data.TType.Text;
@@ -784,6 +860,7 @@ const TextField = <M extends IACele.Data.ModelName>() => {
         <Textarea
             onChange={setValue}
             value={value}
+            disabled={isReadonly}
         />
     );
 };
@@ -799,8 +876,9 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
     // Obtención de valores desde los contextos
-    const { name, metadata } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, metadata, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
 
     // Valor del registro
     const recordValue = (
@@ -892,7 +970,7 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
 
     return (
         <div className="flex flex-row gap-2">
-            <Select onOpenChange={load} open={isOpen} onValueChange={setValue} value={value}>
+            <Select onOpenChange={load} open={isOpen} onValueChange={setValue} value={value} disabled={isReadonly}>
                 <SelectTrigger className="w-full">
                     {
                         loading
@@ -915,7 +993,7 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
                     }
                 </SelectContent>
             </Select>
-            <Button size='icon' variant="secondary" onClick={deleteValue}>
+            <Button size='icon' variant="secondary" onClick={deleteValue} disabled={isReadonly}>
                 <X className="stroke-foreground" />
             </Button>
         </div>
@@ -923,7 +1001,7 @@ const Many2OneField = <M extends IACele.Data.ModelName>() => {
 };
 
 const useDuration = <M extends IACele.Data.ModelName>(recordValue: string | null) => {
-    
+
     // Obtención de valores desde los contextos
     const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
@@ -1128,6 +1206,7 @@ const FieldWidget: Record<IACele.Data.TTypeName, React.FC> = {
 
 interface FormFieldContextParams <M extends IACele.Data.ModelName>{
     name: keyof IACele.Data.ModelDefinition<M>;
+    readonly?: BooeanOrConditionalStatement<M>;
     metadata: IACele.Data.Shape.FieldsMetadata;
 };
 
@@ -1237,7 +1316,7 @@ const Wizard = <M extends IACele.Data.ModelName>({
     // Obtención de estado de carga asíncrona de la aplicación
     const { appLoading } = useAPI();
     // Obtención de los datos del formulario padre y función de recarga del contexto de formulario padre
-    const { parent, reload } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { parent, reload, loaded } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Obtención o cómputo de los datos de contexto para el formulario del modal
     const contextData = (
@@ -1266,30 +1345,32 @@ const Wizard = <M extends IACele.Data.ModelName>({
         }, [command, reload]
     );
 
-    return (
-        <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
-            <ContextDataContext.Provider value={{ contextData, setCommand }} >
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="cursor-pointer" variant={decoration}>{label}</Button>
-                    </DialogTrigger>
-                    <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
-                        <DialogTitle>Hola</DialogTitle>
-                        <View.View />
-                        <DialogFooter>
-                            <Button variant="success" onClick={execute} className="w-48">
-                                {
-                                    appLoading
-                                        ? <Spinner />
-                                        : 'Aceptar'
-                                }
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </ContextDataContext.Provider>
-        </ViewDataContext.Provider>
-    );
+    if ( loaded ) {
+        return (
+            <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
+                <ContextDataContext.Provider value={{ contextData, setCommand }} >
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="cursor-pointer" variant={decoration}>{label}</Button>
+                        </DialogTrigger>
+                        <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
+                            <DialogTitle>Hola</DialogTitle>
+                            <View.View />
+                            <DialogFooter>
+                                <Button variant="success" onClick={execute} className="w-48">
+                                    {
+                                        appLoading
+                                            ? <Spinner />
+                                            : 'Aceptar'
+                                    }
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </ContextDataContext.Provider>
+            </ViewDataContext.Provider>
+        );
+    };
 };
 
 interface ContextDataContextParams <M extends IACele.Data.ModelName>{
