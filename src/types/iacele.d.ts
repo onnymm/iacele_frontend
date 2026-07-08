@@ -90,6 +90,12 @@ declare namespace IACele {
                         & _RequiresRecordsData<M>
                     );
 
+                    type Read<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresRecordIDs
+                        & _RequiresFieldsSelection<M>
+                    );
+
                     type SearchRead<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
                         & _SupportsSearchCriteria<M>
@@ -129,6 +135,8 @@ declare namespace IACele {
 
             type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
 
+            type Read<M extends Data.ModelName> = _Definition.Base.Read<M>;
+
             type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
 
             type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
@@ -152,6 +160,8 @@ declare namespace IACele {
             type Action = true;
 
             type Create = number[];
+
+            type Read<M extends Data.ModelName> = Data.ModelDefinition<M>[];
 
             type SearchRead<M extends Data.ModelName> = Data.ModelDefinition<M>[]
 
@@ -565,6 +575,10 @@ declare namespace IACele {
             create: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Create<M>,
             ) => Promise<IACele.API.Response.Create>;
+
+            read: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Read<M>,
+            ) => Promise<IACele.API.Response.Read<M>>;
 
             searchRead: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.SearchRead<M>,
