@@ -64,26 +64,22 @@ const VIEW = {
                 {({ Page, Sheet, Group, Field }) => (
                     <Page>
                         <Sheet>
-                            <Group label="Usuario">
-                                <Field name="employee_id" />
+                            <Group label="Resumen">
+                                <Field name="employee_id" readonly />
+                                <Field name="start_time" />
+                                <Field name="end_time" />
+                            </Group>
+                            <Group label="Detalles">
+                                <Field name="weekday" />
                                 <Field name="allowed_start" />
                                 <Field name="allowed_end" />
                             </Group>
-                            <Group label="Día">
-                                <Field name="date" />
-                                <Field name="weekday" />
+                            <Group label="Métricas">
                                 <Group>
                                     <Field name="has_valid_events" />
                                     <Field name="is_complete" />
                                 </Group>
-                            </Group>
-                            <Group label="Horario">
-                                <Field name="start_time" />
-                                <Field name="end_time" />
                                 <Field name="lunch_time" />
-                                <Field name="event_ids" />
-                            </Group>
-                            <Group label="Métricas">
                                 <Field name="late_start" />
                                 <Field name="early_end" />
                             </Group>
@@ -116,31 +112,32 @@ const VIEW = {
         modelName: 'assistance.registry.event',
         View: () => (
             <Form modelName="assistance.registry.event" create={false}>
-                {({ Page, Sheet, Group, Field, Header, Wizard }) => (
+                {({ Page, Sheet, Action, Group, Field, Header, Wizard, }) => (
                     <Page>
                         <Header>
                             <Wizard label="Aplicar corrección" viewDataName="assistance.registry.event.correction.form" contextData={({ id }) => ({ event_id: id as any as [number, string] })} />
+                            <Action name="undo_corrections" label="Deshacer correcciones" decoration="danger" invisible={[['has_corrections', '=', false]]} />
                         </Header>
                         <Sheet>
                             <Group label="General">
-                                <Field name="employee_id" />
+                                <Field name="employee_id" readonly />
                                 <Field name="status" />
                                 <Field name="registry_time" />
                             </Group>
                             <Group label="Detalles">
                                 <Group>
-                                    <Field name="from_api" />
+                                    <Field name="from_api" readonly />
                                     <Field name="has_corrections" />
                                 </Group>
-                                <Field name="day_id" />
+                                <Field name="day_id" readonly />
                             </Group>
                             <Group label="Correciones" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} />
-                                <Field name="registry_time_correction" invisible={[['registry_time_correction', '=', null]]} />
+                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} readonly />
+                                <Field name="registry_time_correction" invisible={[['registry_time_correction', '=', null]]} readonly />
                             </Group>
                             <Group label="Datos originales" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="original_status" />
-                                <Field name="original_registry_time" />
+                                <Field name="original_status" readonly />
+                                <Field name="original_registry_time" readonly />
                             </Group>
                         </Sheet>
                     </Page>

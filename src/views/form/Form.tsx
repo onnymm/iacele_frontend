@@ -35,7 +35,7 @@ interface _SupportsReadonlyParams<M extends IACele.Data.ModelName> {
 };
 
 interface _FieldConfig<M extends IACele.Data.ModelName> {
-    name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, string[]];
+    name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, (keyof IACele.Data.ModelDefinition<any>)[]];
     readonly?: BooeanOrConditionalStatement<M>;
 };
 
