@@ -196,43 +196,24 @@ declare namespace IACele {
         declare namespace Shape {
 
             interface FieldsMetadata {
-                id: TType.Integer<'not_null'>;
-                name: TType.Char<'not_null'>;
-                label: TType.Char<'not_null'>;
-                ttype: TType.Selection<TTypeName, 'not_null'>;
-                help_info: TType.Char;
+                id: TTypeV2.Integer['db'];
+                name: TTypeV2.Char['db'];
+                label: TTypeV2.Char['db'];
+                ttype: TTypeV2.Selection<TTypeName>['db'];
+                help_info: TTypeV2.Char['db'];
                 related_model: ModelName;
                 selection_ids: {
-                    id: TType.Integer<'not_null'>;
-                    name: TType.Char<'not_null'>;
-                    label: TType.Char<'not_null'>;
+                    id: TTypeV2.Integer['db'];
+                    name: TTypeV2.Char['db'];
+                    label: TTypeV2.Char['db'];
                 }[];
-                readonly: TType.Boolean<'not_null'>;
-                is_computed: TType.Boolean<'not_null'>;
+                readonly: TTypeV2.Boolean['db'];
+                is_computed: TTypeV2.Boolean['db'];
             };
 
         };
 
-        type ModelName = (
-            | 'base.model'
-            | 'base.model.field'
-            | 'base.model.field.selection'
-            | 'base.users'
-            | 'base.users.role'
-            | 'base.user.groups'
-            | 'base.user.access'
-            | 'location.warehouse'
-            | 'resource.device.type'
-            | 'schedule.week'
-            | 'model.sync'
-            | 'resource.device'
-            | 'hr.employee'
-            | 'schedule.week.offset'
-            | 'assistance.registry.day'
-            | 'assistance.registry.event'
-            | 'assistance.registry.event.correction'
-            | 'assistance.registry.event.credentials'
-        );
+        type ModelName = keyof Model<'db'>;
 
         type TTypeName = (
             | 'integer'
@@ -288,6 +269,75 @@ declare namespace IACele {
 
         };
 
+        declare namespace TTypeV2 {
+
+            interface _Definition <
+                DB,
+                T extends TTypeName,
+                V = DB,
+                M extends ModelName = null,
+                S = V,
+            >{
+                ttype: T;
+                db: DB;
+                view: V;
+                send: S;
+                modelName: M;
+            };
+
+            type FieldTType<M extends ModelName, V extends ViewType, T extends TTypeName> = {
+                [K in keyof ModelDefinition<M, V>]: ModelDefinition<M, V>[K]['ttype'] extends T ? K : never
+            }[keyof ModelDefinition<M, V>];
+
+            type KeepOrDiscard<M extends ModelName, V extends ViewType, K, T extends TTypeName> = K extends FieldTType<M, V, T> ? never : K
+
+            type WithoutRelated<M extends ModelName, V extends ViewType> = {
+                [K in keyof ModelDefinition<M, V> as KeepOrDiscard<M, V, K, 'one2many' | 'many2many'>]: (
+                    ModelDefinition<M, V>[K][V]
+                );
+            };
+
+            type Integer = _Definition<number, 'integer'>;
+            type Char = _Definition<string, 'char'>;
+            type Boolean = _Definition<boolean, 'boolean'>;
+            type Float = _Definition<float, 'float'>;
+            type Date = _Definition<string, 'date'>;
+            type Datetime = _Definition<string, 'datetime'>;
+            type Time = _Definition<string, 'time'>;
+            type Duration = _Definition<string, 'duration'>;
+            type Selection<O extends string> = _Definition<O, 'selection'>;
+            type Text = _Definition<string, 'text'>;
+            type File = _Definition<string, 'file'>;
+            type Many2One = _Definition<[number, string], 'many2one', number>;
+            type One2Many<M extends ModelName, V extends ViewType> = _Definition<(WithoutRelated<M, V>[]), 'one2many', WithoutRelated<M, V>[], M, Command<M>>;
+            type Many2Many<M extends ModelName, V extends ViewType> = _Definition<(WithoutRelated<M, V>[]), 'many2many', WithoutRelated<M, V>[], M, Command<M>>;
+            type JSON = _Definition<_JSON.JSON, 'json'>;
+
+            interface Command<M extends ModelName> {
+                create?: Partial<WithoutRelated<M, 'send'>>[];
+                add?: number[];
+                unlink?: number[];
+                update?: [number[], Partial<WithoutRelated<M, 'send'>>]
+                delete?: number[];
+                replace?: number[];
+                clear?: true;
+            };
+        };
+
+        type ViewType = 'db' | 'view' | 'send';
+
+        type RecordView<M extends ModelName> = {
+            [K in keyof ModelDefinition<M, 'view'>]: ModelDefinition<M, 'view'>[K]['view']
+        };
+
+        type RecordDatabase<M extends ModelName> = {
+            [K in keyof ModelDefinition<M, 'db'>]: ModelDefinition<M, 'db'>[K]['db']
+        };
+
+        type RecordSend<M extends ModelName> = {
+            [K in keyof ModelDefinition<M, 'send'>]?: ModelDefinition<M, 'send'>[K]['send']
+        };
+
         type _ArrayTTypeVariantOption = 'ids' | 'tuples';
 
         interface _ArrayTTypeVariant {
@@ -299,171 +349,171 @@ declare namespace IACele {
         };
 
         interface _CommonFieldsProperties {
-            id: TType.Integer<'not_null'>;
-            name: TType.Char<'not_null'>;
-            create_date: TType.Datetime<'not_null'>;
-            update_date: TType.Datetime<'not_null'>;
-            create_uid: TType.Many2One<'not_null'>;
-            update_uid: TType.Many2One<'not_null'>;
-            display_name: TType.Char<'not_null'>;
+            id: TTypeV2.Integer;
+            name: TTypeV2.Char;
+            create_date: TTypeV2.Datetime;
+            update_date: TTypeV2.Datetime;
+            create_uid: TTypeV2.Many2One;
+            update_uid: TTypeV2.Many2One;
+            display_name: TTypeV2.Char;
         };
 
-        interface Model {
+        interface Model<V extends ViewType> {
 
             'base.model': {
-                state: TType.Selection<'base' | 'generic', 'not_null'>;
-                label: TType.Char<'not_null'>;
-                model: TType.Char<'not_null'>;
-                has_sequence: TType.Boolean<'not_null'>;
-                is_archivable: TType.Boolean<'not_null'>;
-                has_label: TType.Boolean<'not_null'>;
-                description: TType.Text;
-                field_ids: TType.One2Many;
-                related_field_ids: TType.One2Many;
-                transient: TType.Boolean<'not_null'>;
+                state: TTypeV2.Selection<'base' | 'generic'>;
+                label: TTypeV2.Char;
+                model: TTypeV2.Char;
+                has_sequence: TTypeV2.Boolean;
+                is_archivable: TTypeV2.Boolean;
+                has_label: TTypeV2.Boolean;
+                description: TTypeV2.Text;
+                field_ids: TTypeV2.One2Many<'base.model.field', V>;
+                related_field_ids: TTypeV2.One2Many<'base.model.field', V>;
+                transient: TTypeV2.Boolean;
             };
 
             'base.model.field': {
-                state: TType.Selection<'base' | 'generic', 'not_null'>;
-                label: TType.Char<'not_null'>;
-                model_id: TType.Many2One<'not_null'>;
-                ttype: TType.Selection<TTypeName, 'not_null'>;
-                nullable: TType.Boolean<'not_null'>;
-                on_delete: TType.Selection<'cascade' | 'restrict' | 'set_null'>;
-                is_required: TType.Boolean<'not_null'>;
-                readonly: TType.Boolean<'not_null'>;
-                default_value: TType.JSON;
-                unique: TType.Boolean<'not_null'>;
-                help_info: TType.Text;
-                related_model_id: TType.Many2One;
-                related_field: TType.Char;
-                is_computed: TType.Boolean<'not_null'>;
-                selection_ids: TType.One2Many;
+                state: TTypeV2.Selection<'base' | 'generic'>;
+                label: TTypeV2.Char;
+                model_id: TTypeV2.Many2One;
+                ttypeV2: TTypeV2.Selection<TTypeName>;
+                nullable: TTypeV2.Boolean;
+                on_delete: TTypeV2.Selection<'cascade' | 'restrict' | 'set_null'>;
+                is_required: TTypeV2.Boolean;
+                readonly: TTypeV2.Boolean;
+                default_value: TTypeV2.JSON;
+                unique: TTypeV2.Boolean;
+                help_info: TTypeV2.Text;
+                related_model_id: TTypeV2.Many2One;
+                related_field: TTypeV2.Char;
+                is_computed: TTypeV2.Boolean;
+                selection_ids: TTypeV2.One2Many<'base.model.field.selection', V>;
             };
 
             'base.model.field.selection': {
-                label: TType.Char<'not_null'>;
-                field_id: TType.Many2One<'not_null'>;
+                label: TTypeV2.Char;
+                field_id: TTypeV2.Many2One;
             };
 
             'base.users': {
-                active: TType.Boolean<'not_null'>;
-                login: TType.Char<'not_null'>;
-                password: TType.Char<'not_null'>;
-                profile_picture: TType.File;
-                role_ids: TType.Many2Many;
+                active: TTypeV2.Boolean;
+                login: TTypeV2.Char;
+                password: TTypeV2.Char;
+                profile_picture: TTypeV2.File;
+                role_ids: TTypeV2.Many2Many<'base.users.role', V>;
             };
 
             'base.users.role': {
-                label: TType.Char<'not_null'>;
-                group_ids: TType.Many2Many;
+                label: TTypeV2.Char;
+                group_ids: TTypeV2.Many2Many<'base.user.groups', V>;
             };
 
             'base.user.groups': {
-                label: TType.Char<'not_null'>;
-                access_ids: TType.One2Many;
+                label: TTypeV2.Char;
+                access_ids: TTypeV2.One2Many<'base.user.access', V>;
             };
 
             'base.user.access': {
-                model_id: TType.Many2One<'not_null'>;
-                perm_create: TType.Boolean<'not_null'>;
-                perm_read: TType.Boolean<'not_null'>;
-                perm_update: TType.Boolean<'not_null'>;
-                perm_delete: TType.Boolean<'not_null'>;
-                group_id: TType.Many2One<'not_null'>;
+                model_id: TTypeV2.Many2One;
+                perm_create: TTypeV2.Boolean;
+                perm_read: TTypeV2.Boolean;
+                perm_update: TTypeV2.Boolean;
+                perm_delete: TTypeV2.Boolean;
+                group_id: TTypeV2.Many2One;
             };
 
             'location.warehouse': {
-                short_name: TType.Char<'not_null'>;
-                location_number: TType.Integer<'not_null'>;
+                short_name: TTypeV2.Char;
+                location_number: TTypeV2.Integer;
             };
 
             'resource.device.type': {};
 
             'schedule.week': {
-                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
-                start_time: TType.Time<'not_null'>;
-                end_time: TType.Time<'not_null'>;
+                weekday: TTypeV2.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
+                start_time: TTypeV2.Time;
+                end_time: TTypeV2.Time;
             };
 
             'model.sync': {
-                last_sync: TType.Datetime<'not_null'>;
-                model_id: TType.Many2One<'not_null'>;
+                last_sync: TTypeV2.Datetime;
+                model_id: TTypeV2.Many2One;
             };
 
             'resource.device': {
-                model: TType.Char;
-                brand: TType.Char;
-                serial_number: TType.Char;
-                firmware_version: TType.Char;
-                type_id: TType.Many2One<'not_null'>;
-                location_id: TType.Many2One;
+                model: TTypeV2.Char;
+                brand: TTypeV2.Char;
+                serial_number: TTypeV2.Char;
+                firmware_version: TTypeV2.Char;
+                type_id: TTypeV2.Many2One;
+                location_id: TTypeV2.Many2One;
             };
 
             'hr.employee': {
-                active: TType.Boolean<'not_null'>;
-                odoo_id: TType.Integer;
-                hire_date: TType.Date;
-                location_id: TType.Many2One;
-                user_id: TType.Many2One;
+                active: TTypeV2.Boolean;
+                odoo_id: TTypeV2.Integer;
+                hire_date: TTypeV2.Date;
+                location_id: TTypeV2.Many2One;
+                user_id: TTypeV2.Many2One;
             };
 
             'schedule.week.offset': {
-                employee_id: TType.Many2One<'not_null'>;
-                start_offset: TType.Duration<'not_null'>;
-                end_offset: TType.Duration<'not_null'>;
-                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
+                employee_id: TTypeV2.Many2One;
+                start_offset: TTypeV2.Duration;
+                end_offset: TTypeV2.Duration;
+                weekday: TTypeV2.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
             };
 
             'assistance.registry.day': {
-                date: TType.Date<'not_null'>;
-                employee_id: TType.Many2One<'not_null'>;
-                schedule_id: TType.Many2One;
-                offset_id: TType.Many2One;
-                event_ids: TType.One2Many;
-                start_time: TType.Time;
-                end_time: TType.Time;
-                lunch_time: TType.Duration;
-                weekday: TType.Char;
-                allowed_start: TType.Time;
-                allowed_end: TType.Time;
-                late_start: TType.Duration;
-                early_end: TType.Duration;
-                is_complete: TType.Boolean;
-                has_valid_events: TType.Boolean;
+                date: TTypeV2.Date;
+                employee_id: TTypeV2.Many2One;
+                schedule_id: TTypeV2.Many2One;
+                offset_id: TTypeV2.Many2One;
+                event_ids: TTypeV2.One2Many<'assistance.registry.event', V>;
+                start_time: TTypeV2.Time;
+                end_time: TTypeV2.Time;
+                lunch_time: TTypeV2.Duration;
+                weekday: TTypeV2.Char;
+                allowed_start: TTypeV2.Time;
+                allowed_end: TTypeV2.Time;
+                late_start: TTypeV2.Duration;
+                early_end: TTypeV2.Duration;
+                is_complete: TTypeV2.Boolean;
+                has_valid_events: TTypeV2.Boolean;
             };
 
             'assistance.registry.event': {
-                employee_id: TType.Many2One<'not_null'>;
-                original_registry_time: TType.Datetime<'not_null'>;
-                original_status: TType.Selection<'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
-                device_id: TType.Many2One;
-                from_api: TType.Boolean<'not_null'>;
-                registry_time_correction: TType.Datetime;
-                status_correction: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
-                day_id: TType.Many2One;
-                registry_time: TType.Datetime;
-                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
-                has_corrections: TType.Boolean<'not_null'>;
+                employee_id: TTypeV2.Many2One;
+                original_registry_time: TTypeV2.Datetime;
+                original_status: TTypeV2.Selection<'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                device_id: TTypeV2.Many2One;
+                from_api: TTypeV2.Boolean;
+                registry_time_correction: TTypeV2.Datetime;
+                status_correction: TTypeV2.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                day_id: TTypeV2.Many2One;
+                registry_time: TTypeV2.Datetime;
+                status: TTypeV2.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                has_corrections: TTypeV2.Boolean;
             };
 
             'assistance.registry.event.correction': {
-                event_id: TType.Many2One<'not_null'>;
-                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
-                registry_time: TType.Datetime;
+                event_id: TTypeV2.Many2One;
+                status: TTypeV2.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                registry_time: TTypeV2.Datetime;
             };
 
             'assistance.registry.event.credentials': {
-                token: TType.Char<'not_null'>;
-                cookie_uuid: TType.Char<'not_null'>;
-                site_id: TType.Char<'not_null'>;
+                token: TTypeV2.Char;
+                cookie_uuid: TTypeV2.Char;
+                site_id: TTypeV2.Char;
             };
 
         };
 
-        type ModelDefinition<M extends ModelName> = (
+        type ModelDefinition<M extends ModelName, V extends ViewType> = (
             & _CommonFieldsProperties
-            & Model[M]
+            & Model<V>[M]
         );
 
         type FieldName<M extends ModelName> = keyof ModelDefinition<M>;
