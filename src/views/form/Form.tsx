@@ -16,6 +16,7 @@ import ViewDataContext from "@/contexts/routes/viewDataContext";
 import type VIEW from "../Views";
 import useView from "../useView";
 import type RecordEvaluator from "@/core/ttypes";
+import { useNavigate } from "react-router";
 
 type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
 
@@ -37,6 +38,7 @@ interface _SupportsReadonlyParams<M extends IACele.Data.ModelName> {
 interface _FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, (keyof IACele.Data.ModelDefinition<any>)[]];
     readonly?: BooeanOrConditionalStatement<M>;
+    open?: keyof typeof VIEW;
 };
 
 type FieldConfig<M extends IACele.Data.ModelName> = (
@@ -364,6 +366,7 @@ const Field = <M extends IACele.Data.ModelName>({
     name,
     invisible,
     readonly,
+    open,
 }: FieldConfig<M>) => {
 
     // Obtención de valores desde el contexto
@@ -379,7 +382,7 @@ const Field = <M extends IACele.Data.ModelName>({
     if ( loaded ) {
         return (
             <SupportsInvisible invisible={invisible}>
-                <FormScalarFieldWrapper name={name} readonly={readonly} />
+                <FormScalarFieldWrapper name={name} readonly={readonly} open={open} />
             </SupportsInvisible>
         );
     };
@@ -388,6 +391,7 @@ const Field = <M extends IACele.Data.ModelName>({
 const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
     name,
     readonly,
+    open,
 }: _FieldConfig<M>) => {
 
     // Obtención de función de cambio de valor
@@ -407,6 +411,7 @@ const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
                 name: name as keyof IACele.Data.ModelDefinition<M>,
                 metadata,
                 readonly,
+                open,
             }}>
                 <FieldLabel />
                 <FieldComponent />
@@ -1163,18 +1168,28 @@ const useArrayFormValue: <T extends Array<any>>(value: any) => T = (
 const RecordTags = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los contextos
-    const { name } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { name, open } = useContext<FormFieldContextParams<M>>(FormFieldContext);
     const { formRecord } = useContext<RecordFormContextParams<M>>(RecordFormContext);
 
     // Valor del registro
     const recordValue = useArrayFormValue<IACele.Data.TType.One2Many<'tuples'>>(formRecord[name]);
+
+    const navigateTo = useNavigate();
+
+    const openRecord = useCallback(
+        (recordId: number) => {
+            if ( open ) {
+                navigateTo(`/view?name=${open}&id=${recordId}`)
+            }
+        }, [navigateTo, open]
+    )
 
     return (
         <div className="flex flex-wrap gap-2">
             {
                 recordValue.map(
                     (record) => (
-                        <Badge key={String(record['id'])} className="select-none">
+                        <Badge key={String(record['id'])} className="select-none" onClick={() => openRecord(record['id'])}>
                             {record['display_name']}
                         </Badge>
                     )
@@ -1208,6 +1223,7 @@ interface FormFieldContextParams <M extends IACele.Data.ModelName>{
     name: keyof IACele.Data.ModelDefinition<M>;
     readonly?: BooeanOrConditionalStatement<M>;
     metadata: IACele.Data.Shape.FieldsMetadata;
+    open?: keyof typeof VIEW;
 };
 
 const FormFieldContext = createContext<FormFieldContextParams<any>>({

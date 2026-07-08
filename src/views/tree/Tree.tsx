@@ -6,11 +6,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import useViewName from "@/hooks/app/useViewPage";
 import { Badge } from "@/components/ui/badge";
+import type VIEW from "../Views";
+import { useNavigate } from "react-router";
 
 interface TreeParams<M extends IACele.Data.ModelName> {
     modelName: M;
     children: (params: RenderParams<M>) => React.ReactNode;
     label?: string;
+    open: keyof typeof VIEW;
 };
 
 interface RenderParams<M extends IACele.Data.ModelName> {
@@ -30,11 +33,13 @@ interface FieldParams<M extends IACele.Data.ModelName> {
 interface ViewProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    open: keyof typeof VIEW;
 };
 
 interface TreeViewParams<M extends IACele.Data.ModelName> {
     modelName: M;
     data: IACele.API.Response.Tree<M>;
+    open: keyof typeof VIEW;
 };
 
 interface DynamicWidgetParams<M extends IACele.Data.ModelName, T> {
@@ -114,6 +119,7 @@ const Tree = <M extends IACele.Data.ModelName>({
     modelName,
     children,
     label,
+    open,
 }: TreeParams<M>) => {
 
     // Obtención de estados y funciones desde hook
@@ -127,7 +133,7 @@ const Tree = <M extends IACele.Data.ModelName>({
         }}>
             {children({ Field })}
             {metadataLoaded && data &&
-                <TreeView data={data} modelName={modelName} />
+                <TreeView data={data} modelName={modelName} open={open} />
             }
         </TreeContext.Provider>
     );
@@ -157,6 +163,7 @@ const Field = <M extends IACele.Data.ModelName>({
 const TreeView = <M extends IACele.Data.ModelName>({
     modelName,
     data,
+    open,
 }: TreeViewParams<M>) => {
 
     // Obtención de arreglo de campos a leer desde el contexto
@@ -217,13 +224,14 @@ const TreeView = <M extends IACele.Data.ModelName>({
     );
 
     return (
-        <View columns={columns} data={data['data']} />
+        <View columns={columns} data={data['data']} open={open} />
     );
 };
 
 const View = <TData, TValue>({
     columns,
     data,
+    open,
 }: ViewProps<TData, TValue>) => {
 
     const table = useReactTable({
@@ -231,6 +239,8 @@ const View = <TData, TValue>({
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
+
+    const navigateTo = useNavigate();
 
     return (
         <Table>
@@ -271,19 +281,22 @@ const View = <TData, TValue>({
                     ?.length
                         ? (
                             table.getRowModel().rows.map(
-                                (row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                        {
-                                            row.getVisibleCells().map(
-                                                (cell) => (
-                                                    <TableCell key={cell.id}>
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </TableCell>
+                                (row) => {
+                                    const recordId = (row.getVisibleCells()[0].row.original as {id: number}).id
+                                    return (
+                                        <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} onClick={() => navigateTo(`/view?name=${open}&id=${recordId}`)}>
+                                            {
+                                                row.getVisibleCells().map(
+                                                    (cell) => (
+                                                        <TableCell key={cell.id}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    )
                                                 )
-                                            )
-                                        }
-                                    </TableRow>
-                                )
+                                            }
+                                        </TableRow>
+                                    );
+                                }
                             )
                         )
                         : (
@@ -411,7 +424,7 @@ const Widget = {
     }: DynamicWidgetParams<any, IACele.Data.TType.One2Many>) => {
 
         return (
-            <ArrayTags value={(value as {id: number; display_name: string;}[])} />
+            <ArrayTags value={(value as any as {id: number; display_name: string;}[])} />
         );
     },
 

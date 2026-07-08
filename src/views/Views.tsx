@@ -39,7 +39,7 @@ const VIEW = {
     'assistance.registry.day.tree': packedView({
         modelName: 'assistance.registry.day',
         View: () => (
-            <Tree modelName="assistance.registry.day">
+            <Tree modelName="assistance.registry.day" open="assistance.registry.day.form">
                 {({ Field }) => (
                     <>
                         <Field name="id" />
@@ -83,6 +83,9 @@ const VIEW = {
                                 <Field name="late_start" />
                                 <Field name="early_end" />
                             </Group>
+                            <Group label="Eventos">
+                                <Field name="event_ids" open="assistance.registry.event.form" />
+                            </Group>
                         </Sheet>
                     </Page>
                 )}
@@ -93,7 +96,7 @@ const VIEW = {
     'assistance.registry.event.tree': packedView({
         modelName: 'assistance.registry.event',
         View: () => (
-            <Tree modelName="assistance.registry.event">
+            <Tree modelName="assistance.registry.event" open="assistance.registry.event.form">
                 {({ Field }) => (
                     <>
                         <Field name="id" />
