@@ -445,12 +445,20 @@ declare namespace IACele {
                 registry_time: TType.Datetime;
                 status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
                 has_corrections: TType.Boolean<'not_null'>;
+                correction_history_ids: TType.One2Many;
             };
 
             'assistance.registry.event.correction': {
                 event_id: TType.Many2One<'not_null'>;
                 status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
                 registry_time: TType.Datetime;
+            };
+
+            'assistance.registry.event.correction.historial': {
+                event_id: TType.Many2One<'not_null'>;
+                move_type: TType.Selection<'correction' | 'undo', 'not_null'>;
+                new_status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                new_registry_time: TType.Datetime;
             };
 
             'assistance.registry.event.credentials': {

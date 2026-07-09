@@ -61,8 +61,11 @@ const VIEW = {
         modelName: 'assistance.registry.day',
         View: () => (
             <Form modelName="assistance.registry.day" create={false}>
-                {({ Page, Sheet, Group, Field }) => (
+                {({ Page, Header, Wizard, Sheet, Group, Field }) => (
                     <Page>
+                        <Header>
+                            <Wizard label="Añadir registro" viewDataName="assistance.registry.event.form" contextData={({ id }) => ({ event_id: id as any as [number, string], from_api: false })} />
+                        </Header>
                         <Sheet>
                             <Group label="Resumen">
                                 <Field name="employee_id" readonly />
@@ -141,6 +144,9 @@ const VIEW = {
                             <Group label="Datos originales" invisible={[['has_corrections', '=', false]]}>
                                 <Field name="original_status" readonly />
                                 <Field name="original_registry_time" readonly />
+                            </Group>
+                            <Group label="Correcciones" invisible={[['correction_history_ids', '=', null]]}>
+                                <Field name="correction_history_ids" />
                             </Group>
                         </Sheet>
                     </Page>
