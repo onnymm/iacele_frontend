@@ -121,8 +121,8 @@ abstract class ArrayTType<
 > {
 
     name: F;
-    completeValue: IACele.Data.ModelDefinition<M>[] | undefined;
-    viewValue: IACele.Data.ModelDefinition<M>[] = [];
+    completeValue: IACele.Data.ModelDefinition<M>[] | null | undefined;
+    viewValue: IACele.Data.ModelDefinition<M>[] | null = [];
 
     constructor (
         name: F,
@@ -130,7 +130,13 @@ abstract class ArrayTType<
     ) {
 
         this.name = name;
-        this.completeValue = value;
+        this.completeValue = (
+            value === undefined || value === null
+                ? null
+                : value.length === 0
+                    ? null
+                    : value
+        );
         this.computeViewValue();
     };
 
@@ -144,7 +150,7 @@ abstract class ArrayTType<
 
     asReal = () => (this.completeValue);
 
-    equals = () => (false);
+    equals = (value: any) => (this.completeValue === value);
     notEqual = () => (false);
     gt = () => (false);
     lt = () => (false);
