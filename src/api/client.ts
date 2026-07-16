@@ -185,6 +185,8 @@ class Client {
         // Función de remoción de datos y token del usuario si ocurre un error
         const onInvalidToken = (e: APIError): void => {
             if ( e.status == 403 ) {
+                console.log('Me ejecuto');
+                
                 // Se eliminan los datos del usuario
                 this.session.removeUserData();
                 // Se elimina el token del usuario
@@ -332,11 +334,11 @@ class Client {
                     onError({
                         status: 408,
                         detail: 'Hubo un error al intentar conectarse al servidor.',
-                    })
+                    });
                 } else {
                     // Ejecución de función de manejo de error
                     onError({
-                        status: 404,
+                        status: e.status,
                         detail: e.response?.data.detail,
                     });
                 };
