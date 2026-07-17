@@ -40,7 +40,7 @@ const NavbarProfile = () => {
     const { userData } = useUserData();
 
     return (
-        <div id="navbar-profile" className="flex flex-row justify-end items-center gap-2 w-[50%] sm:w-72 h-12">
+        <div id="navbar-profile" className="flex flex-row justify-end items-center gap-2 w-72 h-12">
             <div className="flex flex-col items-end">
                 <p>{userData.name}</p>
                 {userData.role_ids.length && 
