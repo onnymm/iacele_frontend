@@ -6,7 +6,7 @@ const DarkModeSwitch = () => {
     const { darkMode, switchDarkMode } = useDarkMode();
 
     return (
-        <Switch checked={darkMode} onCheckedChange={switchDarkMode} />
+        <Switch className="cursor-pointer" checked={darkMode} onCheckedChange={switchDarkMode} />
     );
 };
 
