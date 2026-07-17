@@ -5,6 +5,6 @@ const userTemplate: IACele.App.Me = {
     'login': '',
     'profile_picture': null,
     'role_ids': [],
-};
+} as const;
 
 export default userTemplate;

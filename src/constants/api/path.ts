@@ -20,6 +20,6 @@ const PATH = {
     SERVER: {
         ACTION: '/server/action',
     },
-};
+} as const;
 
 export default PATH;
