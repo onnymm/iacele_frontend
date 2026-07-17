@@ -14,18 +14,19 @@ const VIEW = {
         modelName: 'base.users',
         View: () => (
             <Form modelName="base.users">
-                {({ Page, Sheet, Header, Action, Group, Field }) => (
+                {({ Page, Sheet, Group, Field }) => (
                     <Page>
-                        <Header>
-                            <Action name="deactivate" label="Desactivar" decoration="danger" />
-                            <Action name="deactivate" label="Desactivar" decoration="danger" />
-                        </Header>
                         <Sheet>
-                            <Group>
-                                <Field name="active" />
+                            <Group label="Personalizar">
+                                <Field name="profile_picture" widget="picture" />
+                            </Group>
+                            <Group label="General">
                                 <Field name="name" />
-                                <Field name="login" />
-                                <Field name="role_ids" />
+                                <Field name="login" readonly />
+                            </Group>
+                            <Group label="Detalles">
+                                <Field name="active" readonly />
+                                <Field name="role_ids" readonly />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />
                             </Group>
@@ -34,6 +35,21 @@ const VIEW = {
                 )}
             </Form>
         ),
+    }),
+
+    'base.users.tree': packedView({
+        modelName: 'base.users',
+        View: () => (
+            <Tree modelName="base.users" open="base.users.form">
+                {({ Field }) => (
+                    <>
+                        <Field name="name" />
+                        <Field name="login" />
+                        <Field name="role_ids" />
+                    </>
+                )}
+            </Tree>
+        )
     }),
 
     'assistance.registry.day.tree': packedView({

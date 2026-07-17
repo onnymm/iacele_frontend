@@ -10,13 +10,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useAPI from "@/hooks/app/useAPI";
 import useFormRecord from "@/hooks/views/useFormRecord";
-import { CircleQuestionMark, Save, Undo2, X } from "lucide-react";
+import { Camera, CircleQuestionMark, Pencil, Save, Undo2, X } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ViewDataContext from "@/contexts/routes/viewDataContext";
 import type VIEW from "../Views";
 import useView from "../useView";
 import type RecordEvaluator from "@/core/ttypes";
 import { useNavigate } from "react-router";
+import useBase64 from "@/hooks/ui/useBase64";
 
 type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
 
@@ -39,6 +40,7 @@ interface _FieldConfig<M extends IACele.Data.ModelName> {
     name: keyof IACele.Data.ModelDefinition<M> | [keyof IACele.Data.ModelDefinition<M>, (keyof IACele.Data.ModelDefinition<any>)[]];
     readonly?: BooeanOrConditionalStatement<M>;
     open?: keyof typeof VIEW;
+    widget?: keyof typeof FieldWidget;
 };
 
 type FieldConfig<M extends IACele.Data.ModelName> = (
@@ -367,6 +369,7 @@ const Field = <M extends IACele.Data.ModelName>({
     invisible,
     readonly,
     open,
+    widget
 }: FieldConfig<M>) => {
 
     // Obtención de valores desde el contexto
@@ -382,7 +385,7 @@ const Field = <M extends IACele.Data.ModelName>({
     if ( loaded ) {
         return (
             <SupportsInvisible invisible={invisible}>
-                <FormScalarFieldWrapper name={name} readonly={readonly} open={open} />
+                <FormScalarFieldWrapper name={name} readonly={readonly} open={open} widget={widget} />
             </SupportsInvisible>
         );
     };
@@ -392,6 +395,7 @@ const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
     name,
     readonly,
     open,
+    widget,
 }: _FieldConfig<M>) => {
 
     // Obtención de función de cambio de valor
@@ -401,8 +405,8 @@ const FormScalarFieldWrapper = <M extends IACele.Data.ModelName>({
     // Definición de componente a usar para renderizar el dato
     const FieldComponent = useMemo(
         () => (
-            FieldWidget[metadata.ttype]
-        ), [metadata.ttype]
+            FieldWidget[widget ?? metadata.ttype]
+        ), [widget, metadata.ttype]
     );
 
     return (
@@ -1151,6 +1155,62 @@ const DurationField = <M extends IACele.Data.ModelName>() => {
     );
 };
 
+const PictureField = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de valores desde los contextos
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
+
+    // Valor del registro
+    const recordValue = (formRecord[name] as IACele.Data.TType.File) ?? 'null';
+
+    const { convertToBase64 } = useBase64();
+
+    const setValue = useCallback(
+        async (file: FileList | null) => {
+            if ( file === null ) {
+                setFormRecordField(name, 'null' as any);
+            } else {
+                const encoded = await convertToBase64(file[0]);
+                const value = encoded.replace('data:image/jpeg;base64,', '');
+                setFormRecordField(name, value as any);
+            };
+        }, [convertToBase64, name, setFormRecordField]
+    );
+
+    return (
+        <div className="flex justify-center md:justify-end w-full">
+            <div className="relative size-72 md:size-36">
+                {recordValue === 'null' &&
+                    <div className="absolute flex justify-center items-center bg-background rounded-full size-full">
+                        <Camera className="stroke-foreground/30 size-16" />
+                    </div>
+                }
+                {recordValue !== 'null' &&
+                    <>
+                        <img className="absolute rounded-full size-full" src={`data:image/jpeg;base64,${recordValue}`} alt="" />
+                        {!isReadonly &&
+                            <div role="button" className="right-0 absolute flex justify-center items-center bg-danger rounded-full size-[min(60px,25%)] cursor-pointer" onClick={() => {setValue(null)}}>
+                                <X className="size-[50%]" />
+                            </div>
+                        }
+                    </>
+                }
+                {!isReadonly &&
+                    <label htmlFor="file-input" className="right-0 bottom-0 absolute size-[min(60px,25%)]">
+                        <div className="flex justify-center items-center bg-primary rounded-full size-full cursor-pointer">
+                            <Pencil className="size-[50%]" />
+                        </div>
+                    </label>
+                }
+
+            </div>
+            <Input type="file" onChange={(e) => setValue(e.target.files)} id="file-input" accept=".jpg, .jpeg" className="hidden" />
+        </div>
+    );
+};
+
 const useArrayFormValue: <T extends Array<any>>(value: any) => T = (
     value,
 ) => {
@@ -1199,7 +1259,7 @@ const RecordTags = <M extends IACele.Data.ModelName>() => {
     );
 };
 
-const FieldWidget: Record<IACele.Data.TTypeName, React.FC> = {
+const FieldWidget = {
     'integer': IntegerField,
     'char': CharField,
     'boolean': BooleanField,
@@ -1215,7 +1275,9 @@ const FieldWidget: Record<IACele.Data.TTypeName, React.FC> = {
     'many2many': RecordTags,
     'file': CharField,
     'json': CharField,
-};
+
+    'picture': PictureField,
+} as const;
 
 // --------------------------------------------
 
