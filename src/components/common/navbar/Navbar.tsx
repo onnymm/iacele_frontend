@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import DarkModeSwitch from "@/components/ui/dark-mode-switch/DarkModeSwitch";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import MainControlsContext from "@/contexts/ui/mainControlsContext";
 import useUserData from "@/hooks/app/useUserData";
 import useUserToken from "@/hooks/app/useUserToken";
+import { LogOut, SunMoon, UserRoundPen } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
 
 const Navbar = () => {
@@ -34,15 +34,6 @@ const Navbar = () => {
 
 export default Navbar;
 
-const Separator = () => {
-
-    return (
-        <div
-            className="m-2 border w-[calc(100%) - 1rem]"
-        />
-    );
-};
-
 const NavbarProfile = () => {
 
     // Obtención de los datos del usuario de la sesión
@@ -63,34 +54,40 @@ const NavbarProfile = () => {
 
 const Settings = () => {
 
-    return (
-        <Popover>
-            <PopoverTrigger className="cursor-pointer">
-                <NavbarProfile />
-            </PopoverTrigger>
-            <PopoverContent className="gap-1 p-2 py-4 border">
-                <div className="flex flex-row justify-between items-center px-4">
-                    Modo oscuro
-                    <DarkModeSwitch />
-                </div>
-                <Separator />
-                <Button>
-                    Mi perfil
-                </Button>
-                <LogoutButton />
-            </PopoverContent>
-        </Popover>
-    );
-};
-
-const LogoutButton = () => {
-
     // Obtención de función de remoción de token
     const { removeUserToken } = useUserToken();
 
     return (
-        <Button variant='danger' onClick={removeUserToken}>
-            Cerrar sesión
-        </Button>
+        <DropdownMenu>
+            <DropdownMenuTrigger>
+                <NavbarProfile />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="py-2">
+
+                <DropdownMenuLabel>Preferencias</DropdownMenuLabel>
+                <div className="flex flex-row items-center gap-2 px-2 text-sm transition-colors duration-300">
+                    <SunMoon />
+                    <div className="flex flex-row justify-between w-full">
+                        Modo oscuro
+                        <DarkModeSwitch />
+                    </div>
+                </div>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Ajustes</DropdownMenuLabel>
+
+                <DropdownMenuItem className="gap-4">
+                    <UserRoundPen />
+                    Mi perfil
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem variant="danger" className="gap-4" onClick={removeUserToken}>
+                    <LogOut />
+                    Cerrar sesión
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
