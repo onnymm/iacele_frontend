@@ -339,8 +339,8 @@ const useReadonly = <M extends IACele.Data.ModelName>(
 
     // Evaluación de si el componente es visible
     const isComponentReadonly = useMemo(
-        () => (readonly !== undefined && evaluator ? evaluator.evaluate(readonly) : false),
-        [evaluator, readonly]
+        () => (readonly !== undefined && evaluator ? evaluator.evaluate(readonly) && !createMode : false),
+        [evaluator, readonly, createMode]
     );
 
     const staticReadonly = useMemo(

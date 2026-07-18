@@ -22,12 +22,12 @@ const VIEW = {
                             </Group>
                             <Group label="General">
                                 <Field name="name" />
-                                <Field name="login" readonly />
+                                <Field name="login" />
                             </Group>
-                            <Group label="Detalles">
+                            <Group label="Detalles" invisible={[['id', '=', null]]}>
                                 <Field name="active" readonly />
                                 <Field name="role_ids" readonly />
-                                <Field name="create_uid" />
+                                <Field name="create_uid"/>
                                 <Field name="create_date" />
                             </Group>
                         </Sheet>
