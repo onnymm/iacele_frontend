@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect } from "react"
 import APIContext from "../../contexts/app/apiContext"
 import useUserToken from "./useUserToken";
+import useWebsocketNotification from "./useWebsocketNotification";
 
 const useFetchUser = (): void => {
 
@@ -8,6 +9,16 @@ const useFetchUser = (): void => {
     const { api } = useContext(APIContext);
     // Obtención de 
     const { userToken } = useUserToken();
+
+    // Función para actualización de los datos del usuario de la sesión
+    const updateUserData = useCallback(
+        async () => {
+            await api.me()
+        }, [api]
+    );
+
+    // Registro de la función
+    useWebsocketNotification('profile.update', updateUserData);
 
     // Función para obtención de los datos del usuario
     const fetchUser = useCallback(
