@@ -182,6 +182,35 @@ declare namespace IACele {
 
         };
 
+        declare namespace Websocket {
+
+            type MessagePayload = _Definition.Message[keyof _Definition.Message];
+            type MessageName = keyof _Definition.Message
+
+            declare namespace _Definition {
+
+                type _Message = (
+                    | ['field.created', {}]
+                    | ['field.deleted', {}]
+                    | ['model.created', {'model': Data.ModelName}]
+                    | ['model.deleted', {'model': Data.ModelName}]
+                    | ['password.changed']
+                    | ['profile.update', {'detail': string}]
+                    | ['validation.failed', {'detail': string}]
+                    | ['verification.failed', {'detail': string}]
+                );
+
+                type Message = {
+                    [I in _Message as I[0]]: {
+                        'name': I[0];
+                        'payload': I[1];
+                    };
+                };
+
+            };
+
+        };
+
     };
 
     declare namespace Data {
@@ -525,6 +554,11 @@ declare namespace IACele {
             interface API {
                 api: Resource.Client;
                 appLoading: boolean;
+                websocket: Resource.SyncClient | null;
+                onWebsocketMessage: (
+                    name: string,
+                    callback: () => void,
+                ) => ( () => (void) );
             };
 
             interface UserToken {
@@ -562,6 +596,15 @@ declare namespace IACele {
     };
 
     declare namespace Resource {
+
+        interface SyncClient {
+            onNotify: (
+                name: string,
+                callback: () => void,
+            ) => (() => (void));
+
+            close: () => void;
+        };
 
         interface Client {
             login: (
