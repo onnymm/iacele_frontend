@@ -21,7 +21,7 @@ class Client {
             'accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-    };
+    } as const;
 
     constructor (
         session: IACele.Resource.UserSession,
@@ -144,7 +144,7 @@ class Client {
     login = async (
         username: string,
         password: string,
-        onError: () => void,
+        onError: (e: any) => void,
     ): Promise<void> => {
 
         // Creación de los datos
