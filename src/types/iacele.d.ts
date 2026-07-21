@@ -202,7 +202,7 @@ declare namespace IACele {
 
                 type Message = {
                     [I in _Message as I[0]]: {
-                        'name': I[0];
+                        'event': I[0];
                         'payload': I[1];
                     };
                 };
@@ -554,11 +554,7 @@ declare namespace IACele {
             interface API {
                 api: Resource.Client;
                 appLoading: boolean;
-                websocket: Resource.SyncClient | null;
-                onWebsocketMessage: (
-                    name: IACele.API.Websocket.MessageName,
-                    callback: () => void,
-                ) => ( () => (void) );
+                eventClient: Resource.SyncClient | null;
             };
 
             interface UserToken {
@@ -598,7 +594,7 @@ declare namespace IACele {
     declare namespace Resource {
 
         interface SyncClient {
-            onNotify: (
+            on: (
                 name: string,
                 callback: () => void,
             ) => (() => (void));

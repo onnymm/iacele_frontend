@@ -3,6 +3,9 @@ const QUERY_PARAMS = {
         ID: 'id',
         NAME: 'name',
     },
+    WEBSOCKET: {
+        TOKEN: 'token',
+    },
 } as const;
 
 export default QUERY_PARAMS;

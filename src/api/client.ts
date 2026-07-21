@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import tokenInterceptor from "../security/tokenInterceptor";
 import PATH from "../constants/api/path";
+import BACKEND_URL from "@/constants/app/backendURL";
 
 // Error de API
 type APIError = {
@@ -14,7 +15,6 @@ const iaCeleAxios = axios.create();
 iaCeleAxios.interceptors.request.use(tokenInterceptor);
 
 class Client {
-    private COMPLETE_URL: string = import.meta.env.VITE_API;
     private session: IACele.Resource.UserSession;
     private config = {
         headers: {
@@ -374,7 +374,7 @@ class Client {
     ): string => {
 
         // Construcción de la URL completa
-        const completeURL = `${this.COMPLETE_URL}${route}`;
+        const completeURL = `${BACKEND_URL}${route}`;
 
         return completeURL;
     };

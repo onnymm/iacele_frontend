@@ -1,6 +1,10 @@
-class SyncClient {
-    ws: WebSocket;
-    hub: Record<string, Record<number, () => (void)>>;
+import PATH from "@/constants/api/path";
+import BACKEND_URL from "@/constants/app/backendURL";
+import QUERY_PARAMS from "@/constants/routes/queryParams";
+
+class EventClient {
+    private ws: WebSocket;
+    private hub: Record<string, Record<number, () => (void)>>;
 
     constructor (
         userToken: string,
@@ -17,7 +21,7 @@ class SyncClient {
         this.ws.close();
     };
 
-    onNotify = (
+    on = (
         messageName: string,
         callback: () => (void),
     ) => {
@@ -44,17 +48,20 @@ class SyncClient {
         // Registro de la funci+on
         messageCallbacks[index] = callback;
         // Creación de función de desuscripción
-        const stopListening = () => {delete messageCallbacks[index]};
+        const unsuscribeCallback = () => {delete messageCallbacks[index]};
 
-        return stopListening;
+        return unsuscribeCallback;
     };
 
     private initializeWebsocket = (
         userToken: string,
     ) => {
 
+        // Construcción de la URL para conexión del websocket
+        const URL = `${BACKEND_URL}${PATH.WEBSOCKET}/?${QUERY_PARAMS.WEBSOCKET.TOKEN}=${userToken}`
         // Inicialización del websocket
-        const ws = new WebSocket(`${import.meta.env.VITE_API}/ws/?token=${userToken}`);
+        const ws = new WebSocket(URL);
+
         // Función que se ejecuta cuando el websocket se conecta
         ws.onopen = () => {
             console.log('Websocket conectado');
@@ -66,7 +73,7 @@ class SyncClient {
 
             try {
                 // Obtención del objeto de funciones del mensaje
-                const messageCallbacks = this.hub[payload.name];
+                const messageCallbacks = this.hub[payload.event];
                 // Obtención de los índices del objeto
                 const indexes = Object.keys(messageCallbacks);
                 // Iteración por cada índice
@@ -93,4 +100,4 @@ class SyncClient {
     };
 };
 
-export default SyncClient;
+export default EventClient;

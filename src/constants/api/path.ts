@@ -20,6 +20,7 @@ const PATH = {
     SERVER: {
         ACTION: '/server/action',
     },
+    WEBSOCKET: '/ws',
 } as const;
 
 export default PATH;
