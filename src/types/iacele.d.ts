@@ -556,7 +556,7 @@ declare namespace IACele {
                 appLoading: boolean;
                 websocket: Resource.SyncClient | null;
                 onWebsocketMessage: (
-                    name: string,
+                    name: IACele.API.Websocket.MessageName,
                     callback: () => void,
                 ) => ( () => (void) );
             };

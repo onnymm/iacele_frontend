@@ -37,8 +37,8 @@ const APIProvider: React.FC<IACele.Common.SupportsChildren> = ({
     // Inicialización de función de ejecución tras mensaje de websocket
     const onWebsocketMessage = useCallback(
         (
-            name: string,
-            callback: () => (void)
+            name: IACele.API.Websocket.MessageName,
+            callback: () => (void),
         ) => {
 
             // Si el valor del estado es nulo...
