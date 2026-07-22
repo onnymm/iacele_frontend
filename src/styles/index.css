@@ -18,6 +18,10 @@ svg {
   @apply transition-colors duration-300;
 };
 
+a:not(:has(*)) {
+  @apply text-primary hover:brightness-150 transition-all duration-150;
+};
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;
@@ -120,7 +124,7 @@ svg {
     --warning: oklch(79.5% 0.184 86.047);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
+    --accent: oklch(33.293% 0.05024 249.573);
     --accent-foreground: oklch(0.985 0 0);
     --danger: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
