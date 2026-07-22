@@ -563,6 +563,7 @@ declare namespace IACele {
             interface API {
                 api: Resource.Client;
                 appLoading: boolean;
+                websocketConnected: boolean;
                 eventClient: Resource.SyncClient | null;
             };
 

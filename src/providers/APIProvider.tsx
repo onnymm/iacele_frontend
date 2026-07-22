@@ -9,10 +9,10 @@ const APIProvider: React.FC<IACele.Common.SupportsChildren> = ({
     // Inicialización de instancia de conexión al backend
     const { api, appLoading } = useHTTPClient();
     // Inicialización de instancia de conexión a websocket del backend
-    const { eventClient } = useEventClient();
+    const { eventClient,websocketConnected } = useEventClient();
 
     return (
-        <APIContext.Provider value={{ api, appLoading, eventClient }}>
+        <APIContext.Provider value={{ api, appLoading, eventClient, websocketConnected }}>
             {children}
         </APIContext.Provider>
     );

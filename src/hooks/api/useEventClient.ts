@@ -14,6 +14,8 @@ const useEventClient = () => {
 
     // Inicialización de estado de cliente de eventos
     const [eventClient, setEventClient] = useState<EventClient | null>(null);
+    // Inicialización de estado de websocket conectado
+    const [ websocketConnected, setWebsocketConnected ] = useState<boolean>(false);
     // Obtención de la función de establecer valor de token
     const { userToken } = useUserToken();
 
@@ -29,7 +31,7 @@ const useEventClient = () => {
             };
 
             // Inicialización de conexión a websocket
-            const client = new EventClient(userToken, clientConfig);
+            const client = new EventClient(userToken, setWebsocketConnected, clientConfig,);
             // Se establece el estado
             setEventClient(client);
 
@@ -43,7 +45,7 @@ const useEventClient = () => {
         }, [userToken]
     );
 
-    return { eventClient };
+    return { eventClient, websocketConnected };
 };
 
 export default useEventClient;
