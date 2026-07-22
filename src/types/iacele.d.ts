@@ -184,7 +184,16 @@ declare namespace IACele {
 
         declare namespace Websocket {
 
-            type MessagePayload = _Definition.Message[keyof _Definition.Message];
+            interface EventClientConfig {
+                onopen: () => (void);
+                onclose: () => (void);
+                defaultNotification: (
+                    eventName: IACele.API.Websocket.message['event'],
+                    payload: IACele.API.Websocket.message['payload'],
+                ) => (void);
+            };
+
+            type message = _Definition.Message[keyof _Definition.Message];
             type MessageName = keyof _Definition.Message
 
             declare namespace _Definition {

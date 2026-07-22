@@ -2,6 +2,8 @@ import { useCallback, useContext, useEffect } from "react"
 import APIContext from "../../contexts/app/apiContext"
 import useUserToken from "./useUserToken";
 import useWebsocketNotification from "./useWebsocketNotification";
+import showToast from "@/components/ui/toast/toast";
+import { Info } from "lucide-react";
 
 const useFetchUser = (): void => {
 
@@ -13,7 +15,12 @@ const useFetchUser = (): void => {
     // Función para actualización de los datos del usuario de la sesión
     const updateUserData = useCallback(
         async () => {
-            await api.me()
+            await api.me();
+            showToast({
+                title: 'Perfil actualizado',
+                content: 'Los datos de tu perfil han sido actualizados.',
+                icon: Info,
+            })
         }, [api]
     );
 

@@ -2,16 +2,34 @@ import PATH from "@/constants/api/path";
 import BACKEND_URL from "@/constants/app/backendURL";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 
+const DEFAULT_CONFIG: IACele.API.Websocket.EventClientConfig = {
+    onopen: () => {
+        console.log('Websocket conectado');
+    },
+    onclose: () => {
+        console.log('Websocket desconectado');
+    },
+    defaultNotification: (
+        payload
+    ) => {
+        console.log(payload);
+    },
+};
+
 class EventClient {
     private ws: WebSocket;
     private hub: Record<string, Record<number, () => (void)>>;
+    private config: IACele.API.Websocket.EventClientConfig;
 
     constructor (
         userToken: string,
+        config: Partial<IACele.API.Websocket.EventClientConfig> = {},
     ) {
 
         // Inicialización del objeto de centro de funciones a ejecutar en los mensajes de websocket
         this.hub = {};
+        // Inicialización del objeto de configuración
+        this.config = { ...DEFAULT_CONFIG, ...config};
         // Inicialización del websocket
         this.ws = this.initializeWebsocket(userToken);
     };
@@ -63,17 +81,16 @@ class EventClient {
         const ws = new WebSocket(URL);
 
         // Función que se ejecuta cuando el websocket se conecta
-        ws.onopen = () => {
-            console.log('Websocket conectado');
-        };
+        ws.onopen = this.config.onopen;
         // Función para cuando el websocket recibe un mensaje
         ws.onmessage = (event: MessageEvent<string>) => {
             // Obtención de los datos en formato JSON
-            const payload: IACele.API.Websocket.MessagePayload = JSON.parse(event.data);
+            const message: IACele.API.Websocket.message = JSON.parse(event.data);
 
+            // Se intenta ejecutar funciones suscritas
             try {
                 // Obtención del objeto de funciones del mensaje
-                const messageCallbacks = this.hub[payload.event];
+                const messageCallbacks = this.hub[message.event];
                 // Obtención de los índices del objeto
                 const indexes = Object.keys(messageCallbacks);
                 // Iteración por cada índice
@@ -86,15 +103,15 @@ class EventClient {
                     }
                 );
 
+            // Si no hay funciones suscritas al evento...
             } catch {
-                // No hacer nada
+                // Se usa la función predeterminada para mostrar el evento
+                this.config.defaultNotification(message.event, message.payload);
             };
         };
 
         // Función que se ejecuta cuando el websocket se desconecta
-        ws.onclose = () => {
-            console.log('Websocket desconectado');
-        };
+        ws.onclose = this.config.onclose;
 
         return ws;
     };
