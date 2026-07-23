@@ -251,26 +251,7 @@ declare namespace IACele {
 
         };
 
-        type ModelName = (
-            | 'base.model'
-            | 'base.model.field'
-            | 'base.model.field.selection'
-            | 'base.users'
-            | 'base.users.role'
-            | 'base.user.groups'
-            | 'base.user.access'
-            | 'location.warehouse'
-            | 'resource.device.type'
-            | 'schedule.week'
-            | 'model.sync'
-            | 'resource.device'
-            | 'hr.employee'
-            | 'schedule.week.offset'
-            | 'assistance.registry.day'
-            | 'assistance.registry.event'
-            | 'assistance.registry.event.correction'
-            | 'assistance.registry.event.credentials'
-        );
+        type ModelName = keyof Model;
 
         type TTypeName = (
             | 'integer'
