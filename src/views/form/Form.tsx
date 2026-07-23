@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 import useBase64 from "@/hooks/ui/useBase64";
 import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
 import RenderHeaderControlsContext from "@/contexts/ui/renderHeaderControlsContext";
+import SaveChangesContext from "@/contexts/views/saveChangesContext";
 
 type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
 
@@ -75,7 +76,6 @@ interface RecordFormContextParams<M extends IACele.Data.ModelName> {
         value: IACele.Data.ModelDefinition<M>[F],
     ) => void;
     existingChanges: boolean;
-    saveChanges: () => Promise<void>;
     undoChanges: () => void;
     reload: () => void;
     recordId: number;
@@ -159,7 +159,6 @@ const Form = <M extends IACele.Data.ModelName>({
             getFieldMetadata: getFieldMetadata as (fieldName: any) => IACele.Data.Shape.FieldsMetadata,
             setFormRecordField: setFormRecordField as () => void,
             existingChanges,
-            saveChanges,
             undoChanges,
             reload,
             recordId,
@@ -169,10 +168,12 @@ const Form = <M extends IACele.Data.ModelName>({
             parent: formRecord,
             evaluator,
         }}>
-            <div className="flex flex-row w-full h-min min-h-full">
-                {children({ Page, Sheet, Group, Field, Action, Header, Wizard })}
-                <FormControls />
-            </div>
+            <SaveChangesContext.Provider value={{ saveChanges }}>
+                <div className="flex flex-row w-full h-min min-h-full">
+                    {children({ Page, Sheet, Group, Field, Action, Header, Wizard })}
+                    <FormControls />
+                </div>
+            </SaveChangesContext.Provider>
         </RecordFormContext.Provider>
     );
 };
@@ -186,7 +187,7 @@ const FormControls = () => {
     // Obtención de función para establecer el estado de comando de modal
     const { setCommand } = useContext(ContextDataContext);
     // Obtención de función para guardar cambios
-    const { saveChanges } = useContext(RecordFormContext)
+    const { saveChanges } = useContext(SaveChangesContext);
 
     // Se establece la función de guardar cambios en el estado de comando
     useEffect(
@@ -247,7 +248,8 @@ const Action = <M extends IACele.Data.ModelName>({
 }: ActionParams<M>) => {
 
     const { api, appLoading } = useAPI();
-    const { reload, saveChanges, recordId, createMode, modelName, loaded } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { reload, recordId, createMode, modelName, loaded } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { saveChanges } = useContext(SaveChangesContext);
 
     const execute = useCallback(
         async () => {
@@ -302,7 +304,8 @@ const NewRecordButton = <M extends IACele.Data.ModelName>() => {
 const SaveButton = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde el contexto
-    const { existingChanges, saveChanges, existingNewData, createMode } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { existingChanges, existingNewData, createMode } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { saveChanges } = useContext(SaveChangesContext);
 
     // Si existen cambios a guardar...
     if ( existingChanges || ( existingNewData && createMode ) ) {
@@ -1359,7 +1362,6 @@ const RecordFormContext = createContext<RecordFormContextParams<any>>({
     getFieldMetadata: () => (null) as any,
     setFormRecordField: () => {},
     existingChanges: false,
-    saveChanges: async () => {},
     undoChanges: () => {},
     createMode: true,
     recordId: 0,
