@@ -10,93 +10,6 @@ const packedView = <M extends IACele.Data.ModelName>(params: PackedViewParams<M>
 
 const VIEW = {
 
-    'base.users.form': packedView({
-        modelName: 'base.users',
-        View: () => (
-            <Form modelName="base.users">
-                {({ Page, Sheet, Group, Field }) => (
-                    <Page>
-                        <Sheet>
-                            <Group label="Personalizar">
-                                <Field name="profile_picture" widget="picture" />
-                            </Group>
-                            <Group label="General">
-                                <Field name="name" />
-                                <Field name="login" />
-                            </Group>
-                            <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" readonly />
-                                <Field name="role_ids" readonly />
-                                <Field name="create_uid"/>
-                                <Field name="create_date" />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        ),
-    }),
-
-    'base.users.update.password.form': packedView({
-        modelName: 'base.users.update.password',
-        View: () => (
-            <Form modelName="base.users.update.password">
-                {({ Page, Sheet, Group, Field }) => (
-                    <Page>
-                        <Sheet>
-                            <Group label="Contraseña actual">
-                                <Field name="current_password" />
-                            </Group>
-                            <Group label="Nueva contraseña">
-                                <Field name="new_password" />
-                                <Field name="confirm_password" />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        )
-    }),
-
-    'base.users.me.form': packedView({
-        modelName: 'base.users',
-        View: () => (
-            <Form modelName="base.users">
-                {({ Page, Sheet, Header, Group, Field, Wizard }) => (
-                    <Page>
-                        <Header>
-                            <Wizard viewDataName="base.users.update.password.form" label="Cambiar contraseña" />
-                        </Header>
-                        <Sheet>
-                            <Group label="Personalizar">
-                                <Field name="profile_picture" widget="picture" />
-                            </Group>
-                            <Group label="General">
-                                <Field name="name" />
-                                <Field name="login" />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        )
-    }),
-
-    'base.users.tree': packedView({
-        modelName: 'base.users',
-        View: () => (
-            <Tree modelName="base.users" open="base.users.form">
-                {({ Field }) => (
-                    <>
-                        <Field name="name" />
-                        <Field name="login" />
-                        <Field name="role_ids" />
-                    </>
-                )}
-            </Tree>
-        )
-    }),
-
     'assistance.registry.day.tree': packedView({
         modelName: 'assistance.registry.day',
         View: () => (
@@ -253,6 +166,93 @@ const VIEW = {
                 )}
             </Form>
         ),
+    }),
+
+    'base.users.form': packedView({
+        modelName: 'base.users',
+        View: () => (
+            <Form modelName="base.users">
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Personalizar">
+                                <Field name="profile_picture" widget="picture" />
+                            </Group>
+                            <Group label="General">
+                                <Field name="name" />
+                                <Field name="login" />
+                            </Group>
+                            <Group label="Detalles" invisible={[['id', '=', null]]}>
+                                <Field name="active" readonly />
+                                <Field name="role_ids" readonly />
+                                <Field name="create_uid"/>
+                                <Field name="create_date" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        ),
+    }),
+
+    'base.users.tree': packedView({
+        modelName: 'base.users',
+        View: () => (
+            <Tree modelName="base.users" open="base.users.form">
+                {({ Field }) => (
+                    <>
+                        <Field name="name" />
+                        <Field name="login" />
+                        <Field name="role_ids" />
+                    </>
+                )}
+            </Tree>
+        )
+    }),
+
+    'base.users.me.form': packedView({
+        modelName: 'base.users',
+        View: () => (
+            <Form modelName="base.users">
+                {({ Page, Sheet, Header, Group, Field, Wizard }) => (
+                    <Page>
+                        <Header>
+                            <Wizard viewDataName="base.users.update.password.form" label="Cambiar contraseña" />
+                        </Header>
+                        <Sheet>
+                            <Group label="Personalizar">
+                                <Field name="profile_picture" widget="picture" />
+                            </Group>
+                            <Group label="General">
+                                <Field name="name" />
+                                <Field name="login" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        )
+    }),
+
+    'base.users.update.password.form': packedView({
+        modelName: 'base.users.update.password',
+        View: () => (
+            <Form modelName="base.users.update.password">
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Contraseña actual">
+                                <Field name="current_password" />
+                            </Group>
+                            <Group label="Nueva contraseña">
+                                <Field name="new_password" />
+                                <Field name="confirm_password" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        )
     }),
 
 } as const;
