@@ -411,6 +411,12 @@ declare namespace IACele {
                 group_id: TType.Many2One<'not_null'>;
             };
 
+            'base.users.update.password': {
+                current_password: TType.Char;
+                new_password: TType.Char;
+                confirm_password: TType.Char;
+            };
+
             'location.warehouse': {
                 short_name: TType.Char<'not_null'>;
                 location_number: TType.Integer<'not_null'>;
