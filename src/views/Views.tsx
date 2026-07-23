@@ -37,6 +37,51 @@ const VIEW = {
         ),
     }),
 
+    'base.users.update.password.form': packedView({
+        modelName: 'base.users.update.password',
+        View: () => (
+            <Form modelName="base.users.update.password">
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Contraseña actual">
+                                <Field name="current_password" />
+                            </Group>
+                            <Group label="Nueva contraseña">
+                                <Field name="new_password" />
+                                <Field name="confirm_password" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        )
+    }),
+
+    'base.users.me.form': packedView({
+        modelName: 'base.users',
+        View: () => (
+            <Form modelName="base.users">
+                {({ Page, Sheet, Header, Group, Field, Wizard }) => (
+                    <Page>
+                        <Header>
+                            <Wizard viewDataName="base.users.update.password.form" label="Cambiar contraseña" />
+                        </Header>
+                        <Sheet>
+                            <Group label="Personalizar">
+                                <Field name="profile_picture" widget="picture" />
+                            </Group>
+                            <Group label="General">
+                                <Field name="name" />
+                                <Field name="login" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        )
+    }),
+
     'base.users.tree': packedView({
         modelName: 'base.users',
         View: () => (
@@ -80,7 +125,7 @@ const VIEW = {
                 {({ Page, Header, Wizard, Sheet, Group, Field }) => (
                     <Page>
                         <Header>
-                            <Wizard label="Añadir registro" viewDataName="assistance.registry.event.form" contextData={({ id }) => ({ event_id: id as any as [number, string], from_api: false })} />
+                            <Wizard label="Añadir registro" viewDataName="assistance.registry.event.form" contextData={({ id, employee_id }) => ({ event_id: id as any as [number, string], from_api: false, employee_id: employee_id })} />
                         </Header>
                         <Sheet>
                             <Group label="Resumen">

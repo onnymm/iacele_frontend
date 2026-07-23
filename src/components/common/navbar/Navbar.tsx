@@ -6,6 +6,7 @@ import useUserData from "@/hooks/app/useUserData";
 import useUserToken from "@/hooks/app/useUserToken";
 import { LogOut, SunMoon, UserRoundPen } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
+import { Link } from "react-router";
 
 const Navbar = () => {
 
@@ -89,10 +90,12 @@ const Settings = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel>Ajustes</DropdownMenuLabel>
 
-                <DropdownMenuItem className="gap-4">
-                    <UserRoundPen />
-                    Mi perfil
-                </DropdownMenuItem>
+                <Link to={'/me'}>
+                    <DropdownMenuItem className="gap-4">
+                        <UserRoundPen />
+                            Mi perfil
+                    </DropdownMenuItem>
+                </Link>
 
                 <DropdownMenuSeparator />
 
