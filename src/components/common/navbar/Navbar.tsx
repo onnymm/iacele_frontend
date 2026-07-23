@@ -73,7 +73,7 @@ const Settings = () => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="outline-none">
                 <NavbarProfile />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="py-2">
