@@ -1316,7 +1316,7 @@ const Sheet: React.FC<IACele.Common.SupportsChildren> = ({
     const { display } = useContext(ViewDataContext)
 
     return (
-        <div className={`${display === 'screen' ? 'min-h-screen': ''} group bg-card shadow-md pt-2 pb-4 border border-gray-500/20 rounded-lg w-full h-full grow`}>
+        <div className={`${display === 'screen' ? 'h-max': ''} group bg-card shadow-md pt-2 pb-4 border border-gray-500/20 rounded-lg w-full h-max grow`}>
             <div className="grid grid-cols-1 md:grid-cols-2 h-min">
                 {children}
             </div>
