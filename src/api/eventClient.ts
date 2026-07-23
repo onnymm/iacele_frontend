@@ -85,8 +85,12 @@ class EventClient {
     private scheduleReconnect = () => {
         // Si el websocket debería seguir activo
         if ( this.mustReconnect ) {
+            // Función para crear una nueva conexión
+            const createConnection = () => {
+                this.ws = this.initializeWebsocket();
+            };
             // Se reprograma conexión
-            setTimeout(this.initializeWebsocket, CONFIG.NETWORK.WEBSOCKET.RECONNECTION_ATTEMPT_MS);
+            setTimeout(createConnection, CONFIG.NETWORK.WEBSOCKET.RECONNECTION_ATTEMPT_MS);
         };
     };
 
