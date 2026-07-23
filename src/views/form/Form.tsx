@@ -18,6 +18,8 @@ import useView from "../useView";
 import type RecordEvaluator from "@/core/ttypes";
 import { useNavigate } from "react-router";
 import useBase64 from "@/hooks/ui/useBase64";
+import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
+import RenderHeaderControlsContext from "@/contexts/ui/renderHeaderControlsContext";
 
 type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
 
@@ -211,11 +213,10 @@ const Header: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 
-    return (
-        <div className="flex flex-wrap gap-2">
-            {children}
-        </div>
-    );
+    // Obtención de función para renderizar los controles en el encabezado de la app
+    const { renderHeaderControls } = useAppHeaderControls();
+
+    return renderHeaderControls(children);
 };
 
 const SupportsInvisible = <M extends IACele.Data.ModelName>({
@@ -1427,24 +1428,26 @@ const Wizard = <M extends IACele.Data.ModelName>({
         return (
             <ViewDataContext.Provider value={{ viewDataName, recordId: 0, display: 'window' }}>
                 <ContextDataContext.Provider value={{ contextData, setCommand }} >
-                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                        <DialogTrigger asChild>
-                            <Button className="cursor-pointer" variant={decoration}>{label}</Button>
-                        </DialogTrigger>
-                        <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
-                            <DialogTitle>Hola</DialogTitle>
-                            <View.View />
-                            <DialogFooter>
-                                <Button variant="success" onClick={execute} className="w-48">
-                                    {
-                                        appLoading
+                    <RenderHeaderControlsContext.Provider value={{ renderHeaderControls: () => (null) }}>
+                        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="cursor-pointer" variant={decoration}>{label}</Button>
+                            </DialogTrigger>
+                            <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
+                                <DialogTitle>Hola</DialogTitle>
+                                <View.View />
+                                <DialogFooter>
+                                    <Button variant="success" onClick={execute} className="w-48">
+                                        {
+                                            appLoading
                                             ? <Spinner />
                                             : 'Aceptar'
-                                    }
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                                        }
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </RenderHeaderControlsContext.Provider>
                 </ContextDataContext.Provider>
             </ViewDataContext.Provider>
         );

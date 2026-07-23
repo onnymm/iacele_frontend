@@ -3,6 +3,7 @@ import DarkModeProvider from "./DarkModeProvider";
 import MainControlsProvider from "./MainControlsProvider";
 import ModelsMetadataProvider from "./ModelsMetadataProvider";
 import PageNameProvider from "./PageNameProvider"
+import HeaderControlsProvider from "./HeaderControlsProvider";
 
 const ApplicationProvider = ({
     children,
@@ -16,7 +17,9 @@ const ApplicationProvider = ({
         <TooltipProvider>
 
         <MainControlsProvider>
+        <HeaderControlsProvider>
             {children}
+        </HeaderControlsProvider>
         </MainControlsProvider>
 
         </TooltipProvider>

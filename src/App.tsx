@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import Navbar from "./components/common/navbar/Navbar";
 import useRedirectToLogin from "./hooks/app/useRedirectToLogin";
-// import useView from "./views/useView";
+import HeaderControlsBearer from "./components/common/main/AppHeader";
 
 const App = () => {
 
@@ -10,6 +10,7 @@ const App = () => {
     return (
         <>
             <Navbar />
+            <HeaderControlsBearer />
             <Outlet />
         </>
     );
