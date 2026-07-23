@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useAPI from "@/hooks/app/useAPI";
 import useFormRecord from "@/hooks/views/useFormRecord";
-import { Camera, CircleQuestionMark, Pencil, Save, Undo2, X } from "lucide-react";
+import { Camera, CircleQuestionMark, Eye, EyeClosed, Pencil, Save, Undo2, X } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ViewDataContext from "@/contexts/routes/viewDataContext";
 import type VIEW from "../Views";
@@ -21,6 +21,7 @@ import useBase64 from "@/hooks/ui/useBase64";
 import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
 import RenderHeaderControlsContext from "@/contexts/ui/renderHeaderControlsContext";
 import SaveChangesContext from "@/contexts/views/saveChangesContext";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 type BooeanOrConditionalStatement<M extends IACele.Data.ModelName> = IACele.Data.CriteriaStructure<M> | boolean;
 
@@ -1215,6 +1216,70 @@ const PictureField = <M extends IACele.Data.ModelName>() => {
     );
 };
 
+const PasswordField = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de valores desde los contextos
+    const { name, readonly } = useContext<FormFieldContextParams<M>>(FormFieldContext);
+    const { formRecord, setFormRecordField } = useContext<RecordFormContextParams<M>>(RecordFormContext);
+    const { isReadonly } = useReadonly(readonly);
+
+    // Valor del registro
+    const recordValue = useScalarFormValue<IACele.Data.TType.Char>(formRecord[name]);
+
+    // Inicialización de estado de contraseña oculta
+    const [ hidden, setHidden ] = useState<boolean>(true);
+
+    // Función para establecer el valor
+    const setValue = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+            const value = preprocess.char(event.target.value);
+            setFormRecordField(name, value as any);
+        }, [name, setFormRecordField]
+    );
+
+    // Valor actualizado
+    const value = useMemo(
+        () => (recordValue ?? ''),
+        [recordValue]
+    );
+
+    return (
+        <InputGroup>
+            <InputGroupInput
+                spellCheck={false}
+                onChange={setValue}
+                value={value}
+                disabled={isReadonly}
+                type={
+                    hidden
+                        ? "password"
+                        : 'text'
+                }
+            />
+            <InputGroupAddon align='inline-end'>
+                {
+                    <Button
+                        type="button"
+                        className="group/eye bg-transparent focus-visible:border-transparent focus-visible:ring-transparent cursor-pointer buttonn"
+                        variant="link"
+                        size="icon"
+                        onMouseDown={(e) => {e.preventDefault()}}
+                        onClick={() => setHidden( (prev) => (!prev) )}
+                        tabIndex={-1}
+                    >
+                        {
+                            hidden
+                                ? <EyeClosed className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
+                                : <Eye className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
+                        }
+                    </Button>
+                }
+            </InputGroupAddon>
+
+        </InputGroup>
+    );
+};
+
 const useArrayFormValue: <T extends Array<any>>(value: any) => T = (
     value,
 ) => {
@@ -1281,6 +1346,7 @@ const FieldWidget = {
     'json': CharField,
 
     'picture': PictureField,
+    'password': PasswordField,
 } as const;
 
 // --------------------------------------------

@@ -213,7 +213,7 @@ const VIEW = {
     'base.users.me.form': packedView({
         modelName: 'base.users',
         View: () => (
-            <Form modelName="base.users">
+            <Form create={false} modelName="base.users">
                 {({ Page, Sheet, Header, Group, Field, Wizard }) => (
                     <Page>
                         <Header>
@@ -242,11 +242,11 @@ const VIEW = {
                     <Page>
                         <Sheet>
                             <Group label="Contraseña actual">
-                                <Field name="current_password" />
+                                <Field name="current_password" widget="password" />
                             </Group>
                             <Group label="Nueva contraseña">
-                                <Field name="new_password" />
-                                <Field name="confirm_password" />
+                                <Field name="new_password" widget="password" />
+                                <Field name="confirm_password" widget="password" />
                             </Group>
                         </Sheet>
                     </Page>
