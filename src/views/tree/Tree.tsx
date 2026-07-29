@@ -1,5 +1,5 @@
 import useAPI from "@/hooks/app/useAPI";
-import useLoadModelMetadata from "@/hooks/views/useModelMetadata";
+import useLoadModelMetadata from "@/hooks/viewsV0/useModelMetadata";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
