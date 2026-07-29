@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAPI from "../app/useAPI";
 import { useNavigate } from "react-router";
 import useViewName from "../app/useViewPage";
@@ -7,7 +7,6 @@ import useLoadModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 import useUpdateQueryParams from "./useUpdateQueryParams";
-import ViewDataContext from "@/contexts/routes/viewDataContext";
 import RecordEvaluator from "@/core/ttypes";
 
 interface FieldConfig<M extends IACele.Data.ModelName> {
@@ -22,9 +21,8 @@ const useFormRecord = <M extends IACele.Data.ModelName>(
     modelName: M,
 ) => {
 
-    const { display } = useContext(ViewDataContext);
-    // Obtención de la ID del registro y nombre de la vista
-    const { recordId, viewDataName } = useDataView();
+    // Obtención del tipo de renderización, la ID del registro y nombre de la vista
+    const { display, recordId, viewDataName } = useDataView();
     // Obtención de función para actualización de parámetros de query
     const { updateQueryParams } = useUpdateQueryParams();
     // Obtención de metadatos del modelo

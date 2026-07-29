@@ -4,9 +4,9 @@ import { useContext } from "react";
 const useDataView = () => {
 
     // Obtención del nombre de la vista desde el contexto
-    const { viewDataName, recordId } = useContext(ViewDataContext);
+    const { display, recordId, viewDataName } = useContext(ViewDataContext);
 
-    return { viewDataName, recordId };
+    return { display, recordId, viewDataName };
 };
 
 export default useDataView;
