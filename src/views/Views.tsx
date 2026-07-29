@@ -4,6 +4,7 @@ import Tree from "./tree/Tree";
 interface PackedViewParams <M extends IACele.Data.ModelName>{
     modelName: M,
     View: () => React.ReactElement;
+    type: 'form' | 'tree';
 };
 
 const packedView = <M extends IACele.Data.ModelName>(params: PackedViewParams<M>) => (params);
@@ -12,6 +13,7 @@ const VIEW = {
 
     'assistance.registry.day.tree': packedView({
         modelName: 'assistance.registry.day',
+        type: 'tree',
         View: () => (
             <Tree modelName="assistance.registry.day" open="assistance.registry.day.form">
                 {({ Field }) => (
@@ -33,6 +35,7 @@ const VIEW = {
 
     'assistance.registry.day.form': packedView({
         modelName: 'assistance.registry.day',
+        type: 'form',
         View: () => (
             <Form modelName="assistance.registry.day" create={false}>
                 {({ Page, Header, Wizard, Sheet, Group, Field }) => (
@@ -72,6 +75,7 @@ const VIEW = {
 
     'assistance.registry.event.tree': packedView({
         modelName: 'assistance.registry.event',
+        type: 'tree',
         View: () => (
             <Tree modelName="assistance.registry.event" open="assistance.registry.event.form">
                 {({ Field }) => (
@@ -90,6 +94,7 @@ const VIEW = {
 
     'assistance.registry.event.form': packedView({
         modelName: 'assistance.registry.event',
+        type: 'form',
         View: () => (
             <Form modelName="assistance.registry.event" create={false}>
                 {({ Page, Sheet, Action, Group, Field, Header, Wizard, }) => (
@@ -131,6 +136,7 @@ const VIEW = {
 
     'assistance.registry.event.correction.form': packedView({
         modelName: 'assistance.registry.event.correction',
+        type: 'form',
         View: () => (
             <Form modelName="assistance.registry.event.correction">
                 {({ Page, Sheet, Group, Field }) => (
@@ -151,6 +157,7 @@ const VIEW = {
 
     'assistance.registry.event.credentials.form': packedView({
         modelName: 'assistance.registry.event.credentials',
+        type: 'form',
         View: () => (
             <Form modelName="assistance.registry.event.credentials">
                 {({ Page, Sheet, Group, Field }) => (
@@ -170,6 +177,7 @@ const VIEW = {
 
     'base.users.form': packedView({
         modelName: 'base.users',
+        type: 'form',
         View: () => (
             <Form modelName="base.users">
                 {({ Page, Sheet, Group, Field }) => (
@@ -197,6 +205,7 @@ const VIEW = {
 
     'base.users.tree': packedView({
         modelName: 'base.users',
+        type: 'tree',
         View: () => (
             <Tree modelName="base.users" open="base.users.form">
                 {({ Field }) => (
@@ -212,6 +221,7 @@ const VIEW = {
 
     'base.users.me.form': packedView({
         modelName: 'base.users',
+        type: 'form',
         View: () => (
             <Form create={false} modelName="base.users">
                 {({ Page, Sheet, Header, Group, Field, Wizard }) => (
@@ -236,6 +246,7 @@ const VIEW = {
 
     'base.users.update.password.form': packedView({
         modelName: 'base.users.update.password',
+        type: 'form',
         View: () => (
             <Form modelName="base.users.update.password">
                 {({ Page, Sheet, Group, Field }) => (
