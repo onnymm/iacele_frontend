@@ -612,6 +612,10 @@ declare namespace IACele {
                 M extends IACele.Data._Core.ModelName,
             >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
 
+            fieldsMetadataV2: <M extends IACeleV2.Data.ModelName>(
+                params: IACeleV2.API.Request.FieldsMetadata<M>,
+            ) => Promise<IACeleV2.API.Response.FieldsMetadata<M>>;
+
             action: <M extends IACele.Data.ModelName>(
                 params: IACele.API.Request.Action<M>,
             ) => Promise<true>;
@@ -632,8 +636,16 @@ declare namespace IACele {
                 data: IACele.API.Request.Update<M>,
             ) => Promise<true>;
 
+            updateV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.Update<M>,
+            ) => Promise<IACeleV2.API.Response.Update>;
+
             delete: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Delete<M>,
+            ) => Promise<true>;
+
+            deleteV2: <M extends IACeleV2.Data.ModelName>(
+                data: IACeleV2.API.Request.Delete<M>,
             ) => Promise<true>;
 
             tree: <M extends IACele.Data.ModelName>(
@@ -643,6 +655,10 @@ declare namespace IACele {
             form: <M extends IACele.Data.ModelName>(
                 params: IACele.API.Request.Form<M>,
             ) => Promise<IACele.API.Response.Form<M>>;
+
+            formv2: <M extends IACele.Data.ModelName>(
+                params: IACeleV2.API.Request.Form<M>,
+            ) => Promise<IACeleV2.API.Response.Form__<M>>;
 
         };
 

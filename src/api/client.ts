@@ -41,6 +41,16 @@ class Client {
         );
     };
 
+    fieldsMetadataV2 = async <M extends IACeleV2.Data.ModelName>(
+        params: IACeleV2.API.Request.FieldsMetadata<M>,
+    ) => {
+
+        return await this.post<IACeleV2.API.Request.FieldsMetadata<M>, IACeleV2.API.Response.FieldsMetadata<M>>(
+            PATH.METADATA.FIELDS,
+            params,
+        );
+    };
+
     action = async <M extends IACele.Data.ModelName>(
         params: IACele.API.Request.Action<M>,
     ) => {
@@ -123,6 +133,24 @@ class Client {
         return this.execute<IACele.API.Response.Update>(apiCall, () => {});
     };
 
+    updateV2 = async <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.Update<M>,
+    ): Promise<IACeleV2.API.Response.Update> => {
+
+        // Función de modificación de registro
+        const apiCall = async (): Promise<IACeleV2.API.Response.Update> => {
+            // Modificación de registro y obtención de respuesta
+            const response = await this.patch<IACeleV2.API.Request.Update<M>, IACeleV2.API.Response.Update>(
+                PATH.CRUD.UPDATE,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACele.API.Response.Update>(apiCall, () => {});
+    };
+
     delete = <M extends IACele.Data.ModelName>(
         data: IACele.API.Request.Delete<M>,
     ): Promise<IACele.API.Response.Delete> => {
@@ -131,6 +159,24 @@ class Client {
         const apiCall = async (): Promise<IACele.API.Response.Delete> => {
             // Modificación de registro y obtención de respuesta
             const response = await this.post<IACele.API.Request.Delete<M>, IACele.API.Response.Delete>(
+                PATH.CRUD.DELETE,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACele.API.Response.Delete>(apiCall, () => {});
+    };
+
+    deleteV2 = <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.Delete<M>,
+    ): Promise<IACeleV2.API.Response.Delete> => {
+
+        // Función de eliminación de registro
+        const apiCall = async (): Promise<IACeleV2.API.Response.Delete> => {
+            // Modificación de registro y obtención de respuesta
+            const response = await this.post<IACeleV2.API.Request.Delete<M>, IACeleV2.API.Response.Delete>(
                 PATH.CRUD.DELETE,
                 data,
             );
@@ -238,6 +284,24 @@ class Client {
         };
 
         return this.execute<IACele.API.Response.Form<M>>(apiCall, () => {});
+    };
+
+    formv2 = async <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.Form<M>,
+    ): Promise<IACeleV2.API.Response.Form<M>> => {
+
+        // Función de lectura para formulario
+        const apiCall = async (): Promise<IACeleV2.API.Response.Form<M>> => {
+            // Obtención de los datos
+            const response = await this.post<IACeleV2.API.Request.Form<M>, IACeleV2.API.Response.Form<M>>(
+                PATH.FRONTEND.FORM,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACeleV2.API.Response.Form<M>>(apiCall, () => {});
     };
 
     private get = async <S, R>(
