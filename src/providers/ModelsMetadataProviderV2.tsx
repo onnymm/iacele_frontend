@@ -1,6 +1,6 @@
 import ModelsMetadataContextV2 from "@/contexts/views/modelsMetadataContextV2";
 import useAPI from "@/hooks/app/useAPI"
-import { useCallback, useMemo } from "react";
+import { useCallback, useState } from "react";
 
 const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
     children,
@@ -10,9 +10,7 @@ const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
     const { api } = useAPI();
 
     // Inciialización de referencia
-    const modelsMetadata = useMemo<IACeleV2.Data.ModelsMetadata<M>>(
-        () => ({}), []
-    );
+    const [ modelsMetadata, setModelsMetadata ] = useState<IACeleV2.Data.ModelsMetadata<M>>({});
 
     // Función para obtención de metadatos del modelo
     const getFieldsMetadata = useCallback(
@@ -35,7 +33,12 @@ const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
                     }
                 );
                 // Se guardan los metadatos en la referencia
-                modelsMetadata[modelName] = mappedMetadata as IACeleV2.Data.FieldsMetadata<M> as any;
+                setModelsMetadata(
+                    (metadata) => ({
+                        ...metadata,
+                        [modelName]: mappedMetadata,
+                    })
+                );
             };
         }, [api, modelsMetadata]
     );
