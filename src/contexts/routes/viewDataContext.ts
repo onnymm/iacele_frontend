@@ -1,8 +1,8 @@
-import type VIEW from "@/views/Views";
+import type VIEW_V2 from "@/views/ViewsV2";
 import { createContext } from "react";
 
 interface ViewDataContextParams {
-    viewDataName: keyof typeof VIEW;
+    viewDataName: keyof typeof VIEW_V2;
     recordId: number;
     display: IACele.UI.View.DisplayOption;
 };

@@ -437,6 +437,38 @@ declare namespace IACeleV2 {
 
     };
 
+    declare namespace View {
+
+        interface FormComponents <M extends Data.ModelName>{
+            Field: {
+                name: Data.FieldName<M>;
+                readonly?: boolean;
+            };
+            Page: {
+                children: React.ReactNode;
+            };
+            Sheet: {
+                children: React.ReactNode;
+            };
+            Group: {
+                children: React.ReactNode;
+                label: string;
+            };
+        };
+
+        interface FormChildren <M extends Data.ModelName>{
+            Field: React.FC<FormComponents<M>['Field']>;
+            Page: React.FC<FormComponents<M>['Page']>;
+            Sheet: React.FC<FormComponents<M>['Sheet']>;
+            Group: React.FC<FormComponents<M>['Group']>;
+        };
+
+        interface FormStructure <M extends Data.ModelName>{
+            children: (components: View.FormChildren<M>) => React.ReactElement;
+        };
+
+    };
+
     declare namespace Context {
 
         declare namespace View {
@@ -478,6 +510,11 @@ declare namespace IACeleV2 {
 
             interface RequiresField <M extends Data.ModelName>{
                 requiresField: (fieldName: Data.ReadField<M>) => void;
+            };
+
+            interface Config <M extends Data.ModelName>{
+                type: 'form';
+                View: (component: React.FC<IACeleV2.View.FormStructure<M>>) => (React.ReactNode);
             };
 
         };
