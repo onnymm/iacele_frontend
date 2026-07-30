@@ -57,7 +57,7 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
             // Obtención de los datos desde la API
             const data = await api.formv2({
                 'model_name': modelName,
-                'record_id': recordId,
+                'record_ids': recordId,
                 'fields': fieldsToRead.current,
             });
             // Se establece el estado de los datos

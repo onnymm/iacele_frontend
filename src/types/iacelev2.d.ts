@@ -42,7 +42,7 @@ declare namespace IACeleV2 {
                     type Form<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
                         & _SupportsFieldsRead<M>
-                        & _RequiresRecordID
+                        & _RequiresRecordIDs
                     );
 
                 };
@@ -474,6 +474,10 @@ declare namespace IACeleV2 {
 
             interface ModelMetadata <M extends Data.ModelName>{
                 modelMetadata: Data.FieldsMetadata<M>;
+            };
+
+            interface RequiresField <M extends Data.ModelName>{
+                requiresField: (fieldName: Data.ReadField<M>) => void;
             };
 
         };
