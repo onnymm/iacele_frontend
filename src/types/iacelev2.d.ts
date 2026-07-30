@@ -437,4 +437,47 @@ declare namespace IACeleV2 {
 
     };
 
+    declare namespace Context {
+
+        declare namespace View {
+
+            interface OriginalRecord <M extends Data.ModelName>{
+                originalRecord: Data.RecordFromDatabase<M>;
+                updateOriginalRecord: (recordInEdition: Data.EditableRecord<M>) => Promise<void>;
+                deleteOriginalRecord: () => Promise<void>;
+            };
+
+            interface RecordInView <M extends Data.ModelName>{
+                recordInView: Data.RecordForView<M>;
+                updateRecordInViewField: <F extends Data.FieldName<M>>(
+                    fieldName: F,
+                    value: Data.RecordForView<M>[F],
+                ) => void;
+                undoChangesInRecordInView: () => void;
+            };
+
+            interface EditableRecord <M extends Data.ModelName>{
+                editableRecord: IACeleV2.Data.EditableRecord<M>;
+                undoChangesInEditableRecord: () => (void);
+                updateEditableRecordField: <F extends IACeleV2.Data.FieldName<M>>(
+                    fieldName: F,
+                    inputValue: IACeleV2.Data.RecordForView<M>[F],
+                ) => (void);
+                updateRecord: () => void;
+                existingChanges: boolean;
+            };
+
+            interface ModelsMetadata <M extends Data.ModelName>{
+                modelsMetadata: Data.ModelsMetadata<M>;
+                getFieldsMetadata: <M extends keyof Data.Model>(modelName: M) => Promise<void>;
+            };
+
+            interface ModelMetadata <M extends Data.ModelName>{
+                modelMetadata: Data.FieldsMetadata<M>;
+            };
+
+        };
+
+    };
+
 };
