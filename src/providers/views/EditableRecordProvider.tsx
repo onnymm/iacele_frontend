@@ -1,12 +1,12 @@
 import EditableRecordContext from "@/contexts/views/editableRecordContext";
-import useEditRecord from "@/hooks/views/useEditRecord";
+import useEditableRecord from "@/hooks/views/useEditableRecord";
 
 const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
     children,
 }: IACele.Common.SupportsChildren) => {
 
     // Obtención del registro editable y funciones para modificarlo y actualizarlo
-    const { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord } = useEditRecord<M>();
+    const { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord } = useEditableRecord<M>();
 
     return (
         <EditableRecordContext.Provider value={{

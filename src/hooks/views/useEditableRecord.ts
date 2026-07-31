@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import useOriginalRecord from "./useOriginalRecord";
 import useModelMetadata from "./useModelMetadata";
 
-const useEditRecord = <M extends IACeleV2.Data.ModelName>() => {
+const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
 
     // Obtención de los datos del registro original desde el contexto
     const { originalRecord, updateOriginalRecord } = useOriginalRecord<M>();
@@ -155,4 +155,4 @@ const useEditRecord = <M extends IACeleV2.Data.ModelName>() => {
     return { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord };
 };
 
-export default useEditRecord;
+export default useEditableRecord;
