@@ -114,6 +114,34 @@ declare namespace IACeleV2 {
                 'clear'?: _RelationCommand.Clear;
             };
 
+            declare namespace _CriteriaStructure {
+
+                // <M extends ModelName>
+                type LogicOperator = '|' | '&';
+
+                type ComparisonOperator = (
+                    | '='
+                    | '!='
+                    | '>'
+                    | '<'
+                    | '>='
+                    | '<='
+                    | 'in'
+                    | 'not in'
+                    | 'ilike'
+                    | 'not ilike'
+                    | '~'
+                    | '~*'
+                );
+
+                type Serializable = Typing.ScalarOrArray<number | string | boolean | null>;
+
+                type Triplet<M extends ModelName> = [FieldName<M>, ComparisonOperator, Serializable];
+
+                type CriteriaStructure<M extends ModelName> = (LogicOperator | Triplet<M>)[];
+
+            };
+
         };
 
         declare namespace TType {
@@ -157,10 +185,9 @@ declare namespace IACeleV2 {
 
                     type _Serializable = number | string | boolean | null;
                     type _JSONObject = Record<string, _Serializable>;
-                    type _ScalarOrArray<T> = T | T[];
                 };
 
-                type JSON = _JSON._ScalarOrArray<_JSON._Serializable | _JSON._JSONObject>;
+                type JSON = Typing.ScalarOrArray<_JSON._Serializable | _JSON._JSONObject>;
 
             };
 
@@ -435,6 +462,8 @@ declare namespace IACeleV2 {
 
         type ReadField<M extends Data.ModelName> = Data.FieldName<M> | ExpandedRelation<M, Data.ArrayyFieldName<M>>;
 
+        type CriteriaStructure<M extends ModelName> = _Definition._CriteriaStructure.CriteriaStructure<M>;
+
     };
 
     declare namespace View {
@@ -518,6 +547,12 @@ declare namespace IACeleV2 {
             };
 
         };
+
+    };
+
+    declare namespace Typing {
+
+        type ScalarOrArray<T> = T | T[];
 
     };
 
