@@ -10,6 +10,10 @@ declare namespace IACeleV2 {
                     'model_name': M;
                 };
 
+                interface _SupportsSearchCriteria <M extends Data.ModelName>{
+                    'criteria_structure'?: Data.CriteriaStructure<M>;
+                };
+
                 interface _RequiresRecordIDs {
                     'record_ids': Typing.ScalarOrArray<number>;
                 };
@@ -18,7 +22,11 @@ declare namespace IACeleV2 {
                     'record_id': number;
                 };
 
-                interface _SupportsFieldsRead<M extends Data.ModelName> {
+                interface _RequiersFieldsRead <M extends Data.ModelName>{
+                    'fields': Data.ReadField<M>[];
+                };
+
+                interface _SupportsFieldsSelection <M extends Data.ModelName>{
                     'fields': Data.ReadField<M>[];
                 };
 
@@ -26,7 +34,25 @@ declare namespace IACeleV2 {
                     'data': Data.EditableRecord<M>;
                 };
 
+                interface _SupportsSorting <M extends Data.ModelName>{
+                    'sortby'?: Typing.ScalarOrArray<Data.FieldName<M>>;
+                    'ascending'?: Typing.ScalarOrArray<boolean>;
+                };
+
+                interface _SupportsSlicing {
+                    'offset'?: number;
+                    'limit'?: number;
+                };
+
                 declare namespace Base {
+
+                    type SearchRead<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _SupportsSearchCriteria<M>
+                        & _SupportsFieldsSelection<M>
+                        & _SupportsSorting<M>
+                        & _SupportsSlicing
+                    );
 
                     type Update<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
@@ -41,13 +67,15 @@ declare namespace IACeleV2 {
 
                     type Form<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
-                        & _SupportsFieldsRead<M>
+                        & _RequiersFieldsRead<M>
                         & _RequiresRecordIDs
                     );
 
                 };
 
             };
+
+            type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
 
             type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
 
@@ -60,6 +88,8 @@ declare namespace IACeleV2 {
         };
 
         declare namespace Response {
+
+            type SearchRead<M extends Data.ModelName> = Data.RecordFromDatabase<M>[];
 
             type Update = true;
 

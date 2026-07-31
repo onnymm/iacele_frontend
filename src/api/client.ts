@@ -115,6 +115,24 @@ class Client {
         return this.execute<IACele.API.Response.SearchRead<M>>(apiCall, () => {});
     };
 
+    searchReadV2 = async <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.SearchRead<M>,
+    ): Promise<IACeleV2.API.Response.SearchRead<M>> => {
+
+        // Función de búsqueda y lectura
+        const apiCall = async () => {
+            // Obtención de registros
+            const response = await this.post<IACeleV2.API.Request.SearchRead<M>, IACeleV2.API.Response.SearchRead<M>>(
+                PATH.CRUD.SEARCH_READ,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACeleV2.API.Response.SearchRead<M>>(apiCall, () => {});
+    };
+
     update = async <M extends IACele.Data.ModelName>(
         data: IACele.API.Request.Update<M>,
     ): Promise<IACele.API.Response.Update> => {
