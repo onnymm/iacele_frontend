@@ -16,9 +16,6 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
         deleteRecordInDatabase,
     } = useReadRecordFromAPI<M>();
 
-    // Obtención de la declaración de la vista
-    const { View } = useViewData();
-
     // Si los datos desde la API ya fueron cargados...
     return (
         // Contexto para proveer función de registro de campos
@@ -27,7 +24,7 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
         }}>
 
             {/* Recolección de campos requeridos para leer el registro en el backend */}
-            <CollectRequiredFields view={View} />
+            <CollectRequiredFields />
 
             {/* Cuando los datos se carguen... */}
             {dataFromAPI !== null &&
@@ -46,13 +43,10 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
 
 export default RecordFromDatabaseProvider;
 
-interface ColectRequiredFieldsParams <M extends IACeleV2.Data.ModelName>{
-    view: (component: React.FC<IACeleV2.View.FormStructure<M>>) => (React.ReactNode);
-};
+const CollectRequiredFields = () => {
 
-const CollectRequiredFields = <M extends IACeleV2.Data.ModelName>({
-    view,
-}: ColectRequiredFieldsParams<M>) => {
+    // Obtención de la declaración de la vista
+    const { View } = useViewData();
 
-    return view(FormViewInspector);
+    return View(FormViewInspector);
 };
