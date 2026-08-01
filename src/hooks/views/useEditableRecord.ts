@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import useOriginalRecord from "./useOriginalRecord";
 import useModelMetadata from "./useModelMetadata";
+import useAPI from "../app/useAPI";
+import useGetModelNameFromView from "./useGetModelNameFromView";
 
 const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
 
+    // Obtención de la instancia de conexión a la API
+    const { api } = useAPI();
+    // Obtención del nombre del modelo de la vista
+    const { modelName } = useGetModelNameFromView<M>();
     // Obtención de los datos del registro original desde el contexto
-    const { originalRecord, updateOriginalRecord } = useOriginalRecord<M>();
+    const { recordId, originalRecord, updateOriginalRecord, reload } = useOriginalRecord<M>();
     // Inicialización de estado del objeto de registro en edición
     const [ editableRecord, setEditableRecord ] = useState<IACeleV2.Data.EditableRecord<M>>({});
     // Obtención de función para obtener los metadatos de los campos del modelo
@@ -152,6 +158,27 @@ const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
         }, [editableRecord, updateOriginalRecord]
     );
 
+    // Función de ejecución de acción
+    const executeAction = useCallback(
+        async (actionName: string) => {
+            // Si existen cambios a guardar...
+            if ( existingChanges ) {
+                // Se guardan primero los cambios
+                await updateRecord();
+            };
+
+            // Ejecución de la acción
+            await api.actionV2({
+                'model_name': modelName,
+                'name': actionName,
+                'record_id': recordId,
+            });
+
+            // Se vuelve a cargar el registro
+            reload();
+        }, [api, existingChanges, modelName, recordId, reload, updateRecord]
+    );
+
     // Restauración del objeto de edición cuando el objeto original cambia
     useEffect(
         () => {
@@ -159,7 +186,7 @@ const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
         }, [originalRecord]
     );
 
-    return { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord };
+    return { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord, executeAction };
 };
 
 export default useEditableRecord;

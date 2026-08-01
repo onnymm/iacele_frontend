@@ -8,7 +8,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     // Obtención de valores desde los hooks
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
-    const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, updateRecord } = useEditableRecord<M>();
+    const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, updateRecord, executeAction } = useEditableRecord<M>();
 
     // Función para modificación de valor de campo en registros de edición y vista
     const updateRecordField = useCallback(
@@ -43,6 +43,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         undoChanges,
         updateRecord,
         deleteRecord: deleteOriginalRecord,
+        executeAction,
         reload,
     };
 };
