@@ -499,12 +499,15 @@ declare namespace IACeleV2 {
     declare namespace View {
 
         interface FormComponents <M extends Data.ModelName>{
-            Field: {
-                name: Data.FieldName<M>;
-                readonly?: boolean;
-            };
             Page: {
                 children: React.ReactNode;
+            };
+            Header: {
+                children: React.ReactNode;
+            };
+            Action: {
+                name: string;
+                label: string;
             };
             Sheet: {
                 children: React.ReactNode;
@@ -513,13 +516,19 @@ declare namespace IACeleV2 {
                 children: React.ReactNode;
                 label: string;
             };
+            Field: {
+                name: Data.FieldName<M>;
+                readonly?: boolean;
+            };
         };
 
         interface FormChildren <M extends Data.ModelName>{
-            Field: React.FC<FormComponents<M>['Field']>;
             Page: React.FC<FormComponents<M>['Page']>;
+            Header: React.FC<FormComponents<M>['Header']>;
+            Action: React.FC<FormComponents<M>['Action']>;
             Sheet: React.FC<FormComponents<M>['Sheet']>;
             Group: React.FC<FormComponents<M>['Group']>;
+            Field: React.FC<FormComponents<M>['Field']>;
         };
 
         interface FormStructure <M extends Data.ModelName>{
@@ -533,9 +542,11 @@ declare namespace IACeleV2 {
         declare namespace View {
 
             interface OriginalRecord <M extends Data.ModelName>{
+                recordId: number;
                 originalRecord: Data.RecordFromDatabase<M>;
                 updateOriginalRecord: (recordInEdition: Data.EditableRecord<M>) => Promise<void>;
                 deleteOriginalRecord: () => Promise<void>;
+                reload: () => void;
             };
 
             interface RecordInView <M extends Data.ModelName>{
