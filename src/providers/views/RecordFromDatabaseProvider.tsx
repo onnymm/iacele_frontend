@@ -10,10 +10,11 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
 
     const {
         dataFromAPI,
-        // reload,
+        reload,
         suscribeFieldToRead,
         updateRecordInDatabase,
         deleteRecordInDatabase,
+        recordId,
     } = useReadRecordFromAPI<M>();
 
     // Si los datos desde la API ya fueron cargados...
@@ -29,9 +30,11 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
             {/* Cuando los datos se carguen... */}
             {dataFromAPI !== null &&
                 <OriginalRecordContext.Provider value={{
+                    recordId,
                     originalRecord: dataFromAPI,
                     updateOriginalRecord: updateRecordInDatabase,
                     deleteOriginalRecord: deleteRecordInDatabase,
+                    reload,
                 }}>
                     {children}
                 </OriginalRecordContext.Provider>

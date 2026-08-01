@@ -98,6 +98,7 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
     );
 
     return {
+        recordId,
         dataFromAPI,
         suscribeFieldToRead,
         reload,

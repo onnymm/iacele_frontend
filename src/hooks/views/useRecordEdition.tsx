@@ -6,7 +6,7 @@ import useRecordInView from "./useRecordInView";
 const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
 
     // Obtención de valores desde los hooks
-    const { deleteOriginalRecord } = useOriginalRecord<M>();
+    const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
     const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, updateRecord } = useEditableRecord<M>();
 
@@ -36,12 +36,14 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     );
 
     return {
+        recordId,
         recordInView,
         updateRecordField,
         existingChanges,
         undoChanges,
         updateRecord,
         deleteRecord: deleteOriginalRecord,
+        reload,
     };
 };
 
