@@ -510,6 +510,12 @@ declare namespace IACeleV2 {
 
     };
 
+    declare namespace UI {
+
+        type Variant = 'info' | 'primary' | 'success' | 'warning' | 'danger' | 'default';
+
+    };
+
     declare namespace View {
 
         interface FormComponents <M extends Data.ModelName>{
@@ -522,6 +528,7 @@ declare namespace IACeleV2 {
             Action: {
                 name: string;
                 label: string;
+                decoration?: UI.Variant;
             };
             Sheet: {
                 children: React.ReactNode;
