@@ -6,6 +6,10 @@ declare namespace IACeleV2 {
 
             declare namespace _Definition {
 
+                interface _RequiresName {
+                    name: string;
+                };
+
                 interface _RequiresModelName <M extends Data.ModelName>{
                     'model_name': M;
                 };
@@ -46,6 +50,12 @@ declare namespace IACeleV2 {
 
                 declare namespace Base {
 
+                    type Action<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresName
+                        & _RequiresRecordID
+                    );
+
                     type SearchRead<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
                         & _SupportsSearchCriteria<M>
@@ -75,6 +85,8 @@ declare namespace IACeleV2 {
 
             };
 
+            type Action<M extends Data.ModelName> = _Definition.Base.Action<M>;
+
             type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
 
             type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
@@ -88,6 +100,8 @@ declare namespace IACeleV2 {
         };
 
         declare namespace Response {
+
+            type Action = true;
 
             type SearchRead<M extends Data.ModelName> = Data.RecordFromDatabase<M>[];
 
