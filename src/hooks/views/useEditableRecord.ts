@@ -146,9 +146,9 @@ const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
 
     // Función para actualizar el registro original
     const updateRecord = useCallback(
-        () => {
+        async () => {
             // Uso de la función de actualización del registro original
-            updateOriginalRecord(editableRecord);
+            await updateOriginalRecord(editableRecord);
         }, [editableRecord, updateOriginalRecord]
     );
 
