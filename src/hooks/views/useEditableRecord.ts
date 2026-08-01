@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useOriginalRecord from "./useOriginalRecord";
 import useModelMetadata from "./useModelMetadata";
 
@@ -150,6 +150,13 @@ const useEditableRecord = <M extends IACeleV2.Data.ModelName>() => {
             // Uso de la función de actualización del registro original
             await updateOriginalRecord(editableRecord);
         }, [editableRecord, updateOriginalRecord]
+    );
+
+    // Restauración del objeto de edición cuando el objeto original cambia
+    useEffect(
+        () => {
+            setEditableRecord({});
+        }, [originalRecord]
     );
 
     return { editableRecord, existingChanges, undoChangesInEditableRecord, updateEditableRecordField, updateRecord };
