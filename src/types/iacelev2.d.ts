@@ -217,11 +217,12 @@ declare namespace IACeleV2 {
                     | 'json'
                 );
 
-                interface ShapeVariant<N extends _Definition.NullityKey, D, V, E, T extends TTypeName, M extends ModelName = null> {
+                interface ShapeVariant<N extends _Definition.NullityKey, D, V, E, T extends TTypeName, C = V, M extends ModelName = null> {
                     'ttype': T,
                     'database': _WithNullOption<D>[N];
                     'view': _WithNullOption<V>[N];
                     'edition': _WithNullOption<E>[N];
+                    'validate': _WithNullOption<C>[N];
                     'modelName': M;
                 };
 
@@ -246,10 +247,42 @@ declare namespace IACeleV2 {
             type Selection<O extends string, N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, O, O, O, 'selection'>;
             type Text<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, string, string, string, 'text'>;
             type File<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, string, string, string, 'file'>;
-            type Many2One<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, [number, string], [number, string], number, 'many2one'>;
-            type One2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'one2many', M>
-            type Many2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'many2many', M>
+            type Many2One<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, [number, string], [number, string], number, 'many2one', number>;
+            type One2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'one2many', number[], M>
+            type Many2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'many2many', number[], M>
             type JSON = _Definition.ShapeVariant<'not_null', _Definition.JSON, _Definition.JSON, _Definition.JSON, 'json'>;
+
+        };
+
+        declare namespace Validator {
+
+            interface Mode<I = any, O = I> {
+                'view': I;
+                'validate': O;
+            };
+
+            type Operator = (
+                | 'equals'
+                | 'notEqual'
+                | 'gt'
+                | 'lt'
+                | 'ge'
+                | 'le'
+                | 'isin'
+                | 'notIn'
+                | 'ilike'
+                | 'notIlike'
+                | 'regex'
+                | 'regexI'
+            );
+
+            type BaseTType = {
+                [K in IACeleV2.Data.Validator.Operator]: (value: any) => (boolean);
+            };
+
+            type RecordValidation<M extends IACeleV2.Data.ModelName> = {
+                [K in IACeleV2.Data.FieldName<M>]: IACeleV2.Data.Validator.BaseTType;
+            };
 
         };
 
@@ -507,6 +540,12 @@ declare namespace IACeleV2 {
         type ReadField<M extends Data.ModelName> = Data.FieldName<M> | ExpandedRelation<M, Data.ArrayyFieldName<M>>;
 
         type CriteriaStructure<M extends ModelName> = _Definition._CriteriaStructure.CriteriaStructure<M>;
+
+        type ComparisonOperator = _Definition._CriteriaStructure.ComparisonOperator;
+
+        type LogicOperator = _Definition._CriteriaStructure.LogicOperator;
+
+        type Triplet<M extends ModelName> = _Definition._CriteriaStructure.Triplet<M>;
 
     };
 
