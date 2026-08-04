@@ -636,6 +636,7 @@ declare namespace IACeleV2 {
                 ) => (void);
                 updateRecord: () => void;
                 existingChanges: boolean;
+                executeAction: (actionName: string) => Promise<void>;
             };
 
             interface ModelsMetadata <M extends Data.ModelName>{

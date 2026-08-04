@@ -6,6 +6,7 @@ const EditableRecordContext = createContext<IACeleV2.Context.View.EditableRecord
     updateEditableRecordField: () => {},
     updateRecord: () => {},
     existingChanges: false,
+    executeAction: async () => {},
 });
 
 export default EditableRecordContext;
