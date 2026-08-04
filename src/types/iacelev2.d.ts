@@ -248,8 +248,8 @@ declare namespace IACeleV2 {
             type Text<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, string, string, string, 'text'>;
             type File<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, string, string, string, 'file'>;
             type Many2One<N extends _Definition.NullityKey = 'null_'> = _Definition.ShapeVariant<N, [number, string], [number, string], number, 'many2one', number>;
-            type One2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'one2many', number[], M>
-            type Many2Many<M extends ModelName> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], number, 'many2many', number[], M>
+            type One2Many<M extends ModelName = '__'> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], RelationCommand<M>, 'one2many', number[], M>
+            type Many2Many<M extends ModelName = '__'> = _Definition.ShapeVariant<'not_null', ModelDefinition<M>[], ModelDefinition<M>[], RelationCommand<M>, 'many2many', number[], M>
             type JSON = _Definition.ShapeVariant<'not_null', _Definition.JSON, _Definition.JSON, _Definition.JSON, 'json'>;
 
         };
@@ -287,6 +287,8 @@ declare namespace IACeleV2 {
         };
 
         interface Model {
+
+            '__': {};
 
             'base.model': {
                 state: TType.Selection<'base' | 'generic', 'not_null'>;
@@ -496,7 +498,7 @@ declare namespace IACeleV2 {
             );
         };
 
-        type RecordForView<M extends ModelName> = {
+        type RecordForView<M extends ModelName = '__'> = {
             [K in keyof ModelDefinition<M>]: (
                 ModelDefinition<M>[K]['ttype'] extends _Definition.ArrayTTypeName
                     ? RelationCommand<ModelDefinition<M>[K]['modelName']>
@@ -504,7 +506,7 @@ declare namespace IACeleV2 {
             );
         };
 
-        type RelationCommand<M extends ModelName> = _Definition.RelationCommand<M>
+        type RelationCommand<M extends ModelName = '__'> = _Definition.RelationCommand<M>
 
         type ScalarFieldName<M extends ModelName> = {
             [K in keyof ModelDefinition<M>]: (
