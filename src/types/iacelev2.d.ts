@@ -31,7 +31,7 @@ declare namespace IACeleV2 {
                 };
 
                 interface _SupportsFieldsSelection <M extends Data.ModelName>{
-                    'fields': Data.ReadField<M>[];
+                    'fields'?: Data.ReadField<M>[];
                 };
 
                 interface _RequiresRecordData <M extends Data.ModelName>{
