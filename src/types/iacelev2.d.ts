@@ -634,7 +634,7 @@ declare namespace IACeleV2 {
                     fieldName: F,
                     inputValue: IACeleV2.Data.RecordForView<M>[F],
                 ) => (void);
-                updateRecord: () => void;
+                updateRecord: () => Promise<void>;
                 existingChanges: boolean;
                 executeAction: (actionName: string) => Promise<void>;
             };
