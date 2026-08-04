@@ -1,7 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useEditableRecord from "./useEditableRecord";
 import useOriginalRecord from "./useOriginalRecord"
 import useRecordInView from "./useRecordInView";
+import RecordEvaluator from "@/core/ttypesV2";
+import useModelMetadata from "./useModelMetadata";
 
 const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
 
@@ -9,6 +11,9 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
     const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, updateRecord, executeAction } = useEditableRecord<M>();
+
+    // Obtención de los metadatos del campo
+    const { modelMetadata } = useModelMetadata<M>();
 
     // Función para modificación de valor de campo en registros de edición y vista
     const updateRecordField = useCallback(
@@ -35,6 +40,12 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         }, [undoChangesInEditableRecord, undoChangesInRecordInView]
     );
 
+    // Inicialización de instancia de evaluador
+    const evaluator = useMemo(
+        () => (new RecordEvaluator<M>(recordInView, modelMetadata)),
+        [modelMetadata, recordInView]
+    );
+
     return {
         recordId,
         recordInView,
@@ -45,6 +56,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         deleteRecord: deleteOriginalRecord,
         executeAction,
         reload,
+        evaluator,
     };
 };
 

@@ -557,28 +557,37 @@ declare namespace IACeleV2 {
 
     declare namespace View {
 
+        type BooeanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
+
+        interface SupportsInvisibleParams <M extends Data.ModelName>{
+            invisible?: BooeanOrConditionalStatement<M>;
+        };
+
         interface FormComponents <M extends Data.ModelName>{
-            Page: {
+            'Page': {
                 children: React.ReactNode;
             };
-            Header: {
+            'Header': {
                 children: React.ReactNode;
             };
-            Action: {
+            'Action': {
                 name: string;
                 label: string;
                 decoration?: UI.Variant;
+                invisible?: BooeanOrConditionalStatement<M>;
             };
-            Sheet: {
+            'Sheet': {
                 children: React.ReactNode;
             };
-            Group: {
+            'Group': {
                 children: React.ReactNode;
                 label: string;
+                invisible?: BooeanOrConditionalStatement<M>;
             };
-            Field: {
+            'Field': {
                 name: Data.FieldName<M>;
                 readonly?: boolean;
+                invisible?: BooeanOrConditionalStatement<M>;
             };
         };
 
