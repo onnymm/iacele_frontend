@@ -636,6 +636,10 @@ declare namespace IACele {
                 data: IACele.API.Request.SearchRead<M>,
             ) => Promise<IACele.API.Response.SearchRead<M>>;
 
+            searchReadV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.SearchRead<M>,
+            ) => Promise<IACeleV2.API.Response.SearchRead<M>>;
+
             update: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Update<M>,
             ) => Promise<true>;
