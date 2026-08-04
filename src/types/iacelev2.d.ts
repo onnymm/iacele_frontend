@@ -128,10 +128,10 @@ declare namespace IACeleV2 {
 
                 type Create<M extends ModelName> = EditableRecord<M>[];
                 type Update<M extends ModelName> = [number[], EditableRecord<M>];
-                type Add = [number[]];
-                type Unlink = [number[]];
-                type Delete = [number[]];
-                type Replace = [number[]];
+                type Add = number[];
+                type Unlink = number[];
+                type Delete = number[];
+                type Replace = number[];
                 type Clear = [];
 
             };
