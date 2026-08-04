@@ -1,40 +1,10 @@
-import { useCallback, useState } from "react";
-import useOriginalRecord from "./useOriginalRecord";
+import { useContext } from "react";
+import RecordInViewContext from "@/contexts/views/recordInViewContext";
 
 const useRecordInView = <M extends IACeleV2.Data.ModelName>() => {
 
-    // Obtención de los datos del registro original desde el contexto
-    const { originalRecord } = useOriginalRecord<M>();
-
-    // Inicialización de registro en vista
-    const [ recordInView, setRecordInView ] = useState<IACeleV2.Data.RecordForView<M>>(
-        () => ({ ...originalRecord } as IACeleV2.Data.RecordForView<M>),
-    );
-
-    // Función para deshacer cambios en el registro de vista
-    const undoChangesInRecordInView = useCallback(
-        () => {
-            // Se copia el registro original y se usa para establecer el estado
-            setRecordInView({ ...originalRecord } as IACeleV2.Data.RecordForView<M>);
-        }, [originalRecord]
-    );
-
-    // Inicialización de función para modificar un campo del registro en vista
-    const updateRecordInViewField = useCallback(
-        <F extends IACeleV2.Data.FieldName<M>>(
-            fieldName: F,
-            inputValue: IACeleV2.Data.RecordForView<M>[F],
-        ) => {
-
-            // Actualización de valor
-            setRecordInView(
-                (record) => ({
-                    ...record,
-                    [fieldName]: inputValue,
-                })
-            );
-        }, []
-    );
+    // Obtención de los valores y funciones desde el contexto
+    const { recordInView, undoChangesInRecordInView, updateRecordInViewField } = useContext<IACeleV2.Context.View.RecordInView<M>>(RecordInViewContext);
 
     return { recordInView, undoChangesInRecordInView, updateRecordInViewField };
 };
