@@ -1,8 +1,7 @@
 import OriginalRecordContext from "@/contexts/views/originalRecordContext";
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import useReadRecordFromAPI from "@/hooks/views/useReadRecordFromAPI";
-import useViewData from "@/hooks/views/useViewData";
-import FormViewInspector from "@/views/inspectors/FormViewInspector";
+import CollectRequiredFields from "@/views/inspectors/CollectRequiredFields";
 
 const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
     children,
@@ -45,11 +44,3 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
 };
 
 export default RecordFromDatabaseProvider;
-
-const CollectRequiredFields = () => {
-
-    // Obtención de la declaración de la vista
-    const { View } = useViewData();
-
-    return View(FormViewInspector);
-};
