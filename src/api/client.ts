@@ -89,6 +89,24 @@ class Client {
         return this.execute<IACele.API.Response.Create>(apiCall, () => {});
     };
 
+    createV2 = async <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.Create<M>,
+    ): Promise<IACeleV2.API.Response.Create> => {
+
+        // Función de creación de registro
+        const apiCall = async (): Promise<IACeleV2.API.Response.Create> => {
+            // Obtención de ID de registro creado
+            const response = await this.post<IACeleV2.API.Request.Create<M>, IACeleV2.API.Response.Create>(
+                PATH.CRUD.CREATE,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACele.API.Response.Create>(apiCall, () => {});
+    };
+
     read = async <M extends IACele.Data.ModelName>(
         data: IACele.API.Request.Read<M>,
     ) => {

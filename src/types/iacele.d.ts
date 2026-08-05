@@ -628,6 +628,10 @@ declare namespace IACele {
                 data: IACele.API.Request.Create<M>,
             ) => Promise<IACele.API.Response.Create>;
 
+            createV2: <M extends IACeleV2.Data.ModelName>(
+                data: IACeleV2.API.Request.Create<M>,
+            ) => Promise<IACeleV2.API.Response.Create>;
+
             read: <M extends IACele.Data.ModelName>(
                 data: IACele.API.Request.Read<M>,
             ) => Promise<IACele.API.Response.Read<M>>;
