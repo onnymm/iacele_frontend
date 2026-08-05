@@ -48,12 +48,21 @@ declare namespace IACeleV2 {
                     'limit'?: number;
                 };
 
+                interface _RequiresRecordsData <M extends Data.ModelName>{
+                    'data': Typing.ScalarOrArray<Data.EditableRecord<M>>;
+                };
+
                 declare namespace Base {
 
                     type Action<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
                         & _RequiresName
                         & _RequiresRecordID
+                    );
+
+                    type Create<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _RequiresRecordsData<M>
                     );
 
                     type SearchRead<M extends Data.ModelName> = (
@@ -87,6 +96,8 @@ declare namespace IACeleV2 {
 
             type Action<M extends Data.ModelName> = _Definition.Base.Action<M>;
 
+            type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
+
             type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
 
             type Update<M extends Data.ModelName> = _Definition.Base.Update<M>;
@@ -102,6 +113,8 @@ declare namespace IACeleV2 {
         declare namespace Response {
 
             type Action = true;
+
+            type Create = number[];
 
             type SearchRead<M extends Data.ModelName> = Data.RecordFromDatabase<M>[];
 
@@ -559,7 +572,37 @@ declare namespace IACeleV2 {
 
     declare namespace View {
 
-        type BooeanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
+        declare namespace _Definition {
+
+            declare namespace FieldVariant {
+
+                interface CommonField <M extends Data.ModelName, F extends Data.FieldName<M>>{
+                    name: F;
+                    readonly?: boolean;
+                    invisible?: BooeanOrConditionalStatement<M>;
+                };
+
+                interface ScalarField <M extends Data.ModelName, F extends Data.FieldName<M>> extends CommonField<M, F>{
+                    domain?: [];
+                };
+
+                interface ArrayField <M extends Data.ModelName, F extends Data.ArrayyFieldName<M>> extends CommonField<M, F>{
+                    domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
+                };
+
+                type FieldVariant<M extends Data.ModelName, F extends Data.FieldName<M>> = (
+                    F extends Data.ArrayyFieldName<M>
+                        ? ArrayField<M, F>
+                        : ScalarField<M, Data.FieldName<M>>
+                );
+
+            };
+
+            type BooeanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
+
+        };
+
+        type BooeanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooeanOrConditionalStatement<M>;
 
         interface SupportsInvisibleParams <M extends Data.ModelName>{
             invisible?: BooeanOrConditionalStatement<M>;
@@ -586,12 +629,13 @@ declare namespace IACeleV2 {
                 label: string;
                 invisible?: BooeanOrConditionalStatement<M>;
             };
-            'Field': {
-                name: Data.FieldName<M>;
-                readonly?: boolean;
-                invisible?: BooeanOrConditionalStatement<M>;
-            };
+            'Field': FieldVariant<M, Data.FieldName<M>>;
         };
+
+        type FieldVariant<
+            M extends Data.ModelName,
+            F extends Data.FieldName<M>,
+        > = _Definition.FieldVariant.FieldVariant<M, F>;
 
         interface FormChildren <M extends Data.ModelName>{
             Page: React.FC<FormComponents<M>['Page']>;
