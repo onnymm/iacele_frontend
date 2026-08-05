@@ -663,6 +663,14 @@ declare namespace IACeleV2 {
 
     };
 
+    declare namespace Resource {
+
+        interface RecordEvaluator <M extends IACeleV2.Data.ModelName> {
+            evaluate: (conditionOrBoolean: boolean | IACeleV2.Data.CriteriaStructure<M>) => boolean;
+        };
+
+    };
+
     declare namespace Typing {
 
         type ScalarOrArray<T> = T | T[];

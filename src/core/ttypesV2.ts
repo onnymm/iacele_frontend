@@ -421,7 +421,7 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
         '&': (a, b) => (a && b),
         '|': (a, b) => (a || b),
     };
-    LOGIC_OPERATORS: (IACeleV2.Data.LogicOperator | boolean)[] = ['&', '|'];
+    private LOGIC_OPERATORS: (IACeleV2.Data.LogicOperator | boolean)[] = ['&', '|'];
 
     constructor (
         data: IACeleV2.Data.RecordForView<M>,
