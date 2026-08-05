@@ -707,6 +707,14 @@ declare namespace IACeleV2 {
 
     };
 
+    declare namespace Provider {
+
+        interface EmptyRecordParams <M extends Data.ModelName> extends IACele.Common.SupportsChildren{
+            fieldsToRead: React.RefObject<Data.ReadField<M>[]>;
+        };
+
+    };
+
     declare namespace Resource {
 
         interface RecordEvaluator <M extends IACeleV2.Data.ModelName> {
