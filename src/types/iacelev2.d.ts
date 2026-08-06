@@ -719,8 +719,8 @@ declare namespace IACeleV2 {
                 evaluator: Resource.RecordEvaluator<M>,
             };
 
-            interface Field <M extends Data.ModelName>{
-                params: IACeleV2.View.FormComponents<M>['Field'];
+            interface Field <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{
+                params: IACeleV2.View.FieldComponentProps<M, O>;
                 fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
             };
 
