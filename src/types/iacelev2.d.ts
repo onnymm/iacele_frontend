@@ -372,6 +372,27 @@ declare namespace IACeleV2 {
                 confirm_password: TType.Char;
             };
 
+            'base.model.data': {
+                model_name: TType.Char<'not_null'>;
+                res_id: TType.Integer<'not_null'>;
+            };
+
+            'base.model.data.process': {
+                step_ids: TType.One2Many<'base.model.data.process.step'>;
+            };
+
+            'base.model.data.process.step': {
+                sequence: TType.Integer<'not_null'>;
+                process_id: TType.Many2One<'not_null'>;
+                model_name: TType.Char<'not_null'>;
+                record_data_ids: TType.One2Many<'base.model.data.process.step.record'>;
+            };
+
+            'base.model.data.process.step.record': {
+                step_id: TType.Many2One<'not_null'>;
+                data: TType.JSON;
+            };
+
             'location.warehouse': {
                 short_name: TType.Char<'not_null'>;
                 location_number: TType.Integer<'not_null'>;
@@ -431,7 +452,6 @@ declare namespace IACeleV2 {
                 is_complete: TType.Boolean;
                 has_valid_events: TType.Boolean;
             };
-
 
             'assistance.registry.event': {
                 employee_id: TType.Many2One<'not_null'>;
