@@ -703,6 +703,27 @@ declare namespace IACeleV2 {
                 View: (component: React.FC<IACeleV2.View.FormStructure<M>>) => (React.ReactNode);
             };
 
+            interface RecordEdition <M extends Data.ModelName>{
+                recordId: number;
+                recordInView: Data.RecordForView<M>;
+                existingChanges: boolean;
+                undoChanges: () => (void);
+                updateRecordField: <F extends Data.FieldName<M>>(
+                    fieldName: F,
+                    inputValue: Data.RecordForView<M>[F],
+                ) => (void);
+                updateRecord: () => (Promise<void>);
+                deleteRecord: () => (Promise<void>);
+                executeAction: (actionName: string) => Promise<void>;
+                reload: () => (void),
+                evaluator: Resource.RecordEvaluator<M>,
+            };
+
+            interface Field <M extends Data.ModelName>{
+                params: IACeleV2.View.FormComponents<M>['Field'];
+                fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
+            };
+
         };
 
     };
