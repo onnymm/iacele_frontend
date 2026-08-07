@@ -644,7 +644,7 @@ declare namespace IACeleV2 {
 
         };
 
-        type FormComponents <M extends Data.ModelName> = _Definition.FormComponents<M>
+        type FormComponents <M extends Data.ModelName, O extends FieldComponent> = _Definition.FormComponents<M, O>
 
         type BooleanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooleanOrConditionalStatement<M>;
 
