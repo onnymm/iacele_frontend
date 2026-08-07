@@ -716,6 +716,7 @@ declare namespace IACeleV2 {
                 saveChanges: () => Promise<void>;
                 existingChanges: boolean;
                 executeAction: (actionName: string) => Promise<void>;
+                createMode: boolean;
             };
 
             interface ModelsMetadata <M extends Data.ModelName>{
@@ -736,7 +737,7 @@ declare namespace IACeleV2 {
                 View: (component: React.FC<IACeleV2.View.FormStructure<M, O>>) => (React.ReactNode);
             };
 
-            interface RecordEdition__ <M extends Data.ModelName>{
+            interface RecordEdition <M extends Data.ModelName>{
                 recordId: number;
                 recordInView: Data.RecordForView<M>;
                 existingChanges: boolean;
@@ -748,8 +749,9 @@ declare namespace IACeleV2 {
                 saveChanges: () => (Promise<void>);
                 deleteRecord: () => (Promise<void>);
                 executeAction: (actionName: string) => Promise<void>;
-                reload: () => (void),
-                evaluator: Resource.RecordEvaluator<M>,
+                reload: () => (void);
+                evaluator: Resource.RecordEvaluator<M>;
+                createMode: boolean;
             };
 
             interface Field <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{

@@ -182,6 +182,9 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
         }, [api, existingChanges, modelName, recordId, reload, saveChanges]
     );
 
+    // Indicador de modo de edición
+    const createMode = recordId !== 0;
+
     // Restauración del objeto de edición cuando el objeto original cambia
     useEffect(
         () => {
@@ -197,6 +200,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             updateEditableRecordField: updateEditableRecordField as (() => {}),
             saveChanges,
             executeAction,
+            createMode,
         }}>
             {children}
         </EditableRecordContext.Provider>

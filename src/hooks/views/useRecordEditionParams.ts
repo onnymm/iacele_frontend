@@ -14,7 +14,8 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         deleteRecord,
         reload,
         evaluator,
-    } = useContext<IACeleV2.Context.View.RecordEdition__<M>>(RecordEditionContext);
+        createMode,
+    } = useContext<IACeleV2.Context.View.RecordEdition<M>>(RecordEditionContext);
 
     return {
         recordId,
@@ -26,6 +27,7 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         deleteRecord,
         reload,
         evaluator,
+        createMode,
     };
 };
 
