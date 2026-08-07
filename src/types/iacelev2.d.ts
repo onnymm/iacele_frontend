@@ -614,7 +614,7 @@ declare namespace IACeleV2 {
                 };
                 'Group': {
                     children: React.ReactNode;
-                    label: string;
+                    label?: string;
                     invisible?: BooleanOrConditionalStatement<M>;
                 };
             };
