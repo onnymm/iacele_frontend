@@ -668,7 +668,7 @@ declare namespace IACele {
                 params: IACele.API.Request.Form<M>,
             ) => Promise<IACele.API.Response.Form<M>>;
 
-            formv2: <M extends IACele.Data.ModelName>(
+            formv2: <M extends IACeleV2.Data.ModelName>(
                 params: IACeleV2.API.Request.Form<M>,
             ) => Promise<IACeleV2.API.Response.Form__<M>>;
 
