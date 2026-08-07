@@ -1,20 +1,6 @@
 import type FieldComponent from "./FieldComponent";
 
-interface _PackedViewParams <M extends IACeleV2.Data.ModelName>{
-    modelName: M;
-};
-
-type PackedViewParams <M extends IACeleV2.Data.ModelName> = (
-    & _PackedViewParams<M>
-    & FormDeclaration<M>
-);
-
-interface FormDeclaration <M extends IACeleV2.Data.ModelName>{
-    type: 'form';
-    View: (component: React.FC<IACeleV2.View.FormStructure<M, typeof FieldComponent>>) => (React.ReactNode);
-};
-
-const packedView = <M extends IACeleV2.Data.ModelName>(params: PackedViewParams<M>) => (params);
+const packedView = <M extends IACeleV2.Data.ModelName>(params: IACeleV2.View.PackedParams<M, typeof FieldComponent>) => (params);
 
 const VIEW_V2 = {
 
@@ -71,7 +57,7 @@ const VIEW_V2 = {
                                 <Field name="profile_picture" widget="picture" />
                             </Group>
                             <Group label="General">
-                                <Field name="name" widget="password" />
+                                <Field name="name" />
                                 <Field name="login" />
                             </Group>
                             <Group label="Detalles">

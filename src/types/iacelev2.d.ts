@@ -594,6 +594,24 @@ declare namespace IACeleV2 {
 
         declare namespace _Definition {
 
+            declare namespace PackedParams {
+
+                interface _Base <M extends Data.ModelName>{
+                    modelName: M;
+                };
+
+                interface _FormDeclaration <M extends IACeleV2.Data.ModelName, O extends FieldComponent>{
+                    type: 'form';
+                    View: (component: React.FC<FormStructure<M, O>>) => (React.ReactNode);
+                };
+
+                type PackedParams <M extends IACeleV2.Data.ModelName, O extends FieldComponent> = (
+                    & PackedParams._Base<M>
+                    & PackedParams._FormDeclaration<M, O>
+                );
+
+            };
+
             type BooleanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
 
             interface FormComponents <M extends Data.ModelName>{
@@ -643,6 +661,8 @@ declare namespace IACeleV2 {
             };
 
         };
+
+        type PackedParams<M extends IACeleV2.Data.ModelName, O extends FieldComponent> = _Definition.PackedParams.PackedParams<M, O>;
 
         type FormComponents <M extends Data.ModelName, O extends FieldComponent> = _Definition.FormComponents<M, O>
 
