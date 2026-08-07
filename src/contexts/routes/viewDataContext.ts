@@ -15,6 +15,8 @@ interface ViewDataContextParams {
     display: IACele.UI.View.DisplayOption;
     onCreate: (params: OnCreateParams) => (void);
     onUpdate: (params: OnUpdateParams) => (void);
+    newRecord?: () => (void);
+    undoNewRecord?: () => (void);
 };
 
 const ViewDataContext = createContext<ViewDataContextParams>({
@@ -23,6 +25,7 @@ const ViewDataContext = createContext<ViewDataContextParams>({
     display: 'screen',
     onCreate: () => {},
     onUpdate: () => {},
+    newRecord: () => {},
 });
 
 export default ViewDataContext;

@@ -12,6 +12,8 @@ const RecordEditionContext = createContext<IACeleV2.Context.View.RecordEdition<a
     reload: () => {},
     evaluator: null as any,
     createMode: true,
+    newRecord: () => {},
+    undoNewRecord: () => {},
 });
 
 export default RecordEditionContext;

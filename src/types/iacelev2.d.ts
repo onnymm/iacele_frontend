@@ -752,6 +752,8 @@ declare namespace IACeleV2 {
                 reload: () => (void);
                 evaluator: Resource.RecordEvaluator<M>;
                 createMode: boolean;
+                newRecord: () => (void);
+                undoNewRecord: () => (void);
             };
 
             interface Field <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{

@@ -15,6 +15,8 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         reload,
         evaluator,
         createMode,
+        newRecord,
+        undoNewRecord,
     } = useContext<IACeleV2.Context.View.RecordEdition<M>>(RecordEditionContext);
 
     return {
@@ -28,6 +30,8 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         reload,
         evaluator,
         createMode,
+        newRecord,
+        undoNewRecord,
     };
 };
 

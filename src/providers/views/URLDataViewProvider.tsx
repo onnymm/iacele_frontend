@@ -6,6 +6,7 @@ import VIEW_V2 from "@/views/ViewsV2";
 import ViewMode from "@/views/ViewMode";
 import useUpdateQueryParams from "@/hooks/viewsV0/useUpdateQueryParams";
 import { useCallback } from "react";
+import { useNavigate } from "react-router";
 
 interface ViewQueryParams {
     [QUERY_PARAMS.VIEW.ID]: number;
@@ -13,6 +14,9 @@ interface ViewQueryParams {
 };
 
 const URLDataViewProvider = () => {
+
+    // Obtención de función de navegación
+    const navigateTo = useNavigate();
 
     // Obtención de parámetros de query
     const { id: recordId, name: viewDataName } = useGetParams<ViewQueryParams>({
@@ -34,6 +38,24 @@ const URLDataViewProvider = () => {
         }, [updateQueryParams, viewDataName]
     );
 
+    // Función para redirigir a URL para crear un registro nuevo
+    const newRecord = useCallback(
+        () => {
+            // Redireccionamiento a vista sin ID
+            updateQueryParams({
+                [QUERY_PARAMS.VIEW.NAME]: viewDataName,
+            });
+        }, [updateQueryParams, viewDataName]
+    );
+
+    // Función para regresar a la página anterior cuando se deshacen cambios en un registro nuevo
+    const undoNewRecord = useCallback(
+        () => {
+            // Se navega una página atrás
+            navigateTo(-1);
+        }, [navigateTo]
+    );
+
     return (
         <ViewDataContext.Provider value={{
             viewDataName,
@@ -41,6 +63,8 @@ const URLDataViewProvider = () => {
             display: 'screen',
             onCreate: ({ recordId }) => {redirectToNewRecord(recordId)},
             onUpdate: ({ reload }) => {reload()},
+            newRecord: newRecord,
+            undoNewRecord,
         }}>
             <ModelDataProvider>
                 <ViewMode />

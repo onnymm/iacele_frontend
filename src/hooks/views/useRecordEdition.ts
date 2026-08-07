@@ -4,6 +4,7 @@ import useOriginalRecord from "./useOriginalRecord"
 import useRecordInView from "./useRecordInView";
 import RecordEvaluator from "@/core/ttypesV2";
 import useModelMetadata from "./useModelMetadata";
+import useDataView from "../routes/useDataView";
 
 const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
 
@@ -11,6 +12,9 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
     const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, saveChanges, executeAction, createMode } = useEditableRecord<M>();
+
+    // Obtención de función para crear registro
+    const { newRecord, undoNewRecord } = useDataView();
 
     // Obtención de los metadatos del campo
     const { modelMetadata } = useModelMetadata<M>();
@@ -58,6 +62,8 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         reload,
         evaluator,
         createMode,
+        newRecord: newRecord ?? (() => {}),
+        undoNewRecord: undoNewRecord ?? (() => {}),
     };
 };
 
