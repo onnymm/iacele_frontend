@@ -713,7 +713,7 @@ declare namespace IACeleV2 {
                     fieldName: F,
                     inputValue: IACeleV2.Data.RecordForView<M>[F],
                 ) => (void);
-                updateRecord: () => Promise<void>;
+                saveChanges: () => Promise<void>;
                 existingChanges: boolean;
                 executeAction: (actionName: string) => Promise<void>;
             };
@@ -736,7 +736,7 @@ declare namespace IACeleV2 {
                 View: (component: React.FC<IACeleV2.View.FormStructure<M, O>>) => (React.ReactNode);
             };
 
-            interface RecordEdition <M extends Data.ModelName>{
+            interface RecordEdition__ <M extends Data.ModelName>{
                 recordId: number;
                 recordInView: Data.RecordForView<M>;
                 existingChanges: boolean;
@@ -745,7 +745,7 @@ declare namespace IACeleV2 {
                     fieldName: F,
                     inputValue: Data.RecordForView<M>[F],
                 ) => (void);
-                updateRecord: () => (Promise<void>);
+                saveChanges: () => (Promise<void>);
                 deleteRecord: () => (Promise<void>);
                 executeAction: (actionName: string) => Promise<void>;
                 reload: () => (void),

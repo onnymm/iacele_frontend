@@ -13,7 +13,7 @@ const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
         updateRecordField,
         existingChanges,
         undoChanges,
-        updateRecord,
+        saveChanges: updateRecord,
         deleteRecord,
         reload,
         evaluator,

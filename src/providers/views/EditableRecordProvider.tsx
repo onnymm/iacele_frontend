@@ -154,7 +154,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
     );
 
     // Función para actualizar el registro original
-    const updateRecord = useCallback(
+    const saveChanges = useCallback(
         async () => {
             // Uso de la función de actualización del registro original
             await updateOriginalRecord(editableRecord);
@@ -167,7 +167,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             // Si existen cambios a guardar...
             if ( existingChanges ) {
                 // Se guardan primero los cambios
-                await updateRecord();
+                await saveChanges();
             };
 
             // Ejecución de la acción
@@ -179,7 +179,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
             // Se vuelve a cargar el registro
             reload();
-        }, [api, existingChanges, modelName, recordId, reload, updateRecord]
+        }, [api, existingChanges, modelName, recordId, reload, saveChanges]
     );
 
     // Restauración del objeto de edición cuando el objeto original cambia
@@ -195,7 +195,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             existingChanges,
             undoChangesInEditableRecord,
             updateEditableRecordField: updateEditableRecordField as (() => {}),
-            updateRecord,
+            saveChanges,
             executeAction,
         }}>
             {children}

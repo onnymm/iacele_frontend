@@ -10,11 +10,11 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         updateRecordField,
         existingChanges,
         undoChanges,
-        updateRecord,
+        saveChanges,
         deleteRecord,
         reload,
         evaluator,
-    } = useContext<IACeleV2.Context.View.RecordEdition<M>>(RecordEditionContext);
+    } = useContext<IACeleV2.Context.View.RecordEdition__<M>>(RecordEditionContext);
 
     return {
         recordId,
@@ -22,7 +22,7 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         updateRecordField,
         existingChanges,
         undoChanges,
-        updateRecord,
+        saveChanges,
         deleteRecord,
         reload,
         evaluator,

@@ -10,7 +10,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     // Obtención de valores desde los hooks
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
-    const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, updateRecord, executeAction } = useEditableRecord<M>();
+    const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, saveChanges, executeAction } = useEditableRecord<M>();
 
     // Obtención de los metadatos del campo
     const { modelMetadata } = useModelMetadata<M>();
@@ -52,7 +52,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         updateRecordField,
         existingChanges,
         undoChanges,
-        updateRecord,
+        saveChanges,
         deleteRecord: deleteOriginalRecord,
         executeAction,
         reload,
