@@ -57,10 +57,12 @@ const InitializeRecordProvider = <M extends IACeleV2.Data.ModelName>({
         async (recordInEdition: IACeleV2.Data.EditableRecord<M>) => {
 
             // Creación del registro en la base de datos
-            await api.createV2<M>({
+            const [ recordId ] = await api.createV2<M>({
                 'model_name': modelName,
                 'data': recordInEdition,
             });
+
+            return recordId;
         }, [api, modelName]
     );
 

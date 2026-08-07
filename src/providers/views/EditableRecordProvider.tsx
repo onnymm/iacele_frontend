@@ -1,5 +1,6 @@
 import EditableRecordContext from "@/contexts/views/editableRecordContext";
 import useAPI from "@/hooks/app/useAPI";
+import useDataView from "@/hooks/routes/useDataView";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
 import useOriginalRecord from "@/hooks/views/useOriginalRecord";
@@ -25,9 +26,13 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             setEditableRecord({});
         }, []
     );
+    // Obtención de funciones de ejecución tras creación/modificación
+    const { onCreate, onUpdate } = useDataView();
 
     // Inicialización de indicador booleano de cambios existentes
     const existingChanges = Object.keys(editableRecord).length > 0;
+    // Indicador de modo de edición
+    const createMode = recordId === 0;
 
     // Función para extraer la referencia de valores de tipo many2one
     const extractM2OReference = useCallback(
@@ -157,8 +162,20 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
     const saveChanges = useCallback(
         async () => {
             // Uso de la función de actualización del registro original
-            await updateOriginalRecord(editableRecord);
-        }, [editableRecord, updateOriginalRecord]
+            const response = await updateOriginalRecord(editableRecord);
+
+            // Si el modo es creación...
+            if ( createMode ) {
+                // Ejecución de función tras creación
+                onCreate({ recordId: response as number });
+            // Si el modo es edición
+            } else {
+                // Ejecución de función tras modificación
+                onUpdate({ reload });
+            };
+
+            return response;
+        }, [createMode, editableRecord, onCreate, onUpdate, reload, updateOriginalRecord]
     );
 
     // Función de ejecución de acción
@@ -182,9 +199,6 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
         }, [api, existingChanges, modelName, recordId, reload, saveChanges]
     );
 
-    // Indicador de modo de edición
-    const createMode = recordId !== 0;
-
     // Restauración del objeto de edición cuando el objeto original cambia
     useEffect(
         () => {
@@ -198,7 +212,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             existingChanges,
             undoChangesInEditableRecord,
             updateEditableRecordField: updateEditableRecordField as (() => {}),
-            saveChanges,
+            saveChanges: saveChanges as () => (any),
             executeAction,
             createMode,
         }}>

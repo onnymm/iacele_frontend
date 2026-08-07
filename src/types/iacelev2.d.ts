@@ -692,7 +692,7 @@ declare namespace IACeleV2 {
             interface OriginalRecord <M extends Data.ModelName>{
                 recordId: number;
                 originalRecord: Data.RecordFromDatabase<M>;
-                updateOriginalRecord: (recordInEdition: Data.EditableRecord<M>) => Promise<void>;
+                updateOriginalRecord: (recordInEdition: Data.EditableRecord<M>) => Promise<number | true>;
                 deleteOriginalRecord: () => Promise<void>;
                 reload: () => void;
             };
@@ -713,7 +713,7 @@ declare namespace IACeleV2 {
                     fieldName: F,
                     inputValue: IACeleV2.Data.RecordForView<M>[F],
                 ) => (void);
-                saveChanges: () => Promise<void>;
+                saveChanges: () => (Promise<true | number>);
                 existingChanges: boolean;
                 executeAction: (actionName: string) => Promise<void>;
                 createMode: boolean;
@@ -746,7 +746,7 @@ declare namespace IACeleV2 {
                     fieldName: F,
                     inputValue: Data.RecordForView<M>[F],
                 ) => (void);
-                saveChanges: () => (Promise<void>);
+                saveChanges: () => (Promise<number | true>);
                 deleteRecord: () => (Promise<void>);
                 executeAction: (actionName: string) => Promise<void>;
                 reload: () => (void);

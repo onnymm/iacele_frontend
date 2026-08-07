@@ -6,7 +6,7 @@ const RecordEditionContext = createContext<IACeleV2.Context.View.RecordEdition<a
     existingChanges: false,
     undoChanges: () => {},
     updateRecordField: () => {},
-    saveChanges: async () => {},
+    saveChanges: (async () => {}) as (() => (Promise<any>)),
     deleteRecord: async () => {},
     executeAction: async () => {},
     reload: () => {},

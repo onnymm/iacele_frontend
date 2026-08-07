@@ -39,11 +39,13 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
         async (recordInEdition: IACeleV2.Data.EditableRecord<M>) => {
 
             // Se envían los datos a guardar
-            await api.updateV2({
+            const response = await api.updateV2({
                 'model_name': modelName,
                 'record_ids': [recordId],
                 'data': recordInEdition,
             });
+
+            return response;
         }, [api, modelName, recordId]
     );
 
