@@ -594,81 +594,94 @@ declare namespace IACeleV2 {
 
         declare namespace _Definition {
 
-            declare namespace FieldVariant {
+            type BooleanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
 
-                interface CommonField <M extends Data.ModelName, F extends Data.FieldName<M>>{
-                    name: F;
-                    readonly?: boolean;
-                    invisible?: BooeanOrConditionalStatement<M>;
+            interface FormComponents <M extends Data.ModelName>{
+                'Page': {
+                    children: React.ReactNode;
                 };
-
-                interface ScalarField <M extends Data.ModelName, F extends Data.FieldName<M>> extends CommonField<M, F>{
-                    domain?: [];
+                'Header': {
+                    children: React.ReactNode;
                 };
-
-                interface ArrayField <M extends Data.ModelName, F extends Data.ArrayyFieldName<M>> extends CommonField<M, F>{
-                    domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
+                'Action': {
+                    name: string;
+                    label: string;
+                    decoration?: UI.Variant;
+                    invisible?: BooleanOrConditionalStatement<M>;
                 };
-
-                type FieldVariant<M extends Data.ModelName, F extends Data.FieldName<M>> = (
-                    F extends Data.ArrayyFieldName<M>
-                        ? ArrayField<M, F>
-                        : ScalarField<M, Data.FieldName<M>>
-                );
-
+                'Sheet': {
+                    children: React.ReactNode;
+                };
+                'Group': {
+                    children: React.ReactNode;
+                    label: string;
+                    invisible?: BooleanOrConditionalStatement<M>;
+                };
             };
 
-            type BooeanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
+            type _FieldWidget<
+                M extends Data.ModelName,
+                F extends Data.FieldName<M>,
+                O extends Record<Data.TTypeName, Record<string, () => (React.ReactNode)>>,
+            > = {
+                name: F;
+                widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
+                invisible?: BooleanOrConditionalStatement<M>;
+                readonly?: BooleanOrConditionalStatement<M>;
+                domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
+            };
+
+            type _FieldWidgetDistribution<
+                M extends Data.ModelName,
+                O extends FieldComponent,
+            > = {
+                [F in Data.FieldName<M>]: _FieldWidget<M, F, O>;
+            }[Data.FieldName<M>]
+
+            interface CreateMode {
+                createMode: boolean;
+            };
 
         };
 
-        type BooeanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooeanOrConditionalStatement<M>;
+        type FormComponents <M extends Data.ModelName> = _Definition.FormComponents<M>
+
+        type BooleanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooleanOrConditionalStatement<M>;
 
         interface SupportsInvisibleParams <M extends Data.ModelName>{
-            invisible?: BooeanOrConditionalStatement<M>;
+            invisible?: BooleanOrConditionalStatement<M>;
         };
 
-        interface FormComponents <M extends Data.ModelName>{
-            'Page': {
-                children: React.ReactNode;
-            };
-            'Header': {
-                children: React.ReactNode;
-            };
-            'Action': {
-                name: string;
-                label: string;
-                decoration?: UI.Variant;
-                invisible?: BooeanOrConditionalStatement<M>;
-            };
-            'Sheet': {
-                children: React.ReactNode;
-            };
-            'Group': {
-                children: React.ReactNode;
-                label: string;
-                invisible?: BooeanOrConditionalStatement<M>;
-            };
-            'Field': FieldVariant<M, Data.FieldName<M>>;
-        };
+        type FieldComponent = Record<Data.TTypeName, Record<string, () => (React.ReactNode)>>;
 
-        type FieldVariant<
+        type FieldComponentProps<
             M extends Data.ModelName,
-            F extends Data.FieldName<M>,
-        > = _Definition.FieldVariant.FieldVariant<M, F>;
+            O extends FieldComponent
+        > = _Definition._FieldWidgetDistribution<M, O>;
 
-        interface FormChildren <M extends Data.ModelName>{
-            Page: React.FC<FormComponents<M>['Page']>;
-            Header: React.FC<FormComponents<M>['Header']>;
-            Action: React.FC<FormComponents<M>['Action']>;
-            Sheet: React.FC<FormComponents<M>['Sheet']>;
-            Group: React.FC<FormComponents<M>['Group']>;
-            Field: React.FC<FormComponents<M>['Field']>;
+        interface _FormChildren <M extends IACeleV2.Data.ModelName, O extends FieldComponent>{
+            Page: React.FC<_Definition.FormComponents<M>['Page']>;
+            Header: React.FC<_Definition.FormComponents<M>['Header']>;
+            Action: React.FC<_Definition.FormComponents<M>['Action']>;
+            Sheet: React.FC<_Definition.FormComponents<M>['Sheet']>;
+            Group: React.FC<_Definition.FormComponents<M>['Group']>;
+            Field: React.FC<FieldComponentProps<M, O>>;
         };
 
-        interface FormStructure <M extends Data.ModelName>{
-            children: (components: View.FormChildren<M>) => React.ReactElement;
+        interface FormStructure <M extends IACeleV2.Data.ModelName, O extends IACeleV2.View.FieldComponent>{
+            children: (comps: _FormChildren<M, O>) => (React.ReactNode);
         };
+
+        interface CreateOrUpdateModeParams {
+            children: (params: _Definition.CreateMode) => (React.ReactNode);
+        };
+
+        interface Many2OneOption {
+            'id': number;
+            'display_name': string;
+        };
+
+        type DurationType = [number, number, number] | [null, null, null];
 
     };
 
@@ -718,9 +731,9 @@ declare namespace IACeleV2 {
                 requiresField: (fieldName: Data.ReadField<M>) => void;
             };
 
-            interface Config <M extends Data.ModelName>{
+            interface Config <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{
                 type: 'form';
-                View: (component: React.FC<IACeleV2.View.FormStructure<M>>) => (React.ReactNode);
+                View: (component: React.FC<IACeleV2.View.FormStructure<M, O>>) => (React.ReactNode);
             };
 
             interface RecordEdition <M extends Data.ModelName>{
