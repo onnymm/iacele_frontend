@@ -1,3 +1,4 @@
+import EMPTY_CALLBACK from "@/constants/app/callbacks";
 import ViewDataContext from "@/contexts/routes/viewDataContext"
 import useUserData from "@/hooks/app/useUserData";
 import VIEW from "@/views/Views";
@@ -15,7 +16,13 @@ const Me = () => {
     const { userData } = useUserData();
 
     return (
-        <ViewDataContext.Provider value={{ viewDataName: 'base.users.me.form', recordId: userData['id'], display: 'screen' }}>
+        <ViewDataContext.Provider value={{
+            display: 'screen',
+            recordId: userData['id'],
+            viewDataName: 'base.users.me.form',
+            onCreate: EMPTY_CALLBACK.SYNC,
+            onUpdate: EMPTY_CALLBACK.SYNC,
+        }}>
             <View.View />
         </ViewDataContext.Provider>
     );
