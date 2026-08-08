@@ -12,9 +12,10 @@ const VIEW_V2 = {
                 {({ Page, Header, Wizard, Sheet, Group, Field }) => (
                     <Page>
                         <Header>
-                            <Wizard label="Añadir registro" view="assistance.registry.event.form" contextData={({ id, employee_id }) => ({ event_id: [id, ''] as [number, string], from_api: false, employee_id: employee_id })} />
+                            <Wizard label="Añadir registro" view="assistance.registry.event.form" contextData={({ id, display_name, employee_id }) => ({ event_id: [id, display_name] as [number, string], from_api: false, employee_id: employee_id })} />
                         </Header>
                         <Sheet>
+                            <Field name="display_name" invisible />
                             <Group label="Resumen">
                                 <Field name="employee_id" readonly />
                                 <Field name="start_time" />
