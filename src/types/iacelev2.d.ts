@@ -90,6 +90,8 @@ declare namespace IACeleV2 {
                         & _RequiresRecordIDs
                     );
 
+                    type FieldsMetadata<M extends Data.ModelName> = _RequiresModelName<M>;
+
                 };
 
             };
@@ -106,7 +108,7 @@ declare namespace IACeleV2 {
 
             type Form<M extends Data.ModelName> = _Definition.Base.Form<M>;
 
-            type FieldsMetadata<M extends Data.ModelName> = _Definition._RequiresModelName<M>;
+            type FieldsMetadata<M extends Data.ModelName> = _Definition.Base.FieldsMetadata<M>;
 
         };
 
@@ -122,7 +124,7 @@ declare namespace IACeleV2 {
 
             type Delete = true;
 
-            type FieldsMetadata<M extends Data.ModelName> = IACeleV2.Data.FieldMetadata<M>[];
+            type FieldsMetadata<M extends Data.ModelName> = Data.FieldMetadata<M>[];
 
             interface Form<M extends Data.ModelName> {
                 'name': string;
@@ -149,28 +151,6 @@ declare namespace IACeleV2 {
 
             };
 
-            interface _CommonFieldsProperties {
-                id: TType.Integer<'not_null'>;
-                name: TType.Char;
-                create_date: TType.Datetime<'not_null'>;
-                update_date: TType.Datetime<'not_null'>;
-                create_uid: TType.Many2One<'not_null'>;
-                update_uid: TType.Many2One<'not_null'>;
-                display_name: TType.Char<'not_null'>;
-            };
-
-            type ArrayTTypeName = 'one2many' | 'many2many';
-
-            type RelationCommand<M extends ModelName> = {
-                'create'?: _RelationCommand.Create<M>;
-                'update'?: _RelationCommand.Update<M>;
-                'add'?: _RelationCommand.Add;
-                'unlink'?: _RelationCommand.Unlink;
-                'delete'?: _RelationCommand.Delete;
-                'replace'?: _RelationCommand.Replace;
-                'clear'?: _RelationCommand.Clear;
-            };
-
             declare namespace _CriteriaStructure {
 
                 // <M extends ModelName>
@@ -191,12 +171,34 @@ declare namespace IACeleV2 {
                     | '~*'
                 );
 
-                type Serializable = Typing.ScalarOrArray<number | string | boolean | null>;
+                type _Serializable = Typing.ScalarOrArray<number | string | boolean | null>;
 
-                type Triplet<M extends ModelName> = [FieldName<M>, ComparisonOperator, Serializable];
+                type Triplet<M extends ModelName> = [FieldName<M>, ComparisonOperator, _Serializable];
 
                 type CriteriaStructure<M extends ModelName> = (LogicOperator | Triplet<M>)[];
 
+            };
+
+            interface _CommonFieldsProperties {
+                id: TType.Integer<'not_null'>;
+                name: TType.Char;
+                create_date: TType.Datetime<'not_null'>;
+                update_date: TType.Datetime<'not_null'>;
+                create_uid: TType.Many2One<'not_null'>;
+                update_uid: TType.Many2One<'not_null'>;
+                display_name: TType.Char<'not_null'>;
+            };
+
+            type ArrayTTypeName = 'one2many' | 'many2many';
+
+            type RelationCommand<M extends ModelName> = {
+                'create'?: _RelationCommand.Create<M>;
+                'update'?: _RelationCommand.Update<M>;
+                'add'?: _RelationCommand.Add;
+                'unlink'?: _RelationCommand.Unlink;
+                'delete'?: _RelationCommand.Delete;
+                'replace'?: _RelationCommand.Replace;
+                'clear'?: _RelationCommand.Clear;
             };
 
         };
@@ -241,11 +243,13 @@ declare namespace IACeleV2 {
 
                 declare namespace _JSON {
 
-                    type _Serializable = number | string | boolean | null;
-                    type _JSONObject = Record<string, _Serializable>;
+                    type Serializable = number | string | boolean | null;
+
+                    type JSONObject = Record<string, Serializable>;
+
                 };
 
-                type JSON = Typing.ScalarOrArray<_JSON._Serializable | _JSON._JSONObject>;
+                type JSON = Typing.ScalarOrArray<_JSON.Serializable | _JSON.JSONObject>;
 
             };
 
@@ -269,32 +273,36 @@ declare namespace IACeleV2 {
 
         declare namespace Validator {
 
+            declare namespace _Definition {
+
+                type Operator = (
+                    | 'equals'
+                    | 'notEqual'
+                    | 'gt'
+                    | 'lt'
+                    | 'ge'
+                    | 'le'
+                    | 'isin'
+                    | 'notIn'
+                    | 'ilike'
+                    | 'notIlike'
+                    | 'regex'
+                    | 'regexI'
+                );
+
+            };
+
             interface Mode<I = any, O = I> {
                 'view': I;
                 'validate': O;
             };
 
-            type Operator = (
-                | 'equals'
-                | 'notEqual'
-                | 'gt'
-                | 'lt'
-                | 'ge'
-                | 'le'
-                | 'isin'
-                | 'notIn'
-                | 'ilike'
-                | 'notIlike'
-                | 'regex'
-                | 'regexI'
-            );
-
             type BaseTType = {
-                [K in IACeleV2.Data.Validator.Operator]: (value: any) => (boolean);
+                [K in _Definition.Operator]: (value: any) => (boolean);
             };
 
-            type RecordValidation<M extends IACeleV2.Data.ModelName> = {
-                [K in IACeleV2.Data.FieldName<M>]: IACeleV2.Data.Validator.BaseTType;
+            type RecordValidation<M extends ModelName> = {
+                [K in FieldName<M>]: BaseTType;
             };
 
         };
@@ -513,7 +521,7 @@ declare namespace IACeleV2 {
 
         type ModelsMetadata<M extends ModelName> = Partial<Record<ModelName, FieldsMetadata<M>>>
 
-        type ModelDefinition<M extends ModelName> = _Definition._CommonFieldsProperties & Model[M];
+        type ModelDefinition<M extends ModelName = '__'> = _Definition._CommonFieldsProperties & Model[M];
 
         type RecordFromDatabase<M extends ModelName> = {
             [K in keyof ModelDefinition<M>]: (
@@ -541,15 +549,7 @@ declare namespace IACeleV2 {
 
         type RelationCommand<M extends ModelName = '__'> = _Definition.RelationCommand<M>
 
-        type ScalarFieldName<M extends ModelName> = {
-            [K in keyof ModelDefinition<M>]: (
-                ModelDefinition<M>[K]['ttype'] extends _Definition.ArrayTTypeName
-                    ? never
-                    : K
-            );
-        }[keyof ModelDefinition<M>];
-
-        type ArrayyFieldName<M extends ModelName> = {
+        type _ArrayyFieldName<M extends ModelName> = {
             [K in keyof ModelDefinition<M>]: (
                 ModelDefinition<M>[K]['ttype'] extends _Definition.ArrayTTypeName
                     ? K
@@ -559,20 +559,12 @@ declare namespace IACeleV2 {
 
         type FieldName<M extends ModelName> = keyof ModelDefinition<M>;
 
-        type TTypeField<M extends ModelName, L extends TType._Definition.TTypeName> = {
-            [K in keyof ModelDefinition<M>]: (
-                ModelDefinition<M>[K]['ttype'] extends L
-                    ? K
-                    : never
-            )
-        }[keyof ModelDefinition<M>];
-
-        type ExpandedRelation<M extends Data.ModelName, F extends Data.ArrayyFieldName<M>> = [
+        type _ExpandedRelation<M extends Data.ModelName, F extends Data._ArrayyFieldName<M>> = [
             F,
             Data.FieldName<Data.ModelDefinition<M>[F]['modelName']>[],
         ];
 
-        type ReadField<M extends Data.ModelName> = Data.FieldName<M> | ExpandedRelation<M, Data.ArrayyFieldName<M>>;
+        type ReadField<M extends Data.ModelName> = Data.FieldName<M> | _ExpandedRelation<M, Data._ArrayyFieldName<M>>;
 
         type CriteriaStructure<M extends ModelName> = _Definition._CriteriaStructure.CriteriaStructure<M>;
 
@@ -600,12 +592,12 @@ declare namespace IACeleV2 {
                     modelName: M;
                 };
 
-                interface _FormDeclaration <M extends IACeleV2.Data.ModelName, O extends FieldComponent>{
+                interface _FormDeclaration <M extends Data.ModelName, O extends FieldComponent>{
                     type: 'form';
                     View: (component: React.FC<FormStructure<M, O>>) => (React.ReactNode);
                 };
 
-                type PackedParams <M extends IACeleV2.Data.ModelName, O extends FieldComponent> = (
+                type PackedParams <M extends Data.ModelName, O extends FieldComponent> = (
                     & PackedParams._Base<M>
                     & PackedParams._FormDeclaration<M, O>
                 );
@@ -662,9 +654,9 @@ declare namespace IACeleV2 {
 
         };
 
-        type PackedParams<M extends IACeleV2.Data.ModelName, O extends FieldComponent> = _Definition.PackedParams.PackedParams<M, O>;
+        type PackedParams<M extends Data.ModelName, O extends FieldComponent> = _Definition.PackedParams.PackedParams<M, O>;
 
-        type FormComponents <M extends Data.ModelName, O extends FieldComponent> = _Definition.FormComponents<M, O>
+        type FormComponents <M extends Data.ModelName> = _Definition.FormComponents<M>
 
         type BooleanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooleanOrConditionalStatement<M>;
 
@@ -679,7 +671,7 @@ declare namespace IACeleV2 {
             O extends FieldComponent
         > = _Definition._FieldWidgetDistribution<M, O>;
 
-        interface _FormChildren <M extends IACeleV2.Data.ModelName, O extends FieldComponent>{
+        interface _FormChildren <M extends Data.ModelName, O extends FieldComponent>{
             Page: React.FC<_Definition.FormComponents<M>['Page']>;
             Header: React.FC<_Definition.FormComponents<M>['Header']>;
             Action: React.FC<_Definition.FormComponents<M>['Action']>;
@@ -688,7 +680,7 @@ declare namespace IACeleV2 {
             Field: React.FC<FieldComponentProps<M, O>>;
         };
 
-        interface FormStructure <M extends IACeleV2.Data.ModelName, O extends IACeleV2.View.FieldComponent>{
+        interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent>{
             children: (comps: _FormChildren<M, O>) => (React.ReactNode);
         };
 
@@ -707,7 +699,7 @@ declare namespace IACeleV2 {
 
     declare namespace Context {
 
-        declare namespace View {
+        declare namespace ViewContext {
 
             interface OriginalRecord <M extends Data.ModelName>{
                 recordId: number;
@@ -752,9 +744,9 @@ declare namespace IACeleV2 {
                 requiresField: (fieldName: Data.ReadField<M>) => void;
             };
 
-            interface Config <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{
+            interface Config <M extends Data.ModelName, O extends View.FieldComponent>{
                 type: 'form';
-                View: (component: React.FC<IACeleV2.View.FormStructure<M, O>>) => (React.ReactNode);
+                View: (component: React.FC<View.FormStructure<M, O>>) => (React.ReactNode);
             };
 
             interface RecordEdition <M extends Data.ModelName>{
@@ -776,8 +768,8 @@ declare namespace IACeleV2 {
                 undoNewRecord: () => (void);
             };
 
-            interface Field <M extends Data.ModelName, O extends IACeleV2.View.FieldComponent>{
-                params: IACeleV2.View.FieldComponentProps<M, O>;
+            interface Field <M extends Data.ModelName, O extends View.FieldComponent>{
+                params: View.FieldComponentProps<M, O>;
                 fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
             };
 
@@ -795,8 +787,8 @@ declare namespace IACeleV2 {
 
     declare namespace Resource {
 
-        interface RecordEvaluator <M extends IACeleV2.Data.ModelName> {
-            evaluate: (conditionOrBoolean: boolean | IACeleV2.Data.CriteriaStructure<M>) => boolean;
+        interface RecordEvaluator <M extends Data.ModelName> {
+            evaluate: (conditionOrBoolean: boolean | Data.CriteriaStructure<M>) => boolean;
         };
 
     };

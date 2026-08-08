@@ -17,7 +17,7 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         createMode,
         newRecord,
         undoNewRecord,
-    } = useContext<IACeleV2.Context.View.RecordEdition<M>>(RecordEditionContext);
+    } = useContext<IACeleV2.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
     return {
         recordId,

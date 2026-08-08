@@ -4,7 +4,7 @@ import { useContext } from "react";
 const useRequiresField = <M extends IACeleV2.Data.ModelName>() => {
 
     // Obtención de función de campo requerido
-    const { requiresField } = useContext<IACeleV2.Context.View.RequiresField<M>>(RequiresFieldContext);
+    const { requiresField } = useContext<IACeleV2.Context.ViewContext.RequiresField<M>>(RequiresFieldContext);
 
     return { requiresField };
 };

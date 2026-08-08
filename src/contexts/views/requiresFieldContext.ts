@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const RequiresFieldContext = createContext<IACeleV2.Context.View.RequiresField<any>>({
+const RequiresFieldContext = createContext<IACeleV2.Context.ViewContext.RequiresField<any>>({
     requiresField: () => {},
 });
 

@@ -4,7 +4,7 @@ import { useContext } from "react";
 const useModelMetadata = <M extends IACeleV2.Data.ModelName>() => {
 
     // Obtención del estado desde el contexto
-    const { modelMetadata } = useContext<IACeleV2.Context.View.ModelMetadata<M>>(ModelMetadataContext);
+    const { modelMetadata } = useContext<IACeleV2.Context.ViewContext.ModelMetadata<M>>(ModelMetadataContext);
 
     return { modelMetadata };
 };

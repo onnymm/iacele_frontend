@@ -18,7 +18,7 @@ const useGetModelMetadata = <M extends IACeleV2.Data.ModelName>(
 ) => {
 
     // Obtención del estado y función desde el contexto
-    const { modelsMetadata, getFieldsMetadata } = useContext<IACeleV2.Context.View.ModelsMetadata<M>>(ModelsMetadataContextV2);
+    const { modelsMetadata, getFieldsMetadata } = useContext<IACeleV2.Context.ViewContext.ModelsMetadata<M>>(ModelsMetadataContextV2);
 
     // Efecto para ejecutar la obtención de los metadatos del modelo
     useEffect(

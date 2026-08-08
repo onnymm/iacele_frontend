@@ -37,7 +37,7 @@ const Field = <M extends IACeleV2.Data.ModelName>({
 }: IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>) => {
 
     // Contexto tipado
-    const ClosureFieldContext: Context<IACeleV2.Context.View.Field<M, typeof FieldComponent>> = FieldContext;
+    const ClosureFieldContext: Context<IACeleV2.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
 
     // Obtención de los metadatos del campo
     const { modelMetadata } = useModelMetadata<M>();

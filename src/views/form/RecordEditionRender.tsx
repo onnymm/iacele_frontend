@@ -8,7 +8,7 @@ const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
 }: IACele.Common.SupportsChildren) => {
 
     // Contexto tipado
-    const ClosureRecordContext: Context<IACeleV2.Context.View.RecordEdition<M>> = RecordEditionContext;
+    const ClosureRecordContext: Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
 
     // Obtención de valores desde el hook
     const {

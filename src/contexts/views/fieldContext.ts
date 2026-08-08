@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const FieldContext = createContext<IACeleV2.Context.View.Field<any, any>>({
+const FieldContext = createContext<IACeleV2.Context.ViewContext.Field<any, any>>({
     params: {
         name: '',
     },

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const RecordInViewContext = createContext<IACeleV2.Context.View.RecordInView<any>>({
+const RecordInViewContext = createContext<IACeleV2.Context.ViewContext.RecordInView<any>>({
     recordInView: {},
     updateRecordInViewField: () => {},
     undoChangesInRecordInView: () => {},

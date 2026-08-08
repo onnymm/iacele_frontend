@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const RecordEditionContext = createContext<IACeleV2.Context.View.RecordEdition<any>>({
+const RecordEditionContext = createContext<IACeleV2.Context.ViewContext.RecordEdition<any>>({
     recordId: 0,
     recordInView: {},
     existingChanges: false,

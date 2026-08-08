@@ -38,7 +38,7 @@ const FormComponent = {
 
     Header: <M extends IACeleV2.Data.ModelName>({
         children,
-    }: IACeleV2.View.FormComponents<M, typeof FieldComponent>['Header']) => {
+    }: IACeleV2.View.FormComponents<M>['Header']) => {
 
         // Obtención de función para renderizar los controles en el encabezado de la app
         const { renderHeaderControls } = useAppHeaderControls();
@@ -51,7 +51,7 @@ const FormComponent = {
         label,
         decoration = 'default',
         invisible,
-    }: IACeleV2.View.FormComponents<M, typeof FieldComponent>['Action']) => {
+    }: IACeleV2.View.FormComponents<M>['Action']) => {
 
         // Obtención de instancia de API y estado de carga de la app
         const { api, appLoading } = useAPI();
@@ -114,7 +114,7 @@ const FormComponent = {
         label,
         children,
         invisible,
-    }: IACeleV2.View.FormComponents<M, typeof FieldComponent>['Group']) => {
+    }: IACeleV2.View.FormComponents<M>['Group']) => {
 
         return (
             <InvisibleComponent invisible={invisible}>

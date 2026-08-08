@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const EditableRecordContext = createContext<IACeleV2.Context.View.EditableRecord<any>>({
+const EditableRecordContext = createContext<IACeleV2.Context.ViewContext.EditableRecord<any>>({
     editableRecord: {},
     undoChangesInEditableRecord: () => {},
     updateEditableRecordField: () => {},
