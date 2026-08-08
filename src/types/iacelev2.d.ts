@@ -90,6 +90,14 @@ declare namespace IACeleV2 {
                         & _RequiresRecordIDs
                     );
 
+                    type Tree<M extends Data.ModelName> = (
+                        & _RequiresModelName<M>
+                        & _SupportsSearchCriteria<M>
+                        & _SupportsFieldsSelection<M>
+                        & _SupportsSorting<M>
+                        & _SupportsSlicing
+                    );
+
                     type FieldsMetadata<M extends Data.ModelName> = _RequiresModelName<M>;
 
                 };
@@ -107,6 +115,8 @@ declare namespace IACeleV2 {
             type Delete<M extends Data.ModelName> = _Definition.Base.Delete<M>;
 
             type Form<M extends Data.ModelName> = _Definition.Base.Form<M>;
+
+            type Tree<M extends Data.ModelName> = _Definition.Base.Tree<M>;
 
             type FieldsMetadata<M extends Data.ModelName> = _Definition.Base.FieldsMetadata<M>;
 
@@ -129,6 +139,12 @@ declare namespace IACeleV2 {
             interface Form<M extends Data.ModelName> {
                 'name': string;
                 'record': Data.RecordFromDatabase<M>;
+            };
+
+            interface Tree<M extends Data.ModelName> {
+                'count': number;
+                'data': Data.RecordFromDatabase<M>[];
+                'model_label': string;
             };
 
         };

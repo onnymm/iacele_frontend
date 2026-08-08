@@ -314,6 +314,24 @@ class Client {
         return this.execute<IACele.API.Response.Tree<M>>(apiCall, () => {});
     };
 
+    treeV2 = async <M extends IACeleV2.Data.ModelName>(
+        data: IACeleV2.API.Request.Tree<M>,
+    ): Promise<IACeleV2.API.Response.Tree<M>> => {
+
+        // Función de búsqueda y lectura para árbol
+        const apiCall = async (): Promise<IACeleV2.API.Response.Tree<M>> => {
+            // Obtención de los datos
+            const response = this.post<IACeleV2.API.Request.Tree<M>, IACeleV2.API.Response.Tree<M>>(
+                PATH.FRONTEND.TREE,
+                data,
+            );
+
+            return response;
+        };
+
+        return this.execute<IACeleV2.API.Response.Tree<M>>(apiCall, () => {});
+    };
+
     form = async <M extends IACele.Data.ModelName>(
         data: IACele.API.Request.Form<M>,
     ): Promise<IACele.API.Response.Form<M>> => {

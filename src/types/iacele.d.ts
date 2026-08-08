@@ -664,6 +664,10 @@ declare namespace IACele {
                 params: IACele.API.Request.Tree<M>,
             ) => Promise<IACele.API.Response.Tree<M>>;
 
+            treeV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.Tree<M>,
+            ) => Promise<IACeleV2.API.Response.Tree<M>>;
+
             form: <M extends IACele.Data.ModelName>(
                 params: IACele.API.Request.Form<M>,
             ) => Promise<IACele.API.Response.Form<M>>;
