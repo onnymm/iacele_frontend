@@ -1,9 +1,10 @@
 import useRequiresField from "@/hooks/views/useRequiresField";
 import { useEffect } from "react";
+import type FieldComponent from "../FieldComponent";
 
 const FormViewInspector = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACeleV2.View.FormStructure<M>) => {
+}: IACeleV2.View.FormStructure<M, typeof FieldComponent>) => {
 
     return children({
         Field: InspectView.Field,
@@ -29,7 +30,7 @@ const InspectView = {
 
     Field: <M extends IACeleV2.Data.ModelName>({
         name,
-    }: IACeleV2.View.FormComponents<M>['Field']) => {
+    }: IACeleV2.View.FormComponents<M, typeof FieldComponent>['Field']) => {
         // Obtención de función de campo requerido
         const { requiresField } = useRequiresField<M>();
         // Registro de campo requerido
