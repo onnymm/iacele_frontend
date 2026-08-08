@@ -605,17 +605,21 @@ declare namespace IACeleV2 {
             };
 
             type ViewToModelName = {
-                'base.users.update.password.form': 'base.users.update.password',
+                'base.users.update.password.form': 'base.users.update.password';
+                'assistance.registry.event.form': 'assistance.registry.event';
+                'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
             };
 
             type BooleanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
 
-            interface _Wizard <M extends Data.ModelName, V extends keyof ViewToModelName>{
-                view: V;
-                label: string;
-                decoration?: UI.Variant;
-                contextData?: (ctx: Data.RecordForView<M>) => (Partial<Data.RecordForView<ViewToModelName[V]>>);
-            };
+            type _Wizard <M extends Data.ModelName> = {
+                [V in keyof ViewToModelName]: {
+                    view: V;
+                    label: string;
+                    decoration?: UI.Variant;
+                    contextData?: (ctx: Data.RecordForView<M>) => (Partial<Data.RecordForView<ViewToModelName[V]>>);
+                }
+            }[keyof ViewToModelName];
 
             interface FormComponents <M extends Data.ModelName>{
                 'Page': {
@@ -638,7 +642,7 @@ declare namespace IACeleV2 {
                     label?: string;
                     invisible?: BooleanOrConditionalStatement<M>;
                 };
-                'Wizard': _Wizard<M, keyof ViewToModelName>;
+                'Wizard': _Wizard<M>;
             };
 
             type _FieldWidget<
