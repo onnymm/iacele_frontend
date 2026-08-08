@@ -4,11 +4,19 @@ import useDataView from "@/hooks/routes/useDataView";
 import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import FieldComponent from "../FieldComponent";
 import InvisibleComponent from "./ui/InvisibleComponent";
 import Field from "./field/Field";
 import RecordEditionRender from "./RecordEditionRender";
+import ViewDataContext from "@/contexts/routes/viewDataContext";
+import ModelDataProvider from "@/providers/views/ModelDataProvider";
+import ViewMode from "../ViewMode";
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import ContextDataContext from "@/contexts/views/contextDataContext";
+import { Spinner } from "@/components/ui/spinner";
+import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
+import EMPTY_CALLBACK from "@/constants/app/callbacks";
 
 const Form = <M extends IACeleV2.Data.ModelName>({
     children,
@@ -29,8 +37,11 @@ const FormComponent = {
         children,
     }: IACele.Common.SupportsChildren) => {
 
+        // Obtención del tipo de visualización del formulario
+        const { display } = useDataView();
+
         return (
-            <div className="flex flex-col gap-2 p-2 w-full h-max min-h-full max-h-full">
+            <div className={`${display === 'screen' ? 'p-2' : ''} flex flex-col gap-2 w-full h-max min-h-full max-h-full`}>
                 {children}
             </div>
         );
@@ -91,6 +102,84 @@ const FormComponent = {
                     {label}
                 </Button>
             </InvisibleComponent>
+        );
+    },
+
+    Wizard: <M extends IACeleV2.Data.ModelName>({
+        view,
+        label,
+        contextData,
+        decoration,
+    }: IACeleV2.View.FormComponents<M>['Wizard']) => {
+
+        // Obtención de parámetros desde el contexto de formulario
+        const { recordInView, reload } = useRecordEditionParams<M>();
+        // Obtención de estado de carga de la aplicación
+        const { appLoading } = useAPI();
+
+        // Construcción de objeto de contexto para establecer valores iniciales en el registro
+        const contextDataForRecord = useMemo<Partial<IACeleV2.Data.RecordForView<IACeleV2.Data.ModelName>>>(
+            () => (
+                contextData === undefined
+                    ? {}
+                    : contextData(recordInView)
+            ), [contextData, recordInView]
+        );
+
+        // Inicialización de estado de función para ejecutar en el botón de aceptar
+        const [ executeAccept, setExecuteAccept ] = useState<(() => (Promise<number | true>)) | null>(null);
+
+        // Inicialización de estado de modal abierto
+        const [ isOpen, setIsOpen ] = useState<boolean>(false);
+
+        // Función de ejecución tras creación del registro
+        const onCreate = useCallback(
+            () => {
+                // Se cierra el modal
+                setIsOpen(false);
+                // Se recargan los datos
+                reload();
+            }, [reload]
+        );
+
+        return (
+            <ViewDataContext.Provider value={{
+                viewDataName: view,
+                recordId: 0,
+                display: 'window',
+                onCreate,
+                onUpdate: EMPTY_CALLBACK.SYNC,
+            }}>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                    <DialogTrigger asChild>
+                        <Button className="cursor-pointer" variant={decoration}>{label}</Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
+                        <DialogTitle>{label}</DialogTitle>
+
+                        <FormExternalButtonsContext.Provider value={{ setSaveChanges: setExecuteAccept }}>
+                            <ContextDataContext.Provider value={{ contextData: contextDataForRecord as any }}>
+                                <ModelDataProvider>
+                                    <ViewMode />
+                                </ModelDataProvider>
+                            </ContextDataContext.Provider>
+                        </FormExternalButtonsContext.Provider>
+
+                        <DialogFooter>
+                            {executeAccept !== null &&
+                                <Button variant='success' onClick={executeAccept} className="w-48">
+                                    {
+                                        appLoading
+                                            ? <Spinner />
+                                            : 'Aceptar'
+                                    }
+                                </Button>
+                            }
+                        </DialogFooter>
+
+                    </DialogContent>
+                </Dialog>
+            </ViewDataContext.Provider>
         );
     },
 

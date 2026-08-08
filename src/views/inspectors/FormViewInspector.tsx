@@ -10,6 +10,7 @@ const FormViewInspector = <M extends IACeleV2.Data.ModelName>({
         Field: InspectView.Field,
         Header: InspectView.Header,
         Action: InspectView.Action,
+        Wizard: InspectView.Wizard,
         Page: InspectView.Page,
         Sheet: InspectView.Sheet,
         Group: InspectView.Group,
@@ -23,6 +24,8 @@ const InspectView = {
     Header: ({ children }: IACele.Common.SupportsChildren) => (children),
 
     Action: () => (null),
+
+    Wizard: () => (null),
 
     Sheet: ({ children }: IACele.Common.SupportsChildren) => (children),
 

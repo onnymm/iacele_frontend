@@ -604,7 +604,18 @@ declare namespace IACeleV2 {
 
             };
 
+            type ViewToModelName = {
+                'base.users.update.password.form': 'base.users.update.password',
+            };
+
             type BooleanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
+
+            interface _Wizard <M extends Data.ModelName, V extends keyof ViewToModelName>{
+                view: V;
+                label: string;
+                decoration?: UI.Variant;
+                contextData?: (ctx: Data.RecordForView<M>) => (Partial<Data.RecordForView<ViewToModelName[V]>>);
+            };
 
             interface FormComponents <M extends Data.ModelName>{
                 'Page': {
@@ -627,6 +638,7 @@ declare namespace IACeleV2 {
                     label?: string;
                     invisible?: BooleanOrConditionalStatement<M>;
                 };
+                'Wizard': _Wizard<M, keyof ViewToModelName>;
             };
 
             type _FieldWidget<
@@ -678,6 +690,7 @@ declare namespace IACeleV2 {
             Sheet: React.FC<_Definition.FormComponents<M>['Sheet']>;
             Group: React.FC<_Definition.FormComponents<M>['Group']>;
             Field: React.FC<FieldComponentProps<M, O>>;
+            Wizard: React.FC<_Definition.FormComponents<M>['Wizard']>;
         };
 
         interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent>{
@@ -771,6 +784,10 @@ declare namespace IACeleV2 {
             interface Field <M extends Data.ModelName, O extends View.FieldComponent>{
                 params: View.FieldComponentProps<M, O>;
                 fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
+            };
+
+            interface ContextData <M extends Data.ModelName>{
+                contextData: IACeleV2.Data.RecordForView<M>;
             };
 
         };

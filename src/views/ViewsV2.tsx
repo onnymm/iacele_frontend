@@ -46,9 +46,10 @@ const VIEW_V2 = {
         type: 'form',
         View: (Form) => (
             <Form>
-                {({ Page, Header, Action, Sheet, Group, Field }) => (
+                {({ Page, Header, Wizard, Action, Sheet, Group, Field }) => (
                     <Page>
                         <Header>
+                            <Wizard view="base.users.update.password.form" label="Cambiar contraseña" />
                             <Action name="deactivate" label="Desactivar usuario" />
                         </Header>
                         <Sheet>
@@ -65,6 +66,28 @@ const VIEW_V2 = {
                                 <Field name="role_ids" readonly domain={[['group_ids', '=', '']]} />
                                 <Field name="create_uid"/>
                                 <Field name="create_date" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        ),
+    }),
+
+    'base.users.update.password.form': packedView({
+        modelName: 'base.users.update.password',
+        type: 'form',
+        View: (Form) => (
+            <Form>
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Contraseña actual">
+                                <Field name="current_password" widget="password" />
+                            </Group>
+                            <Group label="Nueva contraseña">
+                                <Field name="new_password" widget="password" />
+                                <Field name="confirm_password" widget="password" />
                             </Group>
                         </Sheet>
                     </Page>

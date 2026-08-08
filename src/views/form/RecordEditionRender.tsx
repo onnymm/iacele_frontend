@@ -1,7 +1,9 @@
 import useRecordEdition from "@/hooks/views/useRecordEdition";
 import ScreenModeControls from "./ui/ScreenModeControls";
-import type { Context } from "react";
+import { useContext, useEffect, type Context } from "react";
 import RecordEditionContext from "@/contexts/views/recordEditionContext";
+import useDataView from "@/hooks/routes/useDataView";
+import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
 
 const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
     children,
@@ -9,6 +11,10 @@ const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
 
     // Contexto tipado
     const ClosureRecordContext: Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
+    // Obtención de modo de visualización del formulario
+    const { display } = useDataView();
+
+    const { setSaveChanges } = useContext(FormExternalButtonsContext);
 
     // Obtención de valores desde el hook
     const {
@@ -27,6 +33,12 @@ const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
         undoNewRecord,
     } = useRecordEdition<M>();
 
+    useEffect(
+        () => {
+            setSaveChanges(() => (saveChanges))
+        }, [saveChanges, setSaveChanges]
+    );
+
     return (
         <ClosureRecordContext.Provider value={{
             recordId,
@@ -44,7 +56,9 @@ const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
             undoNewRecord,
         }}>
             {children}
-            <ScreenModeControls />
+            {display === 'screen' &&
+                <ScreenModeControls />
+            }
         </ClosureRecordContext.Provider>
     );
 };

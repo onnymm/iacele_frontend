@@ -1,3 +1,4 @@
+import EMPTY_CALLBACK from "@/constants/app/callbacks";
 import ModelNameContext from "@/contexts/views/modelNameContext";
 import OriginalRecordContext from "@/contexts/views/originalRecordContext";
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
@@ -127,13 +128,11 @@ const InitializeRecordProvider = <M extends IACeleV2.Data.ModelName>({
                 recordId: 0,
                 originalRecord: emptyRecord,
                 updateOriginalRecord: createRecord,
-                deleteOriginalRecord: async () => {},
-                reload: () => {},
+                deleteOriginalRecord: EMPTY_CALLBACK.ASYNC,
+                reload: EMPTY_CALLBACK.SYNC,
             }}>
                 {children}
             </OriginalRecordContext.Provider>
         );
     };
 };
-
-

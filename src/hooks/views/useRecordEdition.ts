@@ -1,10 +1,12 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import useEditableRecord from "./useEditableRecord";
 import useOriginalRecord from "./useOriginalRecord"
 import useRecordInView from "./useRecordInView";
 import RecordEvaluator from "@/core/ttypesV2";
 import useModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
+import useDataContext from "./useDataContext";
+import EMPTY_CALLBACK from "@/constants/app/callbacks";
 
 const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
 
@@ -12,6 +14,8 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
     const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
     const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, saveChanges, executeAction, createMode } = useEditableRecord<M>();
+    // Obtención de datos de contexto
+    const { contextData } = useDataContext<M>();
 
     // Obtención de función para crear registro
     const { newRecord, undoNewRecord } = useDataView();
@@ -36,7 +40,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     // Función para deshacer cambios
     const undoChanges = useCallback(
         () => {
-            
+
             // Se deshacen cambios en el registro de vista
             undoChangesInRecordInView();
             // Se deshacen cambios en el registro de edición
@@ -48,6 +52,20 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     const evaluator = useMemo(
         () => (new RecordEvaluator<M>(recordInView, modelMetadata)),
         [modelMetadata, recordInView]
+    );
+
+    useEffect(
+        () => {
+            // Obtención de los nombres de campos de datos del contexto
+            const fieldNames = Object.keys(contextData) as IACeleV2.Data.FieldName<M>[];
+            // Iteración por los nombres de campo
+            fieldNames.forEach(
+                (fieldName) => {
+                    // Actualización de valores del registro actual
+                    updateRecordField(fieldName, contextData[fieldName]);
+                }
+            );
+        }, [contextData, updateRecordField]
     );
 
     return {
@@ -62,8 +80,8 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
         reload,
         evaluator,
         createMode,
-        newRecord: newRecord ?? (() => {}),
-        undoNewRecord: undoNewRecord ?? (() => {}),
+        newRecord: newRecord ?? (EMPTY_CALLBACK.SYNC),
+        undoNewRecord: undoNewRecord ?? (EMPTY_CALLBACK.SYNC),
     };
 };
 
