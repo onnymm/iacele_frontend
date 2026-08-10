@@ -1,5 +1,5 @@
 import Form from "./formV0/Form";
-import Tree from "./tree/Tree";
+import Tree from "./treeV0/Tree";
 
 interface PackedViewParams <M extends IACele.Data.ModelName>{
     modelName: M,
