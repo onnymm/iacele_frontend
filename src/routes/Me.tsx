@@ -1,16 +1,10 @@
 import EMPTY_CALLBACK from "@/constants/app/callbacks";
 import ViewDataContext from "@/contexts/routes/viewDataContext"
 import useUserData from "@/hooks/app/useUserData";
-import VIEW from "@/views/Views";
-import { useMemo } from "react";
+import ModelDataProvider from "@/providers/views/ModelDataProvider";
+import ViewMode from "@/views/ViewMode";
 
 const Me = () => {
-
-    // Obtención de la vista a renderizar
-    const View = useMemo(
-        () => (VIEW['base.users.me.form']),
-        [],
-    );
 
     // Obtención de los datos de usuario
     const { userData } = useUserData();
@@ -23,7 +17,9 @@ const Me = () => {
             onCreate: EMPTY_CALLBACK.SYNC,
             onUpdate: EMPTY_CALLBACK.SYNC,
         }}>
-            <View.View />
+            <ModelDataProvider>
+                <ViewMode />
+            </ModelDataProvider>
         </ViewDataContext.Provider>
     );
 };

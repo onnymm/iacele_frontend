@@ -32,6 +32,7 @@ const FieldLabel = <M extends IACeleV2.Data.ModelName>() => {
 const Field = <M extends IACeleV2.Data.ModelName>({
     name,
     invisible,
+    readonly,
     domain = [],
     widget = 'default',
 }: IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>) => {
@@ -57,7 +58,7 @@ const Field = <M extends IACeleV2.Data.ModelName>({
     return (
         <InvisibleComponent invisible={invisible}>
             <ClosureFieldContext.Provider value={{
-                params: { name, domain, invisible, widget } as IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>,
+                params: { name, domain, invisible, widget, readonly } as IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 <FieldLabel />

@@ -1,11 +1,12 @@
 import FieldContext from "@/contexts/views/fieldContext";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import useRecordEditionParams from "./useRecordEditionParams";
 
 const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
 
     // Obtención de los parámetros del campo
     const { params, fieldMetadata } = useContext<IACeleV2.Context.ViewContext.Field<M, any>>(FieldContext);
+
     // Obtención de los parámetros del registro
     const {
         recordId,
@@ -19,6 +20,20 @@ const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
         evaluator,
     } = useRecordEditionParams<M>();
 
+    // Evaluación de parámetro de solo lectura
+    const isReadonly = useMemo(
+        () => (
+            evaluator.evaluate(
+                (
+                    params.readonly
+                    || fieldMetadata.readonly
+                    || fieldMetadata.is_computed
+                ) ?? false
+            )
+        ),
+        [evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly]
+    );
+
     return {
         params,
         fieldMetadata,
@@ -31,6 +46,7 @@ const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
         deleteRecord,
         reload,
         evaluator,
+        isReadonly,
     };
 };
 

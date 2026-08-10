@@ -742,6 +742,11 @@ declare namespace IACeleV2 {
                 reload: () => void;
             };
 
+            interface OriginalRecords <M extends Data.ModelName>{
+                originalRecords: Data.RecordFromDatabase<M>[];
+                reload: () => (void);
+            };
+
             interface RecordInView <M extends Data.ModelName>{
                 recordInView: Data.RecordForView<M>;
                 updateRecordInViewField: <F extends Data.FieldName<M>>(

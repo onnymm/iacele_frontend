@@ -22,6 +22,7 @@ const VIEW_V2 = {
                                 <Field name="end_time" />
                             </Group>
                             <Group label="Detalles">
+                                <Field name="date" readonly />
                                 <Field name="weekday" />
                                 <Field name="allowed_start" />
                                 <Field name="allowed_end" />
@@ -136,8 +137,8 @@ const VIEW_V2 = {
                 {({ Page, Sheet, Group, Field }) => (
                     <Page>
                         <Sheet>
-                            <Field name="id" invisible />
                             <Group label="Personalizar">
+                                <Field name="id" />
                                 <Field name="profile_picture" widget="picture" />
                             </Group>
                             <Group label="General">
@@ -145,9 +146,9 @@ const VIEW_V2 = {
                                 <Field name="login" />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" readonly />
+                                <Field name="active" readonly widget="switch" />
                                 <Field name="role_ids" readonly />
-                                <Field name="create_uid"/>
+                                <Field name="create_uid" />
                                 <Field name="create_date" />
                             </Group>
                         </Sheet>
@@ -169,7 +170,7 @@ const VIEW_V2 = {
                         </Header>
                         <Sheet>
                             <Group label="Personalizar">
-                                <Field name="profile_picture" widget="picture" />
+                                <Field name="profile_picture" widget="picture" readonly />
                             </Group>
                             <Group label="General">
                                 <Field name="name" />
