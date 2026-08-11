@@ -171,6 +171,23 @@ const VIEW_V2 = {
         ),
     }),
 
+    'base.users.tree': packedView({
+        modelName: 'base.users',
+        type: 'tree',
+        View: (Tree) => (
+            <Tree open="base.users.form">
+                {({ Page, Field }) => (
+                    <Page>
+                        <Field name="profile_picture" widget="avatar" />
+                        <Field name="name" />
+                        <Field name="login" widget="badge" />
+                        <Field name="role_ids" />
+                    </Page>
+                )}
+            </Tree>
+        )
+    }),
+
     'base.users.form': packedView({
         modelName: 'base.users',
         type: 'form',

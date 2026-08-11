@@ -483,7 +483,27 @@ const FieldWidget = {
                     <Input type="file" onChange={(e) => setValue(e.target.files)} id="file-input" accept=".jpg, .jpeg" className="hidden" />
                 </div>
             );
-        }
+        },
+
+        Avatar: <M extends IACeleV2.Data.ModelName>() => {
+            // Inicialización de estados y funciones para edición
+            const { value } = TTypeInterface.useFile<M>();
+
+            return (
+                <div className="flex justify-center md:justify-end w-full">
+                    <div className="relative size-8">
+                        {value === 'null' &&
+                            <div className="absolute flex justify-center items-center bg-primary rounded-full size-full">
+                                <Camera className="stroke-foreground size-[62.5%]" />
+                            </div>
+                        }
+                        {value !== 'null' &&
+                            <img className="absolute rounded-full size-full" src={`data:image/jpeg;base64,${value}`} alt="" />
+                        }
+                    </div>
+                </div>
+            );
+        },
 
     },
 
@@ -694,6 +714,7 @@ const FieldComponent = {
     'file': {
         'default': FieldWidget['file'].ProfilePicture,
         'picture': FieldWidget['file'].ProfilePicture,
+        'avatar': FieldWidget['file'].Avatar,
     },
 
     'many2one': {
