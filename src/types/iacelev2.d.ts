@@ -1,5 +1,49 @@
 declare namespace IACeleV2 {
 
+    declare namespace Common {
+
+        interface SupportsChildren {
+            children: React.ReactNode;
+        };
+
+        interface SupportsClasName {
+            className: string;
+        };
+
+    };
+
+    declare namespace App {
+
+        interface Authentication {
+            'access_token': string;
+            'token_type': 'bearer';
+        };
+
+        interface Me {
+            'id': number;
+            'name': string;
+            'active': boolean;
+            'login': string;
+            'profile_picture': string | null;
+            'role_ids': {
+                'id': number;
+                'name': string;
+                'label': string;
+                'group_ids': {
+                    'id': number;
+                    'name': string;
+                    'label': string;
+                }[];
+            }[];
+        };
+
+        interface PageName {
+            pageName: string | null;
+            setPageName: React.Dispatch<React.SetStateAction<string | null>>;
+        };
+
+    };
+
     declare namespace API {
 
         declare namespace Request {
@@ -145,6 +189,45 @@ declare namespace IACeleV2 {
                 'count': number;
                 'data': Data.RecordFromDatabase<M>[];
                 'model_label': string;
+            };
+
+        };
+
+        declare namespace Websocket {
+
+            declare namespace _Definition {
+
+                type _Message = (
+                    | ['field.created', {}]
+                    | ['field.deleted', {}]
+                    | ['model.created', {'model': Data.ModelName}]
+                    | ['model.deleted', {'model': Data.ModelName}]
+                    | ['password.changed']
+                    | ['profile.update', {'detail': string}]
+                    | ['validation.failed', {'detail': string}]
+                    | ['verification.failed', {'detail': string}]
+                );
+
+                type Message = {
+                    [I in _Message as I[0]]: {
+                        'event': I[0];
+                        'payload': I[1];
+                    };
+                };
+
+            };
+
+            type message = _Definition.Message[keyof _Definition.Message];
+
+            type MessageName = keyof _Definition.Message;
+
+            interface EventClientConfig {
+                onopen: () => (void);
+                onclose: () => (void);
+                defaultNotification: (
+                    eventName: message['event'],
+                    payload: message['payload'],
+                ) => (void);
             };
 
         };
@@ -596,6 +679,51 @@ declare namespace IACeleV2 {
 
         type Variant = 'info' | 'primary' | 'success' | 'warning' | 'danger' | 'default';
 
+        declare namespace Alert {
+
+            declare namespace _Definition {
+
+                interface AlertDetail {
+                    icon: React.FC<Common.SupportsClasName>;
+                    variant: Variant;
+                    message: string;
+                    display: true;
+                };
+
+                interface EmptyAlertDetail {
+                    icon: null;
+                    variant: undefined;
+                    message: undefined;
+                    display: false;
+                };
+
+                interface DetailBody {
+                    icon: React.FC<Common.SupportsClasName>;
+                    variant: Variant;
+                };
+
+                type AlertOptions<O extends string> = {
+                    [K in O]: DetailBody;
+                };
+
+            };
+            
+            type Options<O extends string> = _Definition.AlertOptions<O>;
+            
+            type Detail = _Definition.AlertDetail;
+            
+            type EmptyDetail = _Definition.EmptyAlertDetail;
+
+            interface Component {
+                detail: Detail | EmptyDetail;
+                onClose?: () => void;
+                canClose?: boolean;
+            };
+
+        };
+
+        type DisplayOption = 'screen' | 'window';
+
     };
 
     declare namespace View {
@@ -903,17 +1031,96 @@ declare namespace IACeleV2 {
 
         };
 
+        interface API {
+            api: Resource.Client;
+            appLoading: boolean;
+            websocketConnected: boolean;
+            eventClient: Resource.SyncClient | null;
+        };
+
+        interface UserToken {
+            userToken: string | null;
+            setUserToken: (value: string) => void;
+            removeUserToken: () => void;
+        };
+
+        interface UserData {
+            userData: App.Me;
+            setUserData: React.Dispatch<React.SetStateAction<App.Me>>
+            removeUserData: () => void;
+        };
+
     };
 
     declare namespace Provider {
 
-        interface EmptyRecordParams <M extends Data.ModelName> extends IACele.Common.SupportsChildren{
+        interface EmptyRecordParams <M extends Data.ModelName> extends IACeleV2.Common.SupportsChildren{
             fieldsToRead: React.RefObject<Data.ReadField<M>[]>;
         };
 
     };
 
     declare namespace Resource {
+
+        interface SyncClient {
+            on: (
+                name: string,
+                callback: () => void,
+            ) => (() => (void));
+
+            close: () => void;
+        };
+
+        interface Client {
+            login: (
+                username: string,
+                password: string,
+                onError: (e: any) => void,
+            ) => Promise<void>;
+
+            me: () => Promise<void>;
+
+            fieldsMetadataV2: <M extends IACeleV2.Data.ModelName>(
+                params: IACeleV2.API.Request.FieldsMetadata<M>,
+            ) => Promise<IACeleV2.API.Response.FieldsMetadata<M>>;
+
+            actionV2: <M extends IACeleV2.Data.ModelName>(
+                params: IACeleV2.API.Request.Action<M>,
+            ) => Promise<true>;
+
+            createV2: <M extends IACeleV2.Data.ModelName>(
+                data: IACeleV2.API.Request.Create<M>,
+            ) => Promise<IACeleV2.API.Response.Create>;
+
+            searchReadV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.SearchRead<M>,
+            ) => Promise<IACeleV2.API.Response.SearchRead<M>>;
+
+            updateV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.Update<M>,
+            ) => Promise<IACeleV2.API.Response.Update>;
+
+            deleteV2: <M extends IACeleV2.Data.ModelName>(
+                data: IACeleV2.API.Request.Delete<M>,
+            ) => Promise<true>;
+
+            treeV2: <M extends keyof IACeleV2.Data.Model>(
+                data: IACeleV2.API.Request.Tree<M>,
+            ) => Promise<IACeleV2.API.Response.Tree<M>>;
+
+            formv2: <M extends IACeleV2.Data.ModelName>(
+                params: IACeleV2.API.Request.Form<M>,
+            ) => Promise<IACeleV2.API.Response.Form__<M>>;
+
+        };
+
+        interface UserSession {
+            setUserToken: (token: string) => void;
+            removeUserToken: () => void;
+            setAppLoading: (loading: boolean) => void;
+            setUserData: (data: App.Me) => void;
+            removeUserData: () => void;
+        };
 
         interface RecordEvaluator <M extends Data.ModelName> {
             evaluate: (conditionOrBoolean: boolean | Data.CriteriaStructure<M>) => boolean;

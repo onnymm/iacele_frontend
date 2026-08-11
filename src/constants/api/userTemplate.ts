@@ -1,4 +1,4 @@
-const userTemplate: IACele.App.Me = {
+const userTemplate: IACeleV2.App.Me = {
     'id': 0,
     'name': '',
     'active': false,

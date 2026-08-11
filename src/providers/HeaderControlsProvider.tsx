@@ -3,7 +3,7 @@ import RenderHeaderControlsContext from "@/contexts/ui/renderHeaderControlsConte
 import { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 
-const HeaderControlsProvider: React.FC<IACele.Common.SupportsChildren> = ({
+const HeaderControlsProvider: React.FC<IACeleV2.Common.SupportsChildren> = ({
     children,
 }) => {
 

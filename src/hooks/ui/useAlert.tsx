@@ -7,10 +7,10 @@ const EMPTY_DETAIL = {
     display: false,
 } as const;
 
-const useAlert = <O extends string>(options: IACele.UI.Alert.Options<O>) => {
+const useAlert = <O extends string>(options: IACeleV2.UI.Alert.Options<O>) => {
 
     // Inicialización de estado de detalle del componente
-    const [ detail, setDetail ] = useState<IACele.UI.Alert.Detail | IACele.UI.Alert.EmptyDetail>(EMPTY_DETAIL);
+    const [ detail, setDetail ] = useState<IACeleV2.UI.Alert.Detail | IACeleV2.UI.Alert.EmptyDetail>(EMPTY_DETAIL);
 
     // Función para establecer algún estado de las opciones
     const setAlertDetail = useCallback(

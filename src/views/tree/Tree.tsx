@@ -132,7 +132,7 @@ const TreeComponent = {
 
     Rows: <M extends IACeleV2.Data.ModelName>({
         children,
-    }: IACele.Common.SupportsChildren) => {
+    }: IACeleV2.Common.SupportsChildren) => {
 
         // Obtención de los registros originales desde el contexto
         const { originalRecords } = useOriginalRecords<M>();
@@ -162,7 +162,7 @@ const TreeComponent = {
 
     RecordRowProvider: <M extends IACeleV2.Data.ModelName>({
         children,
-    }: IACele.Common.SupportsChildren) => {
+    }: IACeleV2.Common.SupportsChildren) => {
 
         // Contexto tipado
         const ClosureRecordContext: React.Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;

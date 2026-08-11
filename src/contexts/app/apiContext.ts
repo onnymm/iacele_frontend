@@ -11,7 +11,7 @@ const sessionTemplate = new UserSession(
     () => null,
 );
 
-const APIContext = createContext<IACele.App.Context.API>({
+const APIContext = createContext<IACeleV2.Context.API>({
     api: new Client(sessionTemplate),
     appLoading: false,
     websocketConnected: false,

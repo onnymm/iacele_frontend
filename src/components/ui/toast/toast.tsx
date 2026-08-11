@@ -5,11 +5,11 @@ import { X, type LucideProps } from "lucide-react";
 interface ToastProps {
     title?: string;
     content: string;
-    type?: IACele.UI.Variant | 'default';
+    type?: IACeleV2.UI.Variant | 'default';
     icon?: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 };
 
-const borderColor: Record<IACele.UI.Variant | 'default', string> = {
+const borderColor: Record<IACeleV2.UI.Variant | 'default', string> = {
     'default': 'border-gray-500/50',
     'info': 'border-info',
     'primary': 'border-primary',
@@ -18,7 +18,7 @@ const borderColor: Record<IACele.UI.Variant | 'default', string> = {
     'danger': 'border-danger',
 };
 
-const backgroundColor: Record<IACele.UI.Variant | 'default', string> = {
+const backgroundColor: Record<IACeleV2.UI.Variant | 'default', string> = {
     'default': 'bg-card/50',
     'info': 'bg-info/50',
     'primary': 'bg-primary/50',

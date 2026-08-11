@@ -2,7 +2,7 @@ import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import { useMemo } from "react";
 
 type InvisibleComponentParams <M extends IACeleV2.Data.ModelName> = (
-    & IACele.Common.SupportsChildren
+    & IACeleV2.Common.SupportsChildren
     & IACeleV2.View.SupportsInvisibleParams<M>
 );
 

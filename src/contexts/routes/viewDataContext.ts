@@ -12,7 +12,7 @@ interface OnUpdateParams {
 interface ViewDataContextParams {
     viewDataName: keyof typeof VIEW_V2;
     recordId: number;
-    display: IACele.UI.View.DisplayOption;
+    display: IACeleV2.UI.DisplayOption;
     onCreate: (params: OnCreateParams) => (void);
     onUpdate: (params: OnUpdateParams) => (void);
     newRecord?: () => (void);

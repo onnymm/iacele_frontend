@@ -5,7 +5,7 @@ import CollectFormRequiredFields from "@/views/inspectors/CollectFormRequiredFie
 
 const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     const {
         dataFromAPI,

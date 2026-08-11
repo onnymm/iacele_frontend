@@ -1,4 +1,4 @@
-interface GroupParams extends IACele.Common.SupportsChildren {
+interface GroupParams extends IACeleV2.Common.SupportsChildren {
     title?: string;
 };
 

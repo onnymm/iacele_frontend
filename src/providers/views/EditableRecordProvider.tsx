@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 
 const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención de la instancia de conexión a la API
     const { api } = useAPI();

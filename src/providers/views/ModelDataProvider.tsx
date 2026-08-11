@@ -8,7 +8,7 @@ import { useMemo } from "react";
 
 const ModelDataProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención del nombre de la vista
     const { viewDataName } = useDataView();
@@ -28,7 +28,7 @@ const ModelDataProvider = <M extends IACeleV2.Data.ModelName>({
             <ModelNameContext.Provider value={{ modelName }}>
             <ModelMetadataContext.Provider value={{ modelMetadata: modelMetadata['metadata'] }}>
             <ViewConfigContext.Provider value={{
-                type: viewData.type,
+                type: viewData.type as any,
                 View: viewData.View,
             }}>
                 {children}

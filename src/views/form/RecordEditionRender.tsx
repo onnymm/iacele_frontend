@@ -7,7 +7,7 @@ import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsCont
 
 const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Contexto tipado
     const ClosureRecordContext: Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;

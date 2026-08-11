@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-const useFocus = () => {
+const useFocus__ = () => {
 
     // Inicialización de estado de enfocado
     const [ isFocused, setIsFocused ] = useState<boolean>(false);
@@ -22,4 +22,4 @@ const useFocus = () => {
     return { isFocused, setFocusOn, setFocusOff };
 };
 
-export default useFocus;
+export default useFocus__;

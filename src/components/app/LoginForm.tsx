@@ -4,7 +4,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { Eye, EyeClosed, LockKeyhole, UserRound, type LucideProps } from 'lucide-react';
 import Group from "../ui/layer/Group";
 import { Button } from "../ui/button";
-import useFocus from "@/hooks/ui/useFocus";
+import useFocus__ from "@/hooks/ui/useFocus";
 import useLogin from "@/hooks/app/useLogin";
 import { Spinner } from "../ui/spinner";
 import Alert from "../ui/Alerts/Alert";
@@ -19,7 +19,7 @@ interface InputParams {
     end?: React.ReactNode;
 };
 
-interface SubmitButtonParams extends IACele.Common.SupportsChildren {
+interface SubmitButtonParams extends IACeleV2.Common.SupportsChildren {
     isDisabled?: boolean;
     isLoading?: boolean;
 };
@@ -126,7 +126,7 @@ const Input = ({
 }: InputParams) => {
 
     // Uso de valores de enfoque
-    const { isFocused, setFocusOn, setFocusOff } = useFocus();
+    const { isFocused, setFocusOn, setFocusOff } = useFocus__();
 
     // Función para ejecución de cambios
     const onChange = useCallback(

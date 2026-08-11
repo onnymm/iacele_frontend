@@ -3,7 +3,7 @@ import BACKEND_URL from "@/constants/app/backendURL";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 import CONFIG from "@/settings/config";
 
-const DEFAULT_CONFIG: IACele.API.Websocket.EventClientConfig = {
+const DEFAULT_CONFIG: IACeleV2.API.Websocket.EventClientConfig = {
     onopen: () => {
         console.log('Websocket conectado');
     },
@@ -22,13 +22,13 @@ class EventClient {
     private setWebsocketConnected: React.Dispatch<React.SetStateAction<boolean>>;
     private ws: WebSocket;
     private hub: Record<string, Record<number, () => (void)>>;
-    private config: IACele.API.Websocket.EventClientConfig;
+    private config: IACeleV2.API.Websocket.EventClientConfig;
     private mustReconnect: boolean = true;
 
     constructor (
         userToken: string,
         setWebsocketConnected: React.Dispatch<React.SetStateAction<boolean>>,
-        config: Partial<IACele.API.Websocket.EventClientConfig> = {},
+        config: Partial<IACeleV2.API.Websocket.EventClientConfig> = {},
     ) {
 
         // Asignación del token de usuario
@@ -109,7 +109,7 @@ class EventClient {
         // Función para cuando el websocket recibe un mensaje
         ws.onmessage = (event: MessageEvent<string>) => {
             // Obtención de los datos en formato JSON
-            const message: IACele.API.Websocket.message = JSON.parse(event.data);
+            const message: IACeleV2.API.Websocket.message = JSON.parse(event.data);
 
             // Se intenta ejecutar funciones suscritas
             try {

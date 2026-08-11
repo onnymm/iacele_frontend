@@ -1,6 +1,6 @@
 import useFetchUser from "../hooks/app/useFetchUser"
 
-const UserAuthenticationProvider: React.FC<IACele.Common.SupportsChildren> = ({
+const UserAuthenticationProvider: React.FC<IACeleV2.Common.SupportsChildren> = ({
     children,
 }) => {
 

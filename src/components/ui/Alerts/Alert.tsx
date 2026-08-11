@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert as ShadcnAlert } from "../alert";
 import { X } from "lucide-react";
 
-const Alert: React.FC<IACele.UI.Alert.Component> = ({
+const Alert: React.FC<IACeleV2.UI.Alert.Component> = ({
     detail,
     onClose = () => null,
     canClose = false,

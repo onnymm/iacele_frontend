@@ -18,17 +18,6 @@ declare namespace IACele {
 
     };
 
-    declare namespace Application {
-
-        interface PageName {
-            pageName: string | null;
-            setPageName: React.Dispatch<React.SetStateAction<string | null>>;
-        };
-
-        type ModelsMetadata = Partial<Record<IACele.Data.ModelName, IACele.Data.Shape.FieldsMetadata[]>>;
-
-    };
-
     declare namespace API {
 
         declare namespace Request {
@@ -178,44 +167,6 @@ declare namespace IACele {
             interface Form<M extends Data.ModelName> {
                 'record': Data.ModelDefinition<M>;
                 'name': string;
-            };
-
-        };
-
-        declare namespace Websocket {
-
-            interface EventClientConfig {
-                onopen: () => (void);
-                onclose: () => (void);
-                defaultNotification: (
-                    eventName: IACele.API.Websocket.message['event'],
-                    payload: IACele.API.Websocket.message['payload'],
-                ) => (void);
-            };
-
-            type message = _Definition.Message[keyof _Definition.Message];
-            type MessageName = keyof _Definition.Message
-
-            declare namespace _Definition {
-
-                type _Message = (
-                    | ['field.created', {}]
-                    | ['field.deleted', {}]
-                    | ['model.created', {'model': Data.ModelName}]
-                    | ['model.deleted', {'model': Data.ModelName}]
-                    | ['password.changed']
-                    | ['profile.update', {'detail': string}]
-                    | ['validation.failed', {'detail': string}]
-                    | ['verification.failed', {'detail': string}]
-                );
-
-                type Message = {
-                    [I in _Message as I[0]]: {
-                        'event': I[0];
-                        'payload': I[1];
-                    };
-                };
-
             };
 
         };
@@ -554,12 +505,6 @@ declare namespace IACele {
                 eventClient: Resource.SyncClient | null;
             };
 
-            interface UserToken {
-                userToken: string | null;
-                setUserToken: (value: string) => void;
-                removeUserToken: () => void;
-            };
-
             interface UserData {
                 userData: Me;
                 setUserData: React.Dispatch<React.SetStateAction<Me>>
@@ -588,115 +533,9 @@ declare namespace IACele {
 
     };
 
-    declare namespace Resource {
-
-        interface SyncClient {
-            on: (
-                name: string,
-                callback: () => void,
-            ) => (() => (void));
-
-            close: () => void;
-        };
-
-        interface Client {
-            login: (
-                username: string,
-                password: string,
-                onError: (e: any) => void,
-            ) => Promise<void>;
-
-            me: () => Promise<void>;
-
-            fieldsMetadata: <
-                M extends IACele.Data._Core.ModelName,
-            >(params: IACele.API.Request.FieldsMetadata<M>) => Promise<IACele.Data.Shape.FieldsMetadata[]>;
-
-            fieldsMetadataV2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.FieldsMetadata<M>,
-            ) => Promise<IACeleV2.API.Response.FieldsMetadata<M>>;
-
-            action: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.Action<M>,
-            ) => Promise<true>;
-
-            actionV2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.Action<M>,
-            ) => Promise<true>;
-
-            create: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Create<M>,
-            ) => Promise<IACele.API.Response.Create>;
-
-            createV2: <M extends IACeleV2.Data.ModelName>(
-                data: IACeleV2.API.Request.Create<M>,
-            ) => Promise<IACeleV2.API.Response.Create>;
-
-            read: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Read<M>,
-            ) => Promise<IACele.API.Response.Read<M>>;
-
-            searchRead: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.SearchRead<M>,
-            ) => Promise<IACele.API.Response.SearchRead<M>>;
-
-            searchReadV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.SearchRead<M>,
-            ) => Promise<IACeleV2.API.Response.SearchRead<M>>;
-
-            update: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Update<M>,
-            ) => Promise<true>;
-
-            updateV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.Update<M>,
-            ) => Promise<IACeleV2.API.Response.Update>;
-
-            delete: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Delete<M>,
-            ) => Promise<true>;
-
-            deleteV2: <M extends IACeleV2.Data.ModelName>(
-                data: IACeleV2.API.Request.Delete<M>,
-            ) => Promise<true>;
-
-            tree: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.Tree<M>,
-            ) => Promise<IACele.API.Response.Tree<M>>;
-
-            treeV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.Tree<M>,
-            ) => Promise<IACeleV2.API.Response.Tree<M>>;
-
-            form: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.Form<M>,
-            ) => Promise<IACele.API.Response.Form<M>>;
-
-            formv2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.Form<M>,
-            ) => Promise<IACeleV2.API.Response.Form__<M>>;
-
-        };
-
-        interface UserSession {
-            setUserToken: (token: string) => void;
-            removeUserToken: () => void;
-            setAppLoading: (loading: boolean) => void;
-            setUserData: (data: IACele.App.Me) => void;
-            removeUserData: () => void;
-        };
-
-    };
-
     declare namespace UI {
 
         type Variant = 'info' | 'primary' | 'success' | 'warning' | 'danger';
-
-        declare namespace View {
-
-            type DisplayOption = 'screen' | 'window';
-
-        };
 
         declare namespace Alert {
 

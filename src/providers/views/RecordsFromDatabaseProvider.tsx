@@ -5,7 +5,7 @@ import CollectTreeRequiredFields from "@/views/inspectors/CollectTreeRequiredFie
 
 const RecordsFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención de parámetros y funciones para lectura de datos desde la API
     const { dataFromAPI, reload, fieldsToRead, suscribeFieldToRead } = useReadRecordsFromAPI<M>();

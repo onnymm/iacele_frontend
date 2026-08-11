@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 
 const RecordInViewProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención de los datos del registro original desde el contexto
     const { originalRecord } = useOriginalRecord<M>();

@@ -35,7 +35,7 @@ const FormComponent = {
 
     Page: ({
         children,
-    }: IACele.Common.SupportsChildren) => {
+    }: IACeleV2.Common.SupportsChildren) => {
 
         // Obtención del tipo de visualización del formulario
         const { display } = useDataView();
@@ -185,7 +185,7 @@ const FormComponent = {
 
     Sheet: ({
         children,
-    }: IACele.Common.SupportsChildren) => {
+    }: IACeleV2.Common.SupportsChildren) => {
 
         // Obtención de tipo de renderización
         const { display } = useDataView();

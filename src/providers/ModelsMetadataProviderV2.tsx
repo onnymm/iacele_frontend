@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 
 const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención de instancia de conexiones a la API
     const { api } = useAPI();

@@ -10,7 +10,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const EmptyRecordProvider = <M extends IACeleV2.Data.ModelName>({
     children,
-}: IACele.Common.SupportsChildren) => {
+}: IACeleV2.Common.SupportsChildren) => {
 
     // Obtención de referencia y función para suscripción de campos a leer
     const { fieldsToRead, suscribeFieldToRead } = useSuscribeFieldsToRead<M>();

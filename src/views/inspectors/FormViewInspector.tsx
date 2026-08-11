@@ -19,17 +19,17 @@ const FormViewInspector = <M extends IACeleV2.Data.ModelName>({
 
 const InspectView = {
 
-    Page: ({ children }: IACele.Common.SupportsChildren) => (children),
+    Page: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
 
-    Header: ({ children }: IACele.Common.SupportsChildren) => (children),
+    Header: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
 
     Action: () => (null),
 
     Wizard: () => (null),
 
-    Sheet: ({ children }: IACele.Common.SupportsChildren) => (children),
+    Sheet: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
 
-    Group: ({ children }: IACele.Common.SupportsChildren) => (children),
+    Group: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
 
     Field: <M extends IACeleV2.Data.ModelName>({
         name,
