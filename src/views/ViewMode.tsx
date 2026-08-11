@@ -1,5 +1,6 @@
 import useViewData from "@/hooks/views/useViewData";
 import FormView from "./form/FormView";
+import TreeView from "./tree/TreeView";
 
 const ViewMode = () => {
 
@@ -12,7 +13,13 @@ const ViewMode = () => {
             return (
                 <FormView />
             );
+        case 'tree':
+            return (
+                <TreeView />
+            );
     };
 };
 
 export default ViewMode;
+
+

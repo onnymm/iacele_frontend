@@ -1,7 +1,7 @@
 import OriginalRecordContext from "@/contexts/views/originalRecordContext";
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import useReadRecordFromAPI from "@/hooks/views/useReadRecordFromAPI";
-import CollectRequiredFields from "@/views/inspectors/CollectRequiredFields";
+import CollectFormRequiredFields from "@/views/inspectors/CollectFormRequiredFields";
 
 const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
     children,
@@ -24,7 +24,7 @@ const RecordFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
         }}>
 
             {/* Recolección de campos requeridos para leer el registro en el backend */}
-            <CollectRequiredFields />
+            <CollectFormRequiredFields />
 
             {/* Cuando los datos se carguen... */}
             {dataFromAPI !== null &&

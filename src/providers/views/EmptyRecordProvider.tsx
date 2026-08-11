@@ -5,7 +5,7 @@ import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import useAPI from "@/hooks/app/useAPI";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
 import useSuscribeFieldsToRead from "@/hooks/views/useSuscribeFieldsToRead";
-import CollectRequiredFields from "@/views/inspectors/CollectRequiredFields";
+import CollectFormRequiredFields from "@/views/inspectors/CollectFormRequiredFields";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const EmptyRecordProvider = <M extends IACeleV2.Data.ModelName>({
@@ -22,7 +22,7 @@ const EmptyRecordProvider = <M extends IACeleV2.Data.ModelName>({
         }}>
 
             {/* Recolección de campos requeridos para crear un registro con campos nulos */}
-            <CollectRequiredFields />
+            <CollectFormRequiredFields />
 
             {/* Proveedor de registro vacío */}
             <InitializeRecordProvider fieldsToRead={fieldsToRead}>

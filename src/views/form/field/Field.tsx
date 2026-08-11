@@ -35,7 +35,7 @@ const Field = <M extends IACeleV2.Data.ModelName>({
     readonly,
     domain = [],
     widget = 'default',
-}: IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>) => {
+}: IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Contexto tipado
     const ClosureFieldContext: Context<IACeleV2.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
@@ -58,7 +58,7 @@ const Field = <M extends IACeleV2.Data.ModelName>({
     return (
         <InvisibleComponent invisible={invisible}>
             <ClosureFieldContext.Provider value={{
-                params: { name, domain, invisible, widget, readonly } as IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>,
+                params: { name, domain, invisible, widget, readonly } as IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 <FieldLabel />

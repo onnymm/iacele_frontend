@@ -613,18 +613,36 @@ declare namespace IACeleV2 {
                     View: (component: React.FC<FormStructure<M, O>>) => (React.ReactNode);
                 };
 
+                interface _TreeDeclaration <M extends Data.ModelName, O extends FieldComponent>{
+                    type: 'tree';
+                    View: (component: React.FC<TreeStructure<M, O>>) => (React.ReactNode);
+                };
+
                 type PackedParams <M extends Data.ModelName, O extends FieldComponent> = (
                     & PackedParams._Base<M>
-                    & PackedParams._FormDeclaration<M, O>
+                    & (
+                        | _FormDeclaration<M, O>
+                        | _TreeDeclaration<M, O>
+                    )
                 );
 
             };
 
             type ViewToModelName = {
-                'base.users.update.password.form': 'base.users.update.password';
-                'assistance.registry.event.form': 'assistance.registry.event';
+                'assistance.registry.day.form': 'assistance.registry.day';
+                'assistance.registry.event.add.form': 'assistance.registry.event';
                 'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
+                'base.users.form': 'base.users';
+                'base.users.update.password.form': 'base.users.update.password';
             };
+
+            type OpenView<M extends Data.ModelName> = {
+                [K in keyof ViewToModelName]: (
+                    ViewToModelName[K] extends M
+                    ? K
+                    : never
+                );
+            }[keyof ViewToModelName];
 
             type BooleanOrConditionalStatement<M extends Data.ModelName> = Data.CriteriaStructure<M> | boolean;
 
@@ -661,7 +679,14 @@ declare namespace IACeleV2 {
                 'Wizard': _Wizard<M>;
             };
 
-            type _FieldWidget<
+            interface TreeComponents <M extends Data.ModelName, O extends FieldComponent>{
+                'Page': {
+                    children: React.ReactNode;
+                };
+                'Field': _TreeWidgetDistribution<M, O>;
+            };
+
+            type _FormFieldWidget<
                 M extends Data.ModelName,
                 F extends Data.FieldName<M>,
                 O extends Record<Data.TTypeName, Record<string, () => (React.ReactNode)>>,
@@ -673,11 +698,23 @@ declare namespace IACeleV2 {
                 domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
             };
 
-            type _FieldWidgetDistribution<
+            interface _TreeFieldWidget <M extends Data.ModelName, F extends Data.FieldName<M>, O extends FieldComponent>{
+                name: F;
+                widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
+            };
+
+            type _TreeWidgetDistribution<
                 M extends Data.ModelName,
                 O extends FieldComponent,
             > = {
-                [F in Data.FieldName<M>]: _FieldWidget<M, F, O>;
+                [F in Data.FieldName<M>]: _TreeFieldWidget<M, F, O>;
+            }[Data.FieldName<M>];
+
+            type _FormFieldWidgetDistribution<
+                M extends Data.ModelName,
+                O extends FieldComponent,
+            > = {
+                [F in Data.FieldName<M>]: _FormFieldWidget<M, F, O>;
             }[Data.FieldName<M>]
 
             interface CreateMode {
@@ -698,10 +735,29 @@ declare namespace IACeleV2 {
 
         type FieldComponent = Record<Data.TTypeName, Record<string, () => (React.ReactNode)>>;
 
-        type FieldComponentProps<
+        type FormFieldComponentProps<
             M extends Data.ModelName,
             O extends FieldComponent
-        > = _Definition._FieldWidgetDistribution<M, O>;
+        > = _Definition._FormFieldWidgetDistribution<M, O>;
+
+        type TreeFieldComponentProps<
+            M extends Data.ModelName,
+            O extends FieldComponent,
+        > = _Definition._TreeWidgetDistribution<M, O>;
+
+        type TreeComponents<M extends Data.ModelName, O extends View.FieldComponent> = _Definition.TreeComponents<M, O>;
+
+        interface _TreeChildren <M extends Data.ModelName, O extends FieldComponent>{
+            Page: React.FC<TreeComponents<M, O>['Page']>;
+            Field: React.FC<TreeComponents<M, O>['Field']>;
+        };
+
+        type OpenView<M extends Data.ModelName> = _Definition.OpenView<M>
+
+        interface TreeStructure <M extends Data.ModelName, O extends FieldComponent>{
+            children: (components: _TreeChildren<M, O>) => (React.ReactNode);
+            open?: OpenView<M>;
+        };
 
         interface _FormChildren <M extends Data.ModelName, O extends FieldComponent>{
             Page: React.FC<_Definition.FormComponents<M>['Page']>;
@@ -709,7 +765,7 @@ declare namespace IACeleV2 {
             Action: React.FC<_Definition.FormComponents<M>['Action']>;
             Sheet: React.FC<_Definition.FormComponents<M>['Sheet']>;
             Group: React.FC<_Definition.FormComponents<M>['Group']>;
-            Field: React.FC<FieldComponentProps<M, O>>;
+            Field: React.FC<FormFieldComponentProps<M, O>>;
             Wizard: React.FC<_Definition.FormComponents<M>['Wizard']>;
         };
 
@@ -734,6 +790,24 @@ declare namespace IACeleV2 {
 
         declare namespace ViewContext {
 
+            declare namespace _Definition {
+
+                declare namespace Config {
+
+                    interface Form <M extends Data.ModelName, O extends View.FieldComponent>{
+                        type: 'form';
+                        View: (component: React.FC<View.FormStructure<M, O>>) => (React.ReactNode);
+                    };
+
+                    interface Tree <M extends Data.ModelName, O extends View.FieldComponent>{
+                        type: 'tree';
+                        View: (component: React.FC<View.TreeStructure<M, O>>) => (React.ReactNode);
+                    };
+
+                };
+
+            };
+
             interface OriginalRecord <M extends Data.ModelName>{
                 recordId: number;
                 originalRecord: Data.RecordFromDatabase<M>;
@@ -745,6 +819,7 @@ declare namespace IACeleV2 {
             interface OriginalRecords <M extends Data.ModelName>{
                 originalRecords: Data.RecordFromDatabase<M>[];
                 reload: () => (void);
+                fieldsToRead: RefObject<IACeleV2.Data.ReadField<M>[]>;
             };
 
             interface RecordInView <M extends Data.ModelName>{
@@ -782,10 +857,15 @@ declare namespace IACeleV2 {
                 requiresField: (fieldName: Data.ReadField<M>) => void;
             };
 
-            interface Config <M extends Data.ModelName, O extends View.FieldComponent>{
-                type: 'form';
-                View: (component: React.FC<View.FormStructure<M, O>>) => (React.ReactNode);
-            };
+            type Config<M extends Data.ModelName, O extends View.FieldComponent> = (
+                | _Definition.Config.Form<M, O>
+                | _Definition.Config.Tree<M, O>
+            );
+
+            type SegmentedConfig<M extends Data.ModelName, O extends View.FieldComponent, T extends 'form' | 'tree'> = {
+                'form': _Definition.Config.Form<M, O>;
+                'tree': _Definition.Config.Tree<M, O>;
+            }[T];
 
             interface RecordEdition <M extends Data.ModelName>{
                 recordId: number;
@@ -807,12 +887,18 @@ declare namespace IACeleV2 {
             };
 
             interface Field <M extends Data.ModelName, O extends View.FieldComponent>{
-                params: View.FieldComponentProps<M, O>;
+                params: View.FormFieldComponentProps<M, O>;
                 fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
             };
 
             interface ContextData <M extends Data.ModelName>{
                 contextData: IACeleV2.Data.RecordForView<M>;
+            };
+
+            interface FieldConfig <M extends Data.ModelName, O extends View.FieldComponent>{
+                fieldConfig: React.RefObject<View.TreeFieldComponentProps<M, O>[]>;
+                suscribeFieldConfig: (newConfig: View.TreeFieldComponentProps<M, O>) => (void);
+                onRowClick: (record: Data.RecordForView<M>) => (void);
             };
 
         };

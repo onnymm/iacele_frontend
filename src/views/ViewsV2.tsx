@@ -4,7 +4,49 @@ const packedView = <M extends IACeleV2.Data.ModelName>(params: IACeleV2.View.Pac
 
 const VIEW_V2 = {
 
-        'assistance.registry.day.form': packedView({
+    'assistance.registry.day.tree': packedView({
+        modelName: 'assistance.registry.day',
+        type: 'tree',
+        View: (Tree) => (
+            <Tree open='assistance.registry.day.form'>
+                {({ Page, Field }) => (
+                    <Page>
+                        <Field name="date" />
+                        <Field name="employee_id" />
+                        <Field name="has_valid_events" widget="switch" />
+                        <Field name="is_complete" widget="switch" />
+                        <Field name="allowed_start" />
+                        <Field name="allowed_end" />
+                    </Page>
+                )}
+            </Tree>
+        ),
+    }),
+
+    'assistance.registry.event.add.form': packedView({
+        modelName: 'assistance.registry.event',
+        type: 'form',
+        View: (Form) => (
+            <Form>
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Empleado">
+                                <Field name="employee_id" readonly />
+                                <Field name="day_id" readonly />
+                            </Group>
+                            <Group label="Información">
+                                <Field name="original_registry_time" />
+                                <Field name="original_status" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        )
+    }),
+
+    'assistance.registry.day.form': packedView({
         modelName: 'assistance.registry.day',
         type: 'form',
         View: (Form) => (
@@ -12,12 +54,12 @@ const VIEW_V2 = {
                 {({ Page, Header, Wizard, Sheet, Group, Field }) => (
                     <Page>
                         <Header>
-                            <Wizard label="Añadir registro" view="assistance.registry.event.form" contextData={({ id, display_name, employee_id }) => ({ event_id: [id, display_name] as [number, string], from_api: false, employee_id: employee_id })} />
+                            <Wizard label="Añadir registro" view="assistance.registry.event.add.form" contextData={({ id, display_name, employee_id }) => ({ day_id: [id, display_name] as [number, string], from_api: false, employee_id: employee_id })} />
                         </Header>
                         <Sheet>
                             <Field name="display_name" invisible />
                             <Group label="Resumen">
-                                <Field name="employee_id" readonly />
+                                <Field name="employee_id" />
                                 <Field name="start_time" />
                                 <Field name="end_time" />
                             </Group>
@@ -138,15 +180,15 @@ const VIEW_V2 = {
                     <Page>
                         <Sheet>
                             <Group label="Personalizar">
-                                <Field name="id" />
-                                <Field name="profile_picture" widget="picture" />
+                                <Field name="id" invisible={[['id', '=', null]]} />
+                                <Field name="profile_picture" widget="picture" readonly />
                             </Group>
                             <Group label="General">
                                 <Field name="name" />
-                                <Field name="login" />
+                                <Field name="login" readonly />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" readonly widget="switch" />
+                                <Field name="active" readonly />
                                 <Field name="role_ids" readonly />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />
@@ -170,7 +212,7 @@ const VIEW_V2 = {
                         </Header>
                         <Sheet>
                             <Group label="Personalizar">
-                                <Field name="profile_picture" widget="picture" readonly />
+                                <Field name="profile_picture" widget="picture" />
                             </Group>
                             <Group label="General">
                                 <Field name="name" />

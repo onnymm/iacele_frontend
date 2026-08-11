@@ -33,7 +33,7 @@ const InspectView = {
 
     Field: <M extends IACeleV2.Data.ModelName>({
         name,
-    }: IACeleV2.View.FieldComponentProps<M, typeof FieldComponent>) => {
+    }: IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
         // Obtención de función de campo requerido
         const { requiresField } = useRequiresField<M>();
         // Registro de campo requerido
