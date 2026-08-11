@@ -230,9 +230,9 @@ const TTypeInterface = {
                 value === EMPTY_STRING
                     ? null
                     : (
-                        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value)
-                            ? `${value}:00`
-                            : value
+                        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)
+                            ? `${value.replace('T', ' ')}:00`
+                            : value.replace('T', ' ')
                     )
             ), []
         );

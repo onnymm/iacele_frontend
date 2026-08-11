@@ -30,17 +30,22 @@ const format = {
 
     time: (value: string) => {
         const [ hours, minutes, seconds ] = value.split(':');
-        const numericHours = Number(hours);
+        let numericHours = Number(hours);
         const m = (
             numericHours < 12
                 ? 'a.m.'
                 : 'p.m.'
         );
+        numericHours = (
+            numericHours < 12
+                ? numericHours
+                : numericHours - 12
+        );
         const stringHours = (
             numericHours < 10
                 ? `0${numericHours}`
                 : String(numericHours)
-        )
+        );
         const formatedValue = `${stringHours}:${minutes}:${seconds} ${m}`;
 
         return formatedValue;
@@ -264,7 +269,11 @@ const FieldWidget = {
                     // Si el valor es una cadena vacía se retorna ésta
                     if ( value === '' ) return EMPTY_STRING;
                     // Separación de fecha y de hora
-                    const [ d, t ] = value.split(' ');
+                    const [ d, t ] = (
+                        value
+                        .replace(' ', 'T')
+                        .split('T')
+                    );
                     // Formateo de valores
                     const computedValue = `${format.date(d)} ${format.time(t)}`;
 
@@ -299,7 +308,9 @@ const FieldWidget = {
             return (
                 isReadonly
                     ? (
-                        format.time(value)
+                        value !== ''
+                            ? format.time(value)
+                            : ''
                     )
                     : (
                         <Input
@@ -471,8 +482,8 @@ const FieldWidget = {
                     </div>
                     <Input type="file" onChange={(e) => setValue(e.target.files)} id="file-input" accept=".jpg, .jpeg" className="hidden" />
                 </div>
-            )
-        },
+            );
+        }
 
     },
 
