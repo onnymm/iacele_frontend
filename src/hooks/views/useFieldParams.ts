@@ -18,20 +18,32 @@ const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
         deleteRecord,
         reload,
         evaluator,
+        createMode,
     } = useRecordEditionParams<M>();
 
     // Evaluación de parámetro de solo lectura
     const isReadonly = useMemo(
         () => (
-            evaluator.evaluate(
-                (
-                    params.readonly
-                    || fieldMetadata.readonly
-                    || fieldMetadata.is_computed
-                ) ?? false
+            (
+                // Si se especificó un parámetro de modo lectura...
+                params.readonly !== undefined
+                    ? (
+                        // Validación del argumento de solo lectura del campo
+                        evaluator.evaluate(params.readonly)
+                        // O si el campo ya es de solo lectura
+                        || fieldMetadata.readonly
+                    )
+                    : (
+                        // Si el registro no está en modo de creación
+                        !createMode
+                        // Y si el campo ya es de solo lectura
+                        && fieldMetadata.readonly
+                    )
             )
+            // O si el campo es computado (por defecto se hace solo lectura)
+            || fieldMetadata.is_computed
         ),
-        [evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly]
+        [createMode, evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly]
     );
 
     return {
