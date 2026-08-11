@@ -15,7 +15,7 @@ const Me = () => {
             recordId: userData['id'],
             viewDataName: 'base.users.me.form',
             onCreate: EMPTY_CALLBACK.SYNC,
-            onUpdate: EMPTY_CALLBACK.SYNC,
+            onUpdate: ({ reload }) => {reload()},
         }}>
             <ModelDataProvider>
                 <ViewMode />
