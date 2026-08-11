@@ -564,7 +564,7 @@ const FieldWidget = {
             const { values } = TTypeInterface.useOne2Many<M>();
 
             return (
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
                             (record: IACeleV2.Data.RecordForView<any>) => (
@@ -593,7 +593,7 @@ const FieldWidget = {
             const { values } = TTypeInterface.useMany2Many<M>();
 
             return (
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
                             (record: IACeleV2.Data.RecordForView<any>) => (
