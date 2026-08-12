@@ -232,6 +232,11 @@ declare namespace IACele {
 
         };
 
+        interface APIError {
+            status?: number;
+            detail?: string;
+        };
+
     };
 
     declare namespace Data {
@@ -1031,8 +1036,8 @@ declare namespace IACele {
 
         };
 
-        interface API {
-            api: Resource.Client;
+        interface API<O>{
+            api: O;
             appLoading: boolean;
             websocketConnected: boolean;
             eventClient: Resource.SyncClient | null;
@@ -1069,49 +1074,6 @@ declare namespace IACele {
             ) => (() => (void));
 
             close: () => void;
-        };
-
-        interface Client {
-            login: (
-                username: string,
-                password: string,
-                onError: (e: any) => void,
-            ) => Promise<void>;
-
-            me: () => Promise<void>;
-
-            fieldsMetadata: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.FieldsMetadata<M>,
-            ) => Promise<IACele.API.Response.FieldsMetadata<M>>;
-
-            action: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.Action<M>,
-            ) => Promise<true>;
-
-            create: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Create<M>,
-            ) => Promise<IACele.API.Response.Create>;
-
-            searchRead: <M extends keyof IACele.Data.Model>(
-                data: IACele.API.Request.SearchRead<M>,
-            ) => Promise<IACele.API.Response.SearchRead<M>>;
-
-            update: <M extends keyof IACele.Data.Model>(
-                data: IACele.API.Request.Update<M>,
-            ) => Promise<IACele.API.Response.Update>;
-
-            delete: <M extends IACele.Data.ModelName>(
-                data: IACele.API.Request.Delete<M>,
-            ) => Promise<true>;
-
-            tree: <M extends keyof IACele.Data.Model>(
-                data: IACele.API.Request.Tree<M>,
-            ) => Promise<IACele.API.Response.Tree<M>>;
-
-            form: <M extends IACele.Data.ModelName>(
-                params: IACele.API.Request.Form<M>,
-            ) => Promise<IACele.API.Response.Form__<M>>;
-
         };
 
         interface UserSession {

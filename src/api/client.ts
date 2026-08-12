@@ -3,12 +3,6 @@ import tokenInterceptor from "../security/tokenInterceptor";
 import PATH from "../constants/api/path";
 import BACKEND_URL from "@/constants/app/backendURL";
 
-// Error de API
-type APIError = {
-    status?: number;
-    detail?: string;
-};
-
 const iaCeleAxios = axios.create();
 
 // Registro de interceptors
@@ -165,7 +159,7 @@ class Client {
     me = async (): Promise<void> => {
 
         // Función de remoción de datos y token del usuario si ocurre un error
-        const onInvalidToken = (e: APIError): void => {
+        const onInvalidToken = (e: IACele.API.APIError): void => {
             if ( e.status == 403 ) {
                 console.log('Me ejecuto');
                 
@@ -225,7 +219,7 @@ class Client {
     private get = async <S, R>(
         route: string,
         data: S,
-        onError: (e: APIError) => void = () => null,
+        onError: (e: IACele.API.APIError) => void = () => null,
     ): Promise<R> => {
 
         // Inicialización de función de solicitud de datos a la API
@@ -249,7 +243,7 @@ class Client {
     private post = async <S, R>(
         path: string,
         data: S,
-        onError: (e: APIError) => void = () => null,
+        onError: (e: IACele.API.APIError) => void = () => null,
     ): Promise<R> => {
 
         // Inicialización de función de solicitud de datos a la API
@@ -271,7 +265,7 @@ class Client {
     private patch = async <S, R>(
         path: string,
         data: S,
-        onError: (e: APIError) => void = () => null,
+        onError: (e: IACele.API.APIError) => void = () => null,
     ): Promise<R> => {
 
         // Inicialización de función de solicitud de datos a la API
@@ -292,7 +286,7 @@ class Client {
 
     private execute = async <T>(
         callback: () => Promise<T>,
-        onError: (e: APIError) => void,
+        onError: (e: IACele.API.APIError) => void,
     ): Promise<T> => {
 
         // Se establece el estado de carga en verdadero
@@ -344,7 +338,7 @@ class Client {
     };
 
     private error = (
-        error: APIError,
+        error: IACele.API.APIError,
     ) => {
 
         // Impresión del error en la consola
