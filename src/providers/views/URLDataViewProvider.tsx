@@ -2,15 +2,15 @@ import QUERY_PARAMS from "@/constants/routes/queryParams";
 import ViewDataContext from "@/contexts/routes/viewDataContext";
 import useGetParams from "@/hooks/routes/useGetParams"
 import ModelDataProvider from "./ModelDataProvider";
-import VIEW_V2 from "@/views/ViewsV2";
+import VIEW from "@/views/Views";
 import ViewMode from "@/views/ViewMode";
-import useUpdateQueryParams from "@/hooks/viewsV0/useUpdateQueryParams";
+import useUpdateQueryParams from "@/hooks/views/useUpdateQueryParams";
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
 
 interface ViewQueryParams {
     [QUERY_PARAMS.VIEW.ID]: number;
-    [QUERY_PARAMS.VIEW.NAME]: keyof typeof VIEW_V2;
+    [QUERY_PARAMS.VIEW.NAME]: keyof typeof VIEW;
 };
 
 const URLDataViewProvider = () => {
@@ -21,7 +21,7 @@ const URLDataViewProvider = () => {
     // Obtención de parámetros de query
     const { id: recordId, name: viewDataName } = useGetParams<ViewQueryParams>({
         [QUERY_PARAMS.VIEW.ID]: (q) => (Number(q)),
-        [QUERY_PARAMS.VIEW.NAME]: (q) => (q as keyof typeof VIEW_V2),
+        [QUERY_PARAMS.VIEW.NAME]: (q) => (q as keyof typeof VIEW),
     });
 
     // Obtención de función para actualización de parámetros de query

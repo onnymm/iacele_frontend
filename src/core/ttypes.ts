@@ -22,9 +22,9 @@ const validate = {
 };
 
 abstract class ScalarTType<
-    T extends IACeleV2.Data.Validator.Mode,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
+    T extends IACele.Data.Validator.Mode,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
     ST extends 'number' | 'string' | 'boolean',
 > {
 
@@ -87,9 +87,9 @@ abstract class ScalarTType<
 };
 
 abstract class ArrayTType<
-    T extends IACeleV2.Data.Validator.Mode<IACeleV2.Data.RecordForView<any>[], number[]>,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
+    T extends IACele.Data.Validator.Mode<IACele.Data.RecordForView<any>[], number[]>,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
 > {
     name: F;
     viewValue: T['validate'];
@@ -124,9 +124,9 @@ abstract class ArrayTType<
 
 
 class NumericScalarTType<
-    T extends IACeleV2.Data.Validator.Mode,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>
+    T extends IACele.Data.Validator.Mode,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>
 > extends ScalarTType<T, M, F, 'number'> {
     scalarType = 'number' as const;
 
@@ -143,9 +143,9 @@ class NumericScalarTType<
 };
 
 class StringScalarTType<
-    T extends IACeleV2.Data.Validator.Mode,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
+    T extends IACele.Data.Validator.Mode,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
 > extends ScalarTType<T, M, F, 'string'> {
     scalarType = 'string' as const;
 
@@ -195,9 +195,9 @@ class StringScalarTType<
 };
 
 abstract class TemporalityTType <
-    T extends IACeleV2.Data.Validator.Mode,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
+    T extends IACele.Data.Validator.Mode,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
 > extends ScalarTType<T, M, F, 'string'> {
     scalarType = 'string' as const;
     abstract isValidFormat: (value: any) => value is string;
@@ -244,9 +244,9 @@ abstract class TemporalityTType <
 };
 
 abstract class NonComparableTType<
-    T extends IACeleV2.Data.Validator.Mode,
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
+    T extends IACele.Data.Validator.Mode,
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
 > extends ScalarTType<T, M, F, 'string'> {
     scalarType = 'string' as const;
 
@@ -274,19 +274,19 @@ abstract class NonComparableTType<
 
 
 class Integer<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends NumericScalarTType<IACeleV2.Data.TType.Integer<'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends NumericScalarTType<IACele.Data.TType.Integer<'not_null'>, M, F> {};
 
 class Char<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends StringScalarTType<IACeleV2.Data.TType.Char<'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends StringScalarTType<IACele.Data.TType.Char<'not_null'>, M, F> {};
 
 class Boolean<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends ScalarTType<IACeleV2.Data.TType.Boolean<'not_null'>, M, F, 'boolean'> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends ScalarTType<IACele.Data.TType.Boolean<'not_null'>, M, F, 'boolean'> {
     scalarType = 'boolean' as const;
 
     gt = () => (false);
@@ -302,59 +302,59 @@ class Boolean<
 };
 
 class Float<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends NumericScalarTType<IACeleV2.Data.TType.Float<'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends NumericScalarTType<IACele.Data.TType.Float<'not_null'>, M, F> {};
 
 class Date<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends TemporalityTType<IACeleV2.Data.TType.Date<'not_null'>, M, F> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends TemporalityTType<IACele.Data.TType.Date<'not_null'>, M, F> {
     replaceChars = ['-'];
     isValidFormat = validate.isDate;
 };
 
 class Datetime<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends TemporalityTType<IACeleV2.Data.TType.Datetime<'not_null'>, M, F> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends TemporalityTType<IACele.Data.TType.Datetime<'not_null'>, M, F> {
     replaceChars = ['-', ' ', ':'];
     isValidFormat = validate.isDatetime;
 };
 
 class Time<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends TemporalityTType<IACeleV2.Data.TType.Time<'not_null'>, M, F> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends TemporalityTType<IACele.Data.TType.Time<'not_null'>, M, F> {
     replaceChars = ['-', ' ', ':'];
     isValidFormat = validate.isTime;
 };
 
 class Duration<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends TemporalityTType<IACeleV2.Data.TType.Duration<'not_null'>, M, F> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends TemporalityTType<IACele.Data.TType.Duration<'not_null'>, M, F> {
     replaceChars = ['-', ' ', ':'];
     isValidFormat = validate.isDuration;
 };
 
 class File<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends NonComparableTType<IACeleV2.Data.TType.File<'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends NonComparableTType<IACele.Data.TType.File<'not_null'>, M, F> {};
 
 class Selection<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends StringScalarTType<IACeleV2.Data.TType.Selection<string, 'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends StringScalarTType<IACele.Data.TType.Selection<string, 'not_null'>, M, F> {};
 
 class Many2One<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends NumericScalarTType<IACeleV2.Data.TType.Many2One<'not_null'>, M, F> {
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends NumericScalarTType<IACele.Data.TType.Many2One<'not_null'>, M, F> {
     scalarType = 'number' as const;
 
-    parse = (value: IACeleV2.Data.TType.Many2One<'not_null'>['view']) => {
+    parse = (value: IACele.Data.TType.Many2One<'not_null'>['view']) => {
         if ( value === null ) {
             return null;
         };
@@ -363,24 +363,24 @@ class Many2One<
 };
 
 class Text<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends StringScalarTType<IACeleV2.Data.TType.Text<'not_null'>, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends StringScalarTType<IACele.Data.TType.Text<'not_null'>, M, F> {};
 
 class One2Many<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>
-> extends ArrayTType<IACeleV2.Data.TType.One2Many<any>,  M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>
+> extends ArrayTType<IACele.Data.TType.One2Many<any>,  M, F> {};
 
 class Many2Many<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>
-> extends ArrayTType<IACeleV2.Data.TType.One2Many<any>,  M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>
+> extends ArrayTType<IACele.Data.TType.One2Many<any>,  M, F> {};
 
 class JSON<
-    M extends IACeleV2.Data.ModelName,
-    F extends IACeleV2.Data.FieldName<M>,
-> extends NonComparableTType<IACeleV2.Data.TType.JSON, M, F> {};
+    M extends IACele.Data.ModelName,
+    F extends IACele.Data.FieldName<M>,
+> extends NonComparableTType<IACele.Data.TType.JSON, M, F> {};
 
 const Validator = {
     'integer': Integer,
@@ -400,10 +400,10 @@ const Validator = {
     'json': JSON,
 } as const;
 
-class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
+class RecordEvaluator<M extends IACele.Data.ModelName> {
 
-    private data: IACeleV2.Data.Validator.RecordValidation<M>;
-    private op: Record<IACeleV2.Data.ComparisonOperator, ( (o: IACeleV2.Data.Validator.BaseTType) => ((value: any) => boolean) )> = {
+    private data: IACele.Data.Validator.RecordValidation<M>;
+    private op: Record<IACele.Data.ComparisonOperator, ( (o: IACele.Data.Validator.BaseTType) => ((value: any) => boolean) )> = {
         '=': (obj) => (obj.equals),
         '!=': (obj) => (obj.notEqual),
         '>': (obj) => (obj.gt),
@@ -417,22 +417,22 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
         '~': (obj) => (obj.regex),
         '~*': (obj) => (obj.regexI),
     };
-    private join: Record<IACeleV2.Data.LogicOperator, (a: boolean, b: boolean) => (boolean)> = {
+    private join: Record<IACele.Data.LogicOperator, (a: boolean, b: boolean) => (boolean)> = {
         '&': (a, b) => (a && b),
         '|': (a, b) => (a || b),
     };
-    private LOGIC_OPERATORS: (IACeleV2.Data.LogicOperator | boolean)[] = ['&', '|'];
+    private LOGIC_OPERATORS: (IACele.Data.LogicOperator | boolean)[] = ['&', '|'];
 
     constructor (
-        data: IACeleV2.Data.RecordForView<M>,
-        metadata: IACeleV2.Data.FieldsMetadata<M>,
+        data: IACele.Data.RecordForView<M>,
+        metadata: IACele.Data.FieldsMetadata<M>,
     ) {
 
         // Inicialización del objeto de validación
-        this.data = {} as IACeleV2.Data.Validator.RecordValidation<M>;
+        this.data = {} as IACele.Data.Validator.RecordValidation<M>;
 
         // Obtención de los nombres de los campos
-        const fieldNames = Object.keys(data) as IACeleV2.Data.FieldName<M>[];
+        const fieldNames = Object.keys(data) as IACele.Data.FieldName<M>[];
 
         // Inicialización de objeto de validación
         fieldNames.forEach(
@@ -450,7 +450,7 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
     };
 
     evaluate = (
-        conditionOrBoolean: IACeleV2.Data.CriteriaStructure<M> | boolean,
+        conditionOrBoolean: IACele.Data.CriteriaStructure<M> | boolean,
     ) => {
 
         if ( typeof conditionOrBoolean === 'boolean' ) {
@@ -503,20 +503,20 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
     };
 
     private isLogicOperator = (
-        element: IACeleV2.Data.LogicOperator | boolean,
-    ): element is IACeleV2.Data.LogicOperator => {
+        element: IACele.Data.LogicOperator | boolean,
+    ): element is IACele.Data.LogicOperator => {
 
         return this.LOGIC_OPERATORS.indexOf(element) !== -1;
     };
 
     private resolveTriplets = (
-        evaluationCriteria: IACeleV2.Data.CriteriaStructure<M>
+        evaluationCriteria: IACele.Data.CriteriaStructure<M>
     ) => {
 
         // Inicialización del resultado en array
         const arrayResult: (
-            | IACeleV2.Data.LogicOperator
-            | IACeleV2.Data.Triplet<M>
+            | IACele.Data.LogicOperator
+            | IACele.Data.Triplet<M>
             | boolean
         )[] = [ ...evaluationCriteria ];
 
@@ -535,12 +535,12 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
             }
         );
 
-        return arrayResult as (IACeleV2.Data.LogicOperator | boolean)[];
+        return arrayResult as (IACele.Data.LogicOperator | boolean)[];
     };
 
-    private evaluateField = <F extends IACeleV2.Data.FieldName<M>>(
+    private evaluateField = <F extends IACele.Data.FieldName<M>>(
         name: F,
-        op: IACeleV2.Data.ComparisonOperator,
+        op: IACele.Data.ComparisonOperator,
         value: any,
     ) => {
 
@@ -554,8 +554,8 @@ class RecordEvaluator<M extends IACeleV2.Data.ModelName> {
         return result;
     };
 
-    private getOperation = <O extends IACeleV2.Data.Validator.BaseTType>(
-        op: IACeleV2.Data.ComparisonOperator,
+    private getOperation = <O extends IACele.Data.Validator.BaseTType>(
+        op: IACele.Data.ComparisonOperator,
         obj: O,
     ): ( (value: any) => (boolean) ) => {
 

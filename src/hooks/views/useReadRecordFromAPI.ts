@@ -5,7 +5,7 @@ import useDataView from "../routes/useDataView";
 import useGetModelNameFromView from "./useGetModelNameFromView";
 import useSuscribeFieldsToRead from "./useSuscribeFieldsToRead";
 
-const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
+const useReadRecordFromAPI = <M extends IACele.Data.ModelName>() => {
 
     // Obtención del tipo de renderización, la ID del registro y nombre de la vista
     const { recordId } = useDataView();
@@ -16,15 +16,15 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
     // Obtención de estado y función de recarga
     const { reloadSignal, reload } = useReload();
     // Inicialización de estado de datos del registro de la base de datos
-    const [ dataFromAPI, setDataFromAPI ] = useState<IACeleV2.Data.RecordFromDatabase<M> | null>(null);
+    const [ dataFromAPI, setDataFromAPI ] = useState<IACele.Data.RecordFromDatabase<M> | null>(null);
     // Inicialización de lista de campos a leer
     const { fieldsToRead, suscribeFieldToRead } = useSuscribeFieldsToRead<M>();
 
     // Función para leer el registro
     const read = useCallback(
-        async (fieldsToRead: React.RefObject<IACeleV2.Data.ReadField<M>[]>) => {
+        async (fieldsToRead: React.RefObject<IACele.Data.ReadField<M>[]>) => {
             // Obtención de los datos desde la API
-            const data = await api.formv2({
+            const data = await api.form({
                 'model_name': modelName,
                 'record_ids': recordId,
                 'fields': fieldsToRead.current,
@@ -36,10 +36,10 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
 
     // Función para actualizar el valor
     const updateRecordInDatabase = useCallback(
-        async (recordInEdition: IACeleV2.Data.EditableRecord<M>) => {
+        async (recordInEdition: IACele.Data.EditableRecord<M>) => {
 
             // Se envían los datos a guardar
-            const response = await api.updateV2({
+            const response = await api.update({
                 'model_name': modelName,
                 'record_ids': [recordId],
                 'data': recordInEdition,
@@ -54,7 +54,7 @@ const useReadRecordFromAPI = <M extends IACeleV2.Data.ModelName>() => {
         async () => {
 
             // Se envían los datos para eliminar el registro
-            await api.deleteV2({
+            await api.delete({
                 'model_name': modelName,
                 'record_ids': [recordId],
             });

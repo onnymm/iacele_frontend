@@ -64,7 +64,7 @@ const FieldWidget = {
 
     'integer': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useInteger<M>();
 
@@ -88,7 +88,7 @@ const FieldWidget = {
 
     'char': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
 
@@ -106,7 +106,7 @@ const FieldWidget = {
             );
         },
 
-        Password: <M extends IACeleV2.Data.ModelName>() => {
+        Password: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
 
@@ -153,7 +153,7 @@ const FieldWidget = {
             );
         },
 
-        Badge: <M extends IACeleV2.Data.ModelName>() => {
+        Badge: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
 
@@ -177,7 +177,7 @@ const FieldWidget = {
 
     'boolean': {
 
-        Checkbox: <M extends IACeleV2.Data.ModelName>() => {
+        Checkbox: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useBoolean<M>();
 
@@ -190,7 +190,7 @@ const FieldWidget = {
             );
         },
 
-        Switch: <M extends IACeleV2.Data.ModelName>() => {
+        Switch: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useBoolean<M>();
 
@@ -207,7 +207,7 @@ const FieldWidget = {
 
     'float': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useFloat<M>();
 
@@ -231,7 +231,7 @@ const FieldWidget = {
 
     'date': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useDate<M>();
 
@@ -259,7 +259,7 @@ const FieldWidget = {
 
     'datetime': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useDatetime<M>();
 
@@ -301,7 +301,7 @@ const FieldWidget = {
 
     'time': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, isReadonly } = TTypeInterface.useTime<M>();
 
@@ -327,7 +327,7 @@ const FieldWidget = {
 
     'duration': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, INDEX, setHours, setMinutes, setSeconds, deleteValue, isReadonly } = TTypeInterface.useDuration<M>();
 
@@ -367,7 +367,7 @@ const FieldWidget = {
 
     'selection': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, deleteValue, fieldMetadata, isReadonly } = TTypeInterface.useSelection<M>();
 
@@ -405,7 +405,7 @@ const FieldWidget = {
             );
         },
 
-        Badge: <M extends IACeleV2.Data.ModelName>() => {
+        Badge: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
             const { value, setValue, deleteValue, fieldMetadata, isReadonly } = TTypeInterface.useSelection<M>();
 
@@ -449,7 +449,7 @@ const FieldWidget = {
 
     'file': {
 
-        ProfilePicture: <M extends IACeleV2.Data.ModelName>() => {
+        ProfilePicture: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
             const { value, setValue, isReadonly } = TTypeInterface.useFile<M>();
 
@@ -485,7 +485,7 @@ const FieldWidget = {
             );
         },
 
-        Avatar: <M extends IACeleV2.Data.ModelName>() => {
+        Avatar: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
             const { value } = TTypeInterface.useFile<M>();
 
@@ -509,7 +509,7 @@ const FieldWidget = {
 
     'text': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
             const { value, setValue, isReadonly } = TTypeInterface.useText<M>();
 
@@ -531,7 +531,7 @@ const FieldWidget = {
 
     'many2one': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
             const { value, displayName, setValue, isOpen, load, loading, options, deleteValue, isReadonly } = TTypeInterface.useMany2One<M>();
 
@@ -579,7 +579,7 @@ const FieldWidget = {
 
     'one2many': {
 
-        O2MTags: <M extends IACeleV2.Data.ModelName>() => {
+        O2MTags: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
             const { values } = TTypeInterface.useOne2Many<M>();
 
@@ -587,7 +587,7 @@ const FieldWidget = {
                 <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
-                            (record: IACeleV2.Data.RecordForView<any>) => (
+                            (record: IACele.Data.RecordForView<any>) => (
                                 <Badge key={record['id']}>
                                     {record['display_name']}
                                     <Button size='icon' className="size-4 cursor-pointer">
@@ -608,7 +608,7 @@ const FieldWidget = {
 
     'many2many': {
 
-        M2MTags: <M extends IACeleV2.Data.ModelName>() => {
+        M2MTags: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
             const { values } = TTypeInterface.useMany2Many<M>();
 
@@ -616,7 +616,7 @@ const FieldWidget = {
                 <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
-                            (record: IACeleV2.Data.RecordForView<any>) => (
+                            (record: IACele.Data.RecordForView<any>) => (
                                 <Badge key={record['id']}>
                                     {record['display_name']}
                                     <Button size='icon' className="size-4 cursor-pointer">
@@ -637,7 +637,7 @@ const FieldWidget = {
 
     'json': {
 
-        Default: <M extends IACeleV2.Data.ModelName>() => {
+        Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
             const { value, setValue, isValidValue, validateAndUpdateValue, isReadonly } = TTypeInterface.useJSON<M>();
 

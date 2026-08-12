@@ -1,10 +1,10 @@
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import { useContext } from "react";
 
-const useRequiresField = <M extends IACeleV2.Data.ModelName>() => {
+const useRequiresField = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de función de campo requerido
-    const { requiresField } = useContext<IACeleV2.Context.ViewContext.RequiresField<M>>(RequiresFieldContext);
+    const { requiresField } = useContext<IACele.Context.ViewContext.RequiresField<M>>(RequiresFieldContext);
 
     return { requiresField };
 };

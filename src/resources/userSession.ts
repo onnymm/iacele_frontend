@@ -2,14 +2,14 @@ class UserSession {
     setUserToken: (token: string) => void;
     removeUserToken: () => void;
     setAppLoading: (loading: boolean) => void;
-    setUserData: (data: IACeleV2.App.Me) => void;
+    setUserData: (data: IACele.App.Me) => void;
     removeUserData: () => void;
 
     constructor (
         setUserToken: (token: string) => void,
         removeUserToken: () => void,
         setAppLoading: (loading: boolean) => void,
-        setUserData: (data: IACeleV2.App.Me) => void,
+        setUserData: (data: IACele.App.Me) => void,
         removeUserData: () => void,
     ) {
 

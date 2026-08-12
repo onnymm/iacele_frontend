@@ -15,7 +15,7 @@ const iaCeleAxios = axios.create();
 iaCeleAxios.interceptors.request.use(tokenInterceptor);
 
 class Client {
-    private session: IACeleV2.Resource.UserSession;
+    private session: IACele.Resource.UserSession;
     private config = {
         headers: {
             'accept': 'application/json',
@@ -24,41 +24,41 @@ class Client {
     } as const;
 
     constructor (
-        session: IACeleV2.Resource.UserSession,
+        session: IACele.Resource.UserSession,
     ) {
 
         // Se establecen los valores
         this.session = session;
     };
 
-    fieldsMetadataV2 = async <M extends IACeleV2.Data.ModelName>(
-        params: IACeleV2.API.Request.FieldsMetadata<M>,
+    fieldsMetadata = async <M extends IACele.Data.ModelName>(
+        params: IACele.API.Request.FieldsMetadata<M>,
     ) => {
 
-        return await this.post<IACeleV2.API.Request.FieldsMetadata<M>, IACeleV2.API.Response.FieldsMetadata<M>>(
+        return await this.post<IACele.API.Request.FieldsMetadata<M>, IACele.API.Response.FieldsMetadata<M>>(
             PATH.METADATA.FIELDS,
             params,
         );
     };
 
-    actionV2 = async <M extends IACeleV2.Data.ModelName>(
-        params: IACeleV2.API.Request.Action<M>,
+    action = async <M extends IACele.Data.ModelName>(
+        params: IACele.API.Request.Action<M>,
     ) => {
 
-        return await this.post<IACeleV2.API.Request.Action<M>, IACeleV2.API.Response.Action>(
+        return await this.post<IACele.API.Request.Action<M>, IACele.API.Response.Action>(
             PATH.SERVER.ACTION,
             params,
         );
     };
 
-    createV2 = async <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.Create<M>,
-    ): Promise<IACeleV2.API.Response.Create> => {
+    create = async <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.Create<M>,
+    ): Promise<IACele.API.Response.Create> => {
 
         // Función de creación de registro
-        const apiCall = async (): Promise<IACeleV2.API.Response.Create> => {
+        const apiCall = async (): Promise<IACele.API.Response.Create> => {
             // Obtención de ID de registro creado
-            const response = await this.post<IACeleV2.API.Request.Create<M>, IACeleV2.API.Response.Create>(
+            const response = await this.post<IACele.API.Request.Create<M>, IACele.API.Response.Create>(
                 PATH.CRUD.CREATE,
                 data,
             );
@@ -66,17 +66,17 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.Create>(apiCall, () => {});
+        return this.execute<IACele.API.Response.Create>(apiCall, () => {});
     };
 
-    searchReadV2 = async <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.SearchRead<M>,
-    ): Promise<IACeleV2.API.Response.SearchRead<M>> => {
+    searchRead = async <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.SearchRead<M>,
+    ): Promise<IACele.API.Response.SearchRead<M>> => {
 
         // Función de búsqueda y lectura
         const apiCall = async () => {
             // Obtención de registros
-            const response = await this.post<IACeleV2.API.Request.SearchRead<M>, IACeleV2.API.Response.SearchRead<M>>(
+            const response = await this.post<IACele.API.Request.SearchRead<M>, IACele.API.Response.SearchRead<M>>(
                 PATH.CRUD.SEARCH_READ,
                 data,
             );
@@ -84,17 +84,17 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.SearchRead<M>>(apiCall, () => {});
+        return this.execute<IACele.API.Response.SearchRead<M>>(apiCall, () => {});
     };
 
-    updateV2 = async <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.Update<M>,
-    ): Promise<IACeleV2.API.Response.Update> => {
+    update = async <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.Update<M>,
+    ): Promise<IACele.API.Response.Update> => {
 
         // Función de modificación de registro
-        const apiCall = async (): Promise<IACeleV2.API.Response.Update> => {
+        const apiCall = async (): Promise<IACele.API.Response.Update> => {
             // Modificación de registro y obtención de respuesta
-            const response = await this.patch<IACeleV2.API.Request.Update<M>, IACeleV2.API.Response.Update>(
+            const response = await this.patch<IACele.API.Request.Update<M>, IACele.API.Response.Update>(
                 PATH.CRUD.UPDATE,
                 data,
             );
@@ -102,17 +102,17 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.Update>(apiCall, () => {});
+        return this.execute<IACele.API.Response.Update>(apiCall, () => {});
     };
 
-    deleteV2 = <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.Delete<M>,
-    ): Promise<IACeleV2.API.Response.Delete> => {
+    delete = <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.Delete<M>,
+    ): Promise<IACele.API.Response.Delete> => {
 
         // Función de eliminación de registro
-        const apiCall = async (): Promise<IACeleV2.API.Response.Delete> => {
+        const apiCall = async (): Promise<IACele.API.Response.Delete> => {
             // Modificación de registro y obtención de respuesta
-            const response = await this.post<IACeleV2.API.Request.Delete<M>, IACeleV2.API.Response.Delete>(
+            const response = await this.post<IACele.API.Request.Delete<M>, IACele.API.Response.Delete>(
                 PATH.CRUD.DELETE,
                 data,
             );
@@ -120,7 +120,7 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.Delete>(apiCall, () => {});
+        return this.execute<IACele.API.Response.Delete>(apiCall, () => {});
     };
 
     login = async (
@@ -147,7 +147,7 @@ class Client {
         // Función de inicio de sesión
         const apiCall = async (): Promise<void> => {
             // Obtención del token de autenticación del usuario
-            const response = await iaCeleAxios.post<string, AxiosResponse<IACeleV2.App.Authentication>, string>(
+            const response = await iaCeleAxios.post<string, AxiosResponse<IACele.App.Authentication>, string>(
                 this.toPath(PATH.TOKEN),
                 data,
                 this.config,
@@ -177,7 +177,7 @@ class Client {
         };
 
         // Obtención de los datos del usuario
-        const userData = await this.get<{}, IACeleV2.App.Me>(
+        const userData = await this.get<{}, IACele.App.Me>(
             PATH.ACCOUNT.ME,
             {},
             onInvalidToken,
@@ -186,14 +186,14 @@ class Client {
         this.session.setUserData(userData);
     };
 
-    treeV2 = async <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.Tree<M>,
-    ): Promise<IACeleV2.API.Response.Tree<M>> => {
+    tree = async <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.Tree<M>,
+    ): Promise<IACele.API.Response.Tree<M>> => {
 
         // Función de búsqueda y lectura para árbol
-        const apiCall = async (): Promise<IACeleV2.API.Response.Tree<M>> => {
+        const apiCall = async (): Promise<IACele.API.Response.Tree<M>> => {
             // Obtención de los datos
-            const response = this.post<IACeleV2.API.Request.Tree<M>, IACeleV2.API.Response.Tree<M>>(
+            const response = this.post<IACele.API.Request.Tree<M>, IACele.API.Response.Tree<M>>(
                 PATH.FRONTEND.TREE,
                 data,
             );
@@ -201,17 +201,17 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.Tree<M>>(apiCall, () => {});
+        return this.execute<IACele.API.Response.Tree<M>>(apiCall, () => {});
     };
 
-    formv2 = async <M extends IACeleV2.Data.ModelName>(
-        data: IACeleV2.API.Request.Form<M>,
-    ): Promise<IACeleV2.API.Response.Form<M>> => {
+    form = async <M extends IACele.Data.ModelName>(
+        data: IACele.API.Request.Form<M>,
+    ): Promise<IACele.API.Response.Form<M>> => {
 
         // Función de lectura para formulario
-        const apiCall = async (): Promise<IACeleV2.API.Response.Form<M>> => {
+        const apiCall = async (): Promise<IACele.API.Response.Form<M>> => {
             // Obtención de los datos
-            const response = await this.post<IACeleV2.API.Request.Form<M>, IACeleV2.API.Response.Form<M>>(
+            const response = await this.post<IACele.API.Request.Form<M>, IACele.API.Response.Form<M>>(
                 PATH.FRONTEND.FORM,
                 data,
             );
@@ -219,7 +219,7 @@ class Client {
             return response;
         };
 
-        return this.execute<IACeleV2.API.Response.Form<M>>(apiCall, () => {});
+        return this.execute<IACele.API.Response.Form<M>>(apiCall, () => {});
     };
 
     private get = async <S, R>(

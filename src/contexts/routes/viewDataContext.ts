@@ -1,4 +1,4 @@
-import type VIEW_V2 from "@/views/ViewsV2";
+import type VIEW from "@/views/Views";
 import { createContext } from "react";
 
 interface OnCreateParams {
@@ -10,9 +10,9 @@ interface OnUpdateParams {
 };
 
 interface ViewDataContextParams {
-    viewDataName: keyof typeof VIEW_V2;
+    viewDataName: keyof typeof VIEW;
     recordId: number;
-    display: IACeleV2.UI.DisplayOption;
+    display: IACele.UI.DisplayOption;
     onCreate: (params: OnCreateParams) => (void);
     onUpdate: (params: OnUpdateParams) => (void);
     newRecord?: () => (void);

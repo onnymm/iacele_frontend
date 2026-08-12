@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const PageNameContext = createContext<IACeleV2.App.PageName>({
+const PageNameContext = createContext<IACele.App.PageName>({
     pageName: null,
     setPageName: () => null,
 });

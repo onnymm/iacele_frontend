@@ -1,12 +1,12 @@
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import { useMemo } from "react";
 
-type InvisibleComponentParams <M extends IACeleV2.Data.ModelName> = (
-    & IACeleV2.Common.SupportsChildren
-    & IACeleV2.View.SupportsInvisibleParams<M>
+type InvisibleComponentParams <M extends IACele.Data.ModelName> = (
+    & IACele.Common.SupportsChildren
+    & IACele.View.SupportsInvisibleParams<M>
 );
 
-const InvisibleComponent = <M extends IACeleV2.Data.ModelName>({
+const InvisibleComponent = <M extends IACele.Data.ModelName>({
     invisible = false,
     children,
 }: InvisibleComponentParams<M>) => {

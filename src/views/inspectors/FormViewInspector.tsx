@@ -2,9 +2,9 @@ import useRequiresField from "@/hooks/views/useRequiresField";
 import { useEffect } from "react";
 import type FieldComponent from "../FieldComponent";
 
-const FormViewInspector = <M extends IACeleV2.Data.ModelName>({
+const FormViewInspector = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.View.FormStructure<M, typeof FieldComponent>) => {
+}: IACele.View.FormStructure<M, typeof FieldComponent>) => {
 
     return children({
         Field: InspectView.Field,
@@ -19,21 +19,21 @@ const FormViewInspector = <M extends IACeleV2.Data.ModelName>({
 
 const InspectView = {
 
-    Page: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
+    Page: ({ children }: IACele.Common.SupportsChildren) => (children),
 
-    Header: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
+    Header: ({ children }: IACele.Common.SupportsChildren) => (children),
 
     Action: () => (null),
 
     Wizard: () => (null),
 
-    Sheet: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
+    Sheet: ({ children }: IACele.Common.SupportsChildren) => (children),
 
-    Group: ({ children }: IACeleV2.Common.SupportsChildren) => (children),
+    Group: ({ children }: IACele.Common.SupportsChildren) => (children),
 
-    Field: <M extends IACeleV2.Data.ModelName>({
+    Field: <M extends IACele.Data.ModelName>({
         name,
-    }: IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
+    }: IACele.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
         // Obtención de función de campo requerido
         const { requiresField } = useRequiresField<M>();
         // Registro de campo requerido

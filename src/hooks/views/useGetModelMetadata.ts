@@ -1,4 +1,4 @@
-import ModelsMetadataContextV2 from "@/contexts/views/modelsMetadataContextV2";
+import ModelsMetadataContext from "@/contexts/views/modelsMetadataContext";
 import { useContext, useEffect, useMemo } from "react";
 
 interface _NotLoadedModelMetadata {
@@ -6,19 +6,19 @@ interface _NotLoadedModelMetadata {
     metadata: undefined;
 };
 
-interface _LoadedModelMetadata <M extends IACeleV2.Data.ModelName>{
+interface _LoadedModelMetadata <M extends IACele.Data.ModelName>{
     loaded: true;
-    metadata: IACeleV2.Data.FieldsMetadata<M>;
+    metadata: IACele.Data.FieldsMetadata<M>;
 };
 
-type ModelMetadata<M extends IACeleV2.Data.ModelName> = _NotLoadedModelMetadata | _LoadedModelMetadata<M>;
+type ModelMetadata<M extends IACele.Data.ModelName> = _NotLoadedModelMetadata | _LoadedModelMetadata<M>;
 
-const useGetModelMetadata = <M extends IACeleV2.Data.ModelName>(
+const useGetModelMetadata = <M extends IACele.Data.ModelName>(
     modelName: M,
 ) => {
 
     // Obtención del estado y función desde el contexto
-    const { modelsMetadata, getFieldsMetadata } = useContext<IACeleV2.Context.ViewContext.ModelsMetadata<M>>(ModelsMetadataContextV2);
+    const { modelsMetadata, getFieldsMetadata } = useContext<IACele.Context.ViewContext.ModelsMetadata<M>>(ModelsMetadataContext);
 
     // Efecto para ejecutar la obtención de los metadatos del modelo
     useEffect(

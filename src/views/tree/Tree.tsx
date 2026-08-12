@@ -14,16 +14,16 @@ import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/views/FieldComponent";
 import { useContext, useEffect, useMemo, useState } from "react";
 
-const Tree = <M extends IACeleV2.Data.ModelName>({
+const Tree = <M extends IACele.Data.ModelName>({
     children,
     open,
-}: IACeleV2.View.TreeStructure<M, typeof FieldComponent>) => {
+}: IACele.View.TreeStructure<M, typeof FieldComponent>) => {
 
     // Obtención de configuración de vista y función para suscribir configuración de campos
     const { fieldConfig, suscribeFieldConfig } = useFieldConfig<M>();
 
     // Tipado de contexto a usar como proveedor
-    const ClosureFieldConfigContext: React.Context<IACeleV2.Context.ViewContext.FieldConfig<M, typeof FieldComponent>> = FieldConfigContext;
+    const ClosureFieldConfigContext: React.Context<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>> = FieldConfigContext;
 
     const { onRowClick } = useOpenRecord(open);
 
@@ -45,20 +45,20 @@ export default Tree;
 
 const TreeInspector = {
 
-    Page: <M extends IACeleV2.Data.ModelName>({
+    Page: <M extends IACele.Data.ModelName>({
         children,
-    }: IACeleV2.View.TreeComponents<M, typeof FieldComponent>['Page']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Page']) => {
 
         return (children);
     },
 
-    Field: <M extends IACeleV2.Data.ModelName>({
+    Field: <M extends IACele.Data.ModelName>({
         name,
         widget,
-    }: IACeleV2.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
-        const { suscribeFieldConfig } = useContext<IACeleV2.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
+        const { suscribeFieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
 
         // Suscripción de campo en efecto
         useEffect(
@@ -108,12 +108,12 @@ const TreeRender = () => {
 
 const TreeComponent = {
 
-    Columns: <M extends IACeleV2.Data.ModelName>() => {
+    Columns: <M extends IACele.Data.ModelName>() => {
 
         // Obtención de los metadatos del modelo
         const { modelMetadata } = useModelMetadata<M>();
         // Obtención de la configuración de campos desde el contexto
-        const { fieldConfig } = useContext<IACeleV2.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
+        const { fieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
 
         return (
             <TableRow>
@@ -130,9 +130,9 @@ const TreeComponent = {
         )
     },
 
-    Rows: <M extends IACeleV2.Data.ModelName>({
+    Rows: <M extends IACele.Data.ModelName>({
         children,
-    }: IACeleV2.Common.SupportsChildren) => {
+    }: IACele.Common.SupportsChildren) => {
 
         // Obtención de los registros originales desde el contexto
         const { originalRecords } = useOriginalRecords<M>();
@@ -160,12 +160,12 @@ const TreeComponent = {
         );
     },
 
-    RecordRowProvider: <M extends IACeleV2.Data.ModelName>({
+    RecordRowProvider: <M extends IACele.Data.ModelName>({
         children,
-    }: IACeleV2.Common.SupportsChildren) => {
+    }: IACele.Common.SupportsChildren) => {
 
         // Contexto tipado
-        const ClosureRecordContext: React.Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
+        const ClosureRecordContext: React.Context<IACele.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
 
         // Obtención de valores desde el hook
         const {
@@ -205,12 +205,12 @@ const TreeComponent = {
         );
     },
 
-    Row: <M extends IACeleV2.Data.ModelName>() => {
+    Row: <M extends IACele.Data.ModelName>() => {
 
         // Obtención de la configuración de campos desde el contexto
-        const { fieldConfig, onRowClick } = useContext<IACeleV2.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
+        const { fieldConfig, onRowClick } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
         // Obtención del registro en vista
-        const { recordInView } = useContext<IACeleV2.Context.ViewContext.RecordEdition<M>>(RecordEditionContext)
+        const { recordInView } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext)
 
         return (
             <TableRow onClick={() => {onRowClick(recordInView)}} className="cursor-pointer">
@@ -232,10 +232,10 @@ const TreeComponent = {
 
 } as const;
 
-const CellRender = <M extends IACeleV2.Data.ModelName>({
+const CellRender = <M extends IACele.Data.ModelName>({
     name,
     widget = 'default',
-}: IACeleV2.View.TreeFieldComponentProps<M, typeof FieldComponent>) => {
+}: IACele.View.TreeFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Obtención de los metadatos del campo
     const { modelMetadata } = useModelMetadata<M>();

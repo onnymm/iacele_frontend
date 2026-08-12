@@ -1,28 +1,28 @@
-import ModelsMetadataContextV2 from "@/contexts/views/modelsMetadataContextV2";
+import ModelsMetadataContext from "@/contexts/views/modelsMetadataContext";
 import useAPI from "@/hooks/app/useAPI"
 import { useCallback, useState } from "react";
 
-const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
+const ModelsMetadataProvider = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención de instancia de conexiones a la API
     const { api } = useAPI();
 
     // Inciialización de referencia
-    const [ modelsMetadata, setModelsMetadata ] = useState<IACeleV2.Data.ModelsMetadata<M>>({});
+    const [ modelsMetadata, setModelsMetadata ] = useState<IACele.Data.ModelsMetadata<M>>({});
 
     // Función para obtención de metadatos del modelo
     const getFieldsMetadata = useCallback(
-        async <M extends IACeleV2.Data.ModelName>(
+        async <M extends IACele.Data.ModelName>(
             modelName: M,
         ) => {
             // Si no existen metadatos del modelo...
             if ( !modelsMetadata[modelName] ){
                 // Obtención de los metadatos desde el backend
-                const fieldsMetadata: IACeleV2.API.Response.FieldsMetadata<M> = await api.fieldsMetadataV2<M>({ 'model_name': modelName });
+                const fieldsMetadata: IACele.API.Response.FieldsMetadata<M> = await api.fieldsMetadata<M>({ 'model_name': modelName });
                 // Inicialización de objeto de metadatos mapeados
-                const mappedMetadata: Partial<IACeleV2.Data.FieldsMetadata<M>> = {};
+                const mappedMetadata: Partial<IACele.Data.FieldsMetadata<M>> = {};
                 // Iteración por cada objeto de metadatos de campo
                 fieldsMetadata.forEach(
                     (fieldMetadata) => {
@@ -44,10 +44,10 @@ const ModelsMetadataProviderV2 = <M extends IACeleV2.Data.ModelName>({
     );
 
     return (
-        <ModelsMetadataContextV2.Provider value={{ modelsMetadata, getFieldsMetadata }}>
+        <ModelsMetadataContext.Provider value={{ modelsMetadata, getFieldsMetadata }}>
             {children}
-        </ModelsMetadataContextV2.Provider>
+        </ModelsMetadataContext.Provider>
     );
 };
 
-export default ModelsMetadataProviderV2;
+export default ModelsMetadataProvider;

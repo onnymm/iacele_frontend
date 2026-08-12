@@ -3,17 +3,17 @@ import DarkModeProvider from "./DarkModeProvider";
 import MainControlsProvider from "./MainControlsProvider";
 import PageNameProvider from "./PageNameProvider"
 import HeaderControlsProvider from "./HeaderControlsProvider";
-import ModelsMetadataProviderV2 from "./ModelsMetadataProviderV2";
+import ModelsMetadataProvider from "./ModelsMetadataProvider";
 
 const ApplicationProvider = ({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     return (
         <DarkModeProvider>
         <PageNameProvider>
 
-        <ModelsMetadataProviderV2>
+        <ModelsMetadataProvider>
 
         <TooltipProvider>
 
@@ -25,7 +25,7 @@ const ApplicationProvider = ({
 
         </TooltipProvider>
 
-        </ModelsMetadataProviderV2>
+        </ModelsMetadataProvider>
 
         </PageNameProvider>
         </DarkModeProvider>

@@ -3,22 +3,22 @@ import ModelNameContext from "@/contexts/views/modelNameContext";
 import ViewConfigContext from "@/contexts/views/viewConfigContext";
 import useDataView from "@/hooks/routes/useDataView";
 import useGetModelMetadata from "@/hooks/views/useGetModelMetadata";
-import VIEW_V2 from "@/views/ViewsV2";
+import VIEW from "@/views/Views";
 import { useMemo } from "react";
 
-const ModelDataProvider = <M extends IACeleV2.Data.ModelName>({
+const ModelDataProvider = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención del nombre de la vista
     const { viewDataName } = useDataView();
     // Obtención del objeto de vista
     const viewData = useMemo(
-        () => (VIEW_V2[viewDataName]), [viewDataName]
+        () => (VIEW[viewDataName]), [viewDataName]
     );
 
     // Obtención del nombre del modelo
-    const modelName = VIEW_V2[viewDataName].modelName as M;
+    const modelName = VIEW[viewDataName].modelName as M;
     // Obtención de función para obtener los metadatos de los campos del modelo
     const { modelMetadata } = useGetModelMetadata<M>(modelName);
 

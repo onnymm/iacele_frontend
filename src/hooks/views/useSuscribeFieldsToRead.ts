@@ -1,13 +1,13 @@
 import { useCallback, useRef } from "react";
 
-const useSuscribeFieldsToRead = <M extends IACeleV2.Data.ModelName>() => {
+const useSuscribeFieldsToRead = <M extends IACele.Data.ModelName>() => {
 
     // Inicialización de lista de campos a leer
-    const fieldsToRead = useRef<IACeleV2.Data.ReadField<M>[]>([]);
+    const fieldsToRead = useRef<IACele.Data.ReadField<M>[]>([]);
 
     // Función para suscribir campo para lectura
     const suscribeFieldToRead = useCallback(
-        (fieldName: IACeleV2.Data.ReadField<M>) => {
+        (fieldName: IACele.Data.ReadField<M>) => {
             // Se busca el valor del campo en el array
             const foundValue = fieldsToRead.current.find(
                 ( suscribedFieldName ) => {

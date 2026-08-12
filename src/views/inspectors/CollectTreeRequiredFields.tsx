@@ -1,7 +1,7 @@
 import useViewData from "@/hooks/views/useViewData";
 import TreeViewInspector from "./TreeViewInspector";
 
-const CollectTreeRequiredFields = <M extends IACeleV2.Data.ModelName>() => {
+const CollectTreeRequiredFields = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de la declaración de la vista
     const { View } = useViewData<M, 'tree'>();

@@ -6,9 +6,9 @@ import useModelMetadata from "@/hooks/views/useModelMetadata";
 import useOriginalRecord from "@/hooks/views/useOriginalRecord";
 import { useCallback, useEffect, useState } from "react";
 
-const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
+const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención de la instancia de conexión a la API
     const { api } = useAPI();
@@ -17,7 +17,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
     // Obtención de los datos del registro original desde el contexto
     const { recordId, originalRecord, updateOriginalRecord, reload } = useOriginalRecord<M>();
     // Inicialización de estado del objeto de registro en edición
-    const [ editableRecord, setEditableRecord ] = useState<IACeleV2.Data.EditableRecord<M>>({});
+    const [ editableRecord, setEditableRecord ] = useState<IACele.Data.EditableRecord<M>>({});
     // Obtención de función para obtener los metadatos de los campos del modelo
     const { modelMetadata } = useModelMetadata<M>();
     // Inicialización de función para deshacer cambios
@@ -36,7 +36,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
     // Función para extraer la referencia de valores de tipo many2one
     const extractM2OReference = useCallback(
-        (m2oValue: IACeleV2.Data.TType.Many2One['database']) => {
+        (m2oValue: IACele.Data.TType.Many2One['database']) => {
 
             // Si el valor entrante es nulo...
             if ( m2oValue === null ) {
@@ -49,7 +49,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
     // Función para eliminar un valor en registro editable que es igual en el registro original
     const deleteChangesInField = useCallback(
-        (fieldName: IACeleV2.Data.FieldName<M>) => {
+        (fieldName: IACele.Data.FieldName<M>) => {
 
             // Intento de actualización de estado
             setEditableRecord(
@@ -75,9 +75,9 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
     // Función para actualizar valor de campo
     const updateFieldValue = useCallback(
-        <F extends IACeleV2.Data.FieldName<M>>(
+        <F extends IACele.Data.FieldName<M>>(
             fieldName: F,
-            inputValue: IACeleV2.Data.RecordForView<M>[F],
+            inputValue: IACele.Data.RecordForView<M>[F],
         ) => {
 
             // Actualización del valor
@@ -92,9 +92,9 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
     // Inicialización de función para editar el registro
     const updateEditableRecordField = useCallback(
-        <F extends IACeleV2.Data.FieldName<M>>(
+        <F extends IACele.Data.FieldName<M>>(
             fieldName: F,
-            inputValue: IACeleV2.Data.RecordForView<M>[F],
+            inputValue: IACele.Data.RecordForView<M>[F],
         ) => {
 
             // Obtención del valor del campo en el registro
@@ -128,9 +128,9 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
                     break;
                 case 'many2one': {
                     // Obtención del valor ingresado
-                    const inputM2OValue = extractM2OReference(inputValue as IACeleV2.Data.TType.Many2One['database']);
+                    const inputM2OValue = extractM2OReference(inputValue as IACele.Data.TType.Many2One['database']);
                     // Obtención del valor de la base de datos
-                    const currentM2OValue = extractM2OReference(originalValue as IACeleV2.Data.TType.Many2One['database']);
+                    const currentM2OValue = extractM2OReference(originalValue as IACele.Data.TType.Many2One['database']);
                     // Si el valor es distinto al de la base de datos...
                     if ( inputM2OValue !== currentM2OValue ) {
                         // Actualización del valor
@@ -145,7 +145,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
                 case 'one2many':
                 case 'many2many':
                     // Si comandos de relación...
-                    if ( Object.keys(inputValue as IACeleV2.Data.RelationCommand<M>).length ) {
+                    if ( Object.keys(inputValue as IACele.Data.RelationCommand<M>).length ) {
                         // Actualización del valor
                         updateFieldValue(fieldName, inputValue);
                         // Si no existen comandos de relación
@@ -188,7 +188,7 @@ const EditableRecordProvider = <M extends IACeleV2.Data.ModelName>({
             };
 
             // Ejecución de la acción
-            await api.actionV2({
+            await api.action({
                 'model_name': modelName,
                 'name': actionName,
                 'record_id': recordId,

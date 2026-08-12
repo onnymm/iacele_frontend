@@ -1,4 +1,4 @@
-declare namespace IACeleV2 {
+declare namespace IACele {
 
     declare namespace Common {
 
@@ -947,7 +947,7 @@ declare namespace IACeleV2 {
             interface OriginalRecords <M extends Data.ModelName>{
                 originalRecords: Data.RecordFromDatabase<M>[];
                 reload: () => (void);
-                fieldsToRead: RefObject<IACeleV2.Data.ReadField<M>[]>;
+                fieldsToRead: RefObject<IACele.Data.ReadField<M>[]>;
             };
 
             interface RecordInView <M extends Data.ModelName>{
@@ -960,11 +960,11 @@ declare namespace IACeleV2 {
             };
 
             interface EditableRecord <M extends Data.ModelName>{
-                editableRecord: IACeleV2.Data.EditableRecord<M>;
+                editableRecord: IACele.Data.EditableRecord<M>;
                 undoChangesInEditableRecord: () => (void);
-                updateEditableRecordField: <F extends IACeleV2.Data.FieldName<M>>(
+                updateEditableRecordField: <F extends IACele.Data.FieldName<M>>(
                     fieldName: F,
-                    inputValue: IACeleV2.Data.RecordForView<M>[F],
+                    inputValue: IACele.Data.RecordForView<M>[F],
                 ) => (void);
                 saveChanges: () => (Promise<true | number>);
                 existingChanges: boolean;
@@ -1016,11 +1016,11 @@ declare namespace IACeleV2 {
 
             interface Field <M extends Data.ModelName, O extends View.FieldComponent>{
                 params: View.FormFieldComponentProps<M, O>;
-                fieldMetadata: IACeleV2.Data.FieldsMetadata<M>[IACeleV2.Data.FieldName<M>];
+                fieldMetadata: IACele.Data.FieldsMetadata<M>[IACele.Data.FieldName<M>];
             };
 
             interface ContextData <M extends Data.ModelName>{
-                contextData: IACeleV2.Data.RecordForView<M>;
+                contextData: IACele.Data.RecordForView<M>;
             };
 
             interface FieldConfig <M extends Data.ModelName, O extends View.FieldComponent>{
@@ -1054,7 +1054,7 @@ declare namespace IACeleV2 {
 
     declare namespace Provider {
 
-        interface EmptyRecordParams <M extends Data.ModelName> extends IACeleV2.Common.SupportsChildren{
+        interface EmptyRecordParams <M extends Data.ModelName> extends IACele.Common.SupportsChildren{
             fieldsToRead: React.RefObject<Data.ReadField<M>[]>;
         };
 
@@ -1080,37 +1080,37 @@ declare namespace IACeleV2 {
 
             me: () => Promise<void>;
 
-            fieldsMetadataV2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.FieldsMetadata<M>,
-            ) => Promise<IACeleV2.API.Response.FieldsMetadata<M>>;
+            fieldsMetadata: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.FieldsMetadata<M>,
+            ) => Promise<IACele.API.Response.FieldsMetadata<M>>;
 
-            actionV2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.Action<M>,
+            action: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.Action<M>,
             ) => Promise<true>;
 
-            createV2: <M extends IACeleV2.Data.ModelName>(
-                data: IACeleV2.API.Request.Create<M>,
-            ) => Promise<IACeleV2.API.Response.Create>;
+            create: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Create<M>,
+            ) => Promise<IACele.API.Response.Create>;
 
-            searchReadV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.SearchRead<M>,
-            ) => Promise<IACeleV2.API.Response.SearchRead<M>>;
+            searchRead: <M extends keyof IACele.Data.Model>(
+                data: IACele.API.Request.SearchRead<M>,
+            ) => Promise<IACele.API.Response.SearchRead<M>>;
 
-            updateV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.Update<M>,
-            ) => Promise<IACeleV2.API.Response.Update>;
+            update: <M extends keyof IACele.Data.Model>(
+                data: IACele.API.Request.Update<M>,
+            ) => Promise<IACele.API.Response.Update>;
 
-            deleteV2: <M extends IACeleV2.Data.ModelName>(
-                data: IACeleV2.API.Request.Delete<M>,
+            delete: <M extends IACele.Data.ModelName>(
+                data: IACele.API.Request.Delete<M>,
             ) => Promise<true>;
 
-            treeV2: <M extends keyof IACeleV2.Data.Model>(
-                data: IACeleV2.API.Request.Tree<M>,
-            ) => Promise<IACeleV2.API.Response.Tree<M>>;
+            tree: <M extends keyof IACele.Data.Model>(
+                data: IACele.API.Request.Tree<M>,
+            ) => Promise<IACele.API.Response.Tree<M>>;
 
-            formv2: <M extends IACeleV2.Data.ModelName>(
-                params: IACeleV2.API.Request.Form<M>,
-            ) => Promise<IACeleV2.API.Response.Form__<M>>;
+            form: <M extends IACele.Data.ModelName>(
+                params: IACele.API.Request.Form<M>,
+            ) => Promise<IACele.API.Response.Form__<M>>;
 
         };
 

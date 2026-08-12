@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 type DarkModeOnLocalStorage = "false" | "true";
 
-const DarkModeProvider: React.FC<IACeleV2.Common.SupportsChildren> = ({
+const DarkModeProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 

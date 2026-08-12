@@ -45,7 +45,7 @@ export default FormView;
 
 const CreateOrUpdateMode = ({
     children,
-}: IACeleV2.View.CreateOrUpdateModeParams) => {
+}: IACele.View.CreateOrUpdateModeParams) => {
 
     // Obtención la ID del registro
     const { recordId } = useDataView();

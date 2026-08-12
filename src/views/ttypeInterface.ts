@@ -7,18 +7,18 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 const TTypeInterface = {
 
-    useInteger: <M extends IACeleV2.Data.ModelName>() => {
+    useInteger: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor de campo
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Integer['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Integer['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
-            (value: string): IACeleV2.Data.TType.Integer['view'] => (
+            (value: string): IACele.Data.TType.Integer['view'] => (
                 value === EMPTY_STRING
                     ? null
                     : Number(value.replace(/\D/, ''))
@@ -38,18 +38,18 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useChar: <M extends IACeleV2.Data.ModelName>() => {
+    useChar: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Char['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Char['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
-            (value: string): IACeleV2.Data.TType.Char['view'] => (
+            (value: string): IACele.Data.TType.Char['view'] => (
                 value === EMPTY_STRING
                     ? null
                     : value
@@ -69,18 +69,18 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useText: <M extends IACeleV2.Data.ModelName>() => {
+    useText: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Text['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Text['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
-            (inputValue: string): IACeleV2.Data.TType.Text['view'] => (
+            (inputValue: string): IACele.Data.TType.Text['view'] => (
                 inputValue === EMPTY_STRING
                     ? null
                     : inputValue
@@ -100,14 +100,14 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useBoolean: <M extends IACeleV2.Data.ModelName>() => {
+    useBoolean: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Boolean['view']) ?? false;
+        const value = (recordInView[params.name] as IACele.Data.TType.Boolean['view']) ?? false;
 
         // Función de procesamiento del valor
         const process = useCallback(
@@ -133,14 +133,14 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useFloat: <M extends IACeleV2.Data.ModelName>() => {
+    useFloat: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor de campo
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros de campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Float['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Float['view']) ?? EMPTY_STRING;
 
         // Inicialización de estado de valor de campo
         const [ inputValue, setInputValue ] = useState<number | string>(value);
@@ -188,14 +188,14 @@ const TTypeInterface = {
         return { value: inputValue, setValue, isReadonly };
     },
 
-    useDate: <M extends IACeleV2.Data.ModelName>() => {
+    useDate: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Char['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Char['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
@@ -215,14 +215,14 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useDatetime: <M extends IACeleV2.Data.ModelName>() => {
+    useDatetime: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Datetime['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Datetime['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
@@ -250,14 +250,14 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useTime: <M extends IACeleV2.Data.ModelName>() => {
+    useTime: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Time['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Time['view']) ?? EMPTY_STRING;
 
         // Función de procesamiento del valor
         const processValue = useCallback(
@@ -277,7 +277,7 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useDuration: <M extends IACeleV2.Data.ModelName>() => {
+    useDuration: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
@@ -285,7 +285,7 @@ const TTypeInterface = {
         const { params, isReadonly } = useFieldParams<M>();
 
         // Obtención del valor actual del registro
-        const value = recordInView[params.name] as IACeleV2.Data.TType.Duration['view'];
+        const value = recordInView[params.name] as IACele.Data.TType.Duration['view'];
 
         // Mapeo de índices
         const INDEX = useMemo(
@@ -303,7 +303,7 @@ const TTypeInterface = {
 
         // Función para parsear valor entrante como nulo o cadena de texto en tupla de nulos o números
         const toTuple = useCallback(
-            (formValue: string | null | undefined): IACeleV2.View.DurationType => {
+            (formValue: string | null | undefined): IACele.View.DurationType => {
                 // Si el valor es nulo o indefinido se retorna la forma nula
                 if ( formValue === null || formValue === undefined ) return (NULL_VALUE);
 
@@ -312,13 +312,13 @@ const TTypeInterface = {
                     .split(':')
                     .map(
                         (v) => (Number(v))
-                    ) as IACeleV2.View.DurationType
+                    ) as IACele.View.DurationType
                 );
             }, [NULL_VALUE]
         );
 
         // Inicialización de estado del valor como array
-        const [ arrayValue, setArrayValue ] = useState<IACeleV2.View.DurationType>(toTuple(value));
+        const [ arrayValue, setArrayValue ] = useState<IACele.View.DurationType>(toTuple(value));
 
         // Efecto para actualizar el valor del array cada vez que el valor del formulario cambia
         useEffect(
@@ -329,7 +329,7 @@ const TTypeInterface = {
 
         // Función para convertir el valor de tuplas en cadena de texto
         const toString = useCallback(
-            (arr: IACeleV2.View.DurationType) => (
+            (arr: IACele.View.DurationType) => (
                 arr[INDEX.HOURS] === null
                     ? null
                     : (arr as [number, number, number]).map(
@@ -366,7 +366,7 @@ const TTypeInterface = {
                                     };
                                 };
                             }
-                        ) as IACeleV2.View.DurationType
+                        ) as IACele.View.DurationType
                     )
                 );
                 // Actualización del valor en el registro en edición
@@ -414,14 +414,14 @@ const TTypeInterface = {
         };
     },
 
-    useFile: <M extends IACeleV2.Data.ModelName>() => {
+    useFile: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.File['view'] ?? 'null');
+        const value = (recordInView[params.name] as IACele.Data.TType.File['view'] ?? 'null');
 
         // Obtención de función para convertir a base64
         const { convertToBase64 } = useBase64();
@@ -448,7 +448,7 @@ const TTypeInterface = {
         return { value, setValue, isReadonly };
     },
 
-    useSelection: <M extends IACeleV2.Data.ModelName>() => {
+    useSelection: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
@@ -457,7 +457,7 @@ const TTypeInterface = {
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.Selection<string>['view']) ?? EMPTY_STRING;
+        const value = (recordInView[params.name] as IACele.Data.TType.Selection<string>['view']) ?? EMPTY_STRING;
 
         // Función para establecer el valor
         const processValue = useCallback(
@@ -488,14 +488,14 @@ const TTypeInterface = {
         return { value, setValue, deleteValue, fieldMetadata, isReadonly };
     },
 
-    useMany2One: <M extends IACeleV2.Data.ModelName>() => {
+    useMany2One: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, fieldMetadata, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const rawValue = recordInView[params.name] as IACeleV2.Data.TType.Many2One['view'];
+        const rawValue = recordInView[params.name] as IACele.Data.TType.Many2One['view'];
         // Valor actualizado
         const value = useMemo(
             () => (
@@ -515,13 +515,13 @@ const TTypeInterface = {
 
         // Función para cambiar el formato del valor
         const reshape = useCallback(
-            (inputValue: IACeleV2.Data.TType.Many2One['view']) => {
+            (inputValue: IACele.Data.TType.Many2One['view']) => {
                 // Si el valor del formulario es nulo, se retorna una lista vacía
                 if ( inputValue === null ) return ([]);
                 // Extracción de ID y nombre de registro referenciado
                 const [ id, displayName ] = inputValue;
                 // Inicialización de lista de opciones donde se muestra el registro para que se procese correctamente
-                const recordInOptions: IACeleV2.View.Many2OneOption[] = [
+                const recordInOptions: IACele.View.Many2OneOption[] = [
                     {
                         'id': id,
                         'display_name': displayName,
@@ -552,7 +552,7 @@ const TTypeInterface = {
                 // Se inicia el estado de carga
                 setLoading(true);
                 // Obtención de registros
-                const records = await api.searchReadV2({
+                const records = await api.searchRead({
                     'model_name': fieldMetadata['related_model'],
                 });
                 // Se establecen los registros en las opciones
@@ -565,7 +565,7 @@ const TTypeInterface = {
         );
 
         // Inicialización de estado de opciones a seleccionar
-        const [ options, setOptions ] = useState<IACeleV2.View.Many2OneOption[]>(
+        const [ options, setOptions ] = useState<IACele.View.Many2OneOption[]>(
             () => (reshape(rawValue))
         );
 
@@ -583,7 +583,7 @@ const TTypeInterface = {
             (recordId: string) => {
                 // Procesamiento del valor
                 const value = process(recordId);
-                let many2oneValue: IACeleV2.Data.TType.Many2One['view'];
+                let many2oneValue: IACele.Data.TType.Many2One['view'];
                 // Si el valor a asignar es nulo
                 if ( value === null ) {
                     // Construcción del valor en formato tupla many2one
@@ -593,7 +593,7 @@ const TTypeInterface = {
                 } else {
 
                     // Búsqueda del registro dentro de las opciones
-                    const foundItem = options.find( (option) => (option['id'] === value) ) as IACeleV2.View.Many2OneOption;
+                    const foundItem = options.find( (option) => (option['id'] === value) ) as IACele.View.Many2OneOption;
                     // Construcción del valor en formato tupla many2one
                     many2oneValue = [foundItem['id'], foundItem['display_name']];
                 };
@@ -612,38 +612,38 @@ const TTypeInterface = {
         return { value, displayName, setValue, isOpen, load, loading, options, deleteValue, isReadonly };
     },
 
-    useOne2Many: <M extends IACeleV2.Data.ModelName>() => {
+    useOne2Many: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const values = recordInView[params.name] as IACeleV2.Data.TType.One2Many['view'];
+        const values = recordInView[params.name] as IACele.Data.TType.One2Many['view'];
 
         return { values };
     },
 
-    useMany2Many: <M extends IACeleV2.Data.ModelName>() => {
+    useMany2Many: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const values = recordInView[params.name] as IACeleV2.Data.TType.Many2Many['view'];
+        const values = recordInView[params.name] as IACele.Data.TType.Many2Many['view'];
 
         return { values };
     },
 
-    useJSON: <M extends IACeleV2.Data.ModelName>() => {
+    useJSON: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = JSON.stringify(recordInView[params.name] as IACeleV2.Data.TType.JSON['view']);
+        const value = JSON.stringify(recordInView[params.name] as IACele.Data.TType.JSON['view']);
 
         // Inicialización de estado de valor correcto
         const [ isValidValue, setIsValidValue ] = useState<boolean>(true);
@@ -656,7 +656,7 @@ const TTypeInterface = {
                 // Se intenta actualizar el valor
                 try {
                     // Parseo del valor de string a JSON
-                    const jsonValue: IACeleV2.Data.TType.JSON['view'] = JSON.parse(editionValue);
+                    const jsonValue: IACele.Data.TType.JSON['view'] = JSON.parse(editionValue);
                     // Actualización del valor en el registro
                     updateRecordField(params.name, jsonValue as any);
                     // Se establece el valor como válido
@@ -677,14 +677,14 @@ const TTypeInterface = {
         return { value: editionValue, setValue: setEditionValue, isValidValue, validateAndUpdateValue, isReadonly };
     },
 
-    useFile3: <M extends IACeleV2.Data.ModelName>() => {
+    useFile3: <M extends IACele.Data.ModelName>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView, updateRecordField } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly } = useFieldParams<M>();
         // Obtención del valor actual del registro
-        const value = (recordInView[params.name] as IACeleV2.Data.TType.File['view'] ?? 'null');
+        const value = (recordInView[params.name] as IACele.Data.TType.File['view'] ?? 'null');
 
         // Obtención de función para convertir a base64
         const { convertToBase64 } = useBase64();

@@ -3,7 +3,7 @@ import usePageName from "../hooks/app/usePageName"
 
 const PageNameProvider = ({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención de valores de estado desde hook
     const { pageName, setPageName } = usePageName();

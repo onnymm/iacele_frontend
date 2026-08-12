@@ -3,9 +3,9 @@ import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import useReadRecordsFromAPI from "@/hooks/views/useReadRecordsFromAPI";
 import CollectTreeRequiredFields from "@/views/inspectors/CollectTreeRequiredFields";
 
-const RecordsFromDatabaseProvider = <M extends IACeleV2.Data.ModelName>({
+const RecordsFromDatabaseProvider = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención de parámetros y funciones para lectura de datos desde la API
     const { dataFromAPI, reload, fieldsToRead, suscribeFieldToRead } = useReadRecordsFromAPI<M>();

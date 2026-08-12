@@ -2,10 +2,10 @@ import FieldContext from "@/contexts/views/fieldContext";
 import { useContext, useMemo } from "react";
 import useRecordEditionParams from "./useRecordEditionParams";
 
-const useFieldParams = <M extends IACeleV2.Data.ModelName>() => {
+const useFieldParams = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de los parámetros del campo
-    const { params, fieldMetadata } = useContext<IACeleV2.Context.ViewContext.Field<M, any>>(FieldContext);
+    const { params, fieldMetadata } = useContext<IACele.Context.ViewContext.Field<M, any>>(FieldContext);
 
     // Obtención de los parámetros del registro
     const {

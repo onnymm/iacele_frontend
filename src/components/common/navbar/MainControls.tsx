@@ -2,7 +2,7 @@ import MainControlsContext from "@/contexts/ui/mainControlsContext";
 import { useContext } from "react";
 import { createPortal } from "react-dom";
 
-const MainControls: React.FC<IACeleV2.Common.SupportsChildren> = ({
+const MainControls: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 

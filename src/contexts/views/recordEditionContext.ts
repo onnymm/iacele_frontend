@@ -1,7 +1,7 @@
 import EMPTY_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
-const RecordEditionContext = createContext<IACeleV2.Context.ViewContext.RecordEdition<any>>({
+const RecordEditionContext = createContext<IACele.Context.ViewContext.RecordEdition<any>>({
     recordId: 0,
     recordInView: {},
     existingChanges: false,

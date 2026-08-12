@@ -6,7 +6,7 @@ import { useCallback } from "react";
 
 const MainButtons = {
 
-    NewRecord: <M extends IACeleV2.Data.ModelName>() => {
+    NewRecord: <M extends IACele.Data.ModelName>() => {
 
         // Obtención de función para crear registro y modo de visualización
         const { newRecord, createMode } = useRecordEditionParams<M>();
@@ -21,7 +21,7 @@ const MainButtons = {
         };
     },
 
-    Save: <M extends IACeleV2.Data.ModelName>() => {
+    Save: <M extends IACele.Data.ModelName>() => {
 
         // Obtención de estado de cambios existentes y función para guardar cambios
         const { existingChanges, saveChanges } = useRecordEditionParams<M>();
@@ -36,7 +36,7 @@ const MainButtons = {
         };
     },
 
-    UndoChanges: <M extends IACeleV2.Data.ModelName>() => {
+    UndoChanges: <M extends IACele.Data.ModelName>() => {
 
         // Obtención de indicador de cambios existentes y función para deshacer cambios
         const { existingChanges, undoChanges, createMode, undoNewRecord } = useRecordEditionParams<M>();

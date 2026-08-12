@@ -3,7 +3,7 @@ import TokenContext from "../contexts/app/tokenContext";
 import LOCAL_STORAGE from "@/constants/app/localStorage";
 import { useCallback, useState } from "react";
 
-const UserTokenProvider: React.FC<IACeleV2.Common.SupportsChildren> = ({
+const UserTokenProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 

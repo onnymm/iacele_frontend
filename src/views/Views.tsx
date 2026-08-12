@@ -1,8 +1,8 @@
 import type FieldComponent from "./FieldComponent";
 
-const packedView = <M extends IACeleV2.Data.ModelName>(params: IACeleV2.View.PackedParams<M, typeof FieldComponent>) => (params);
+const packedView = <M extends IACele.Data.ModelName>(params: IACele.View.PackedParams<M, typeof FieldComponent>) => (params);
 
-const VIEW_V2 = {
+const VIEW = {
 
     'assistance.registry.day.tree': packedView({
         modelName: 'assistance.registry.day',
@@ -288,4 +288,4 @@ const VIEW_V2 = {
 
 } as const;
 
-export default VIEW_V2;
+export default VIEW;

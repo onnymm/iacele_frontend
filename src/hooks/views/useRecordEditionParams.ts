@@ -1,7 +1,7 @@
 import RecordEditionContext from "@/contexts/views/recordEditionContext";
 import { useContext } from "react";
 
-const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
+const useRecordEditionParams = <M extends IACele.Data.ModelName>() => {
 
     // Obtención del registro editable y función para modificación de valor de campo
     const {
@@ -17,7 +17,7 @@ const useRecordEditionParams = <M extends IACeleV2.Data.ModelName>() => {
         createMode,
         newRecord,
         undoNewRecord,
-    } = useContext<IACeleV2.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
+    } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
     return {
         recordId,

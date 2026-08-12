@@ -18,9 +18,9 @@ import { Spinner } from "@/components/ui/spinner";
 import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
 import EMPTY_CALLBACK from "@/constants/app/callbacks";
 
-const Form = <M extends IACeleV2.Data.ModelName>({
+const Form = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.View.FormStructure<M, typeof FieldComponent>) => {
+}: IACele.View.FormStructure<M, typeof FieldComponent>) => {
 
     return (
         <RecordEditionRender>
@@ -35,7 +35,7 @@ const FormComponent = {
 
     Page: ({
         children,
-    }: IACeleV2.Common.SupportsChildren) => {
+    }: IACele.Common.SupportsChildren) => {
 
         // Obtención del tipo de visualización del formulario
         const { display } = useDataView();
@@ -47,9 +47,9 @@ const FormComponent = {
         );
     },
 
-    Header: <M extends IACeleV2.Data.ModelName>({
+    Header: <M extends IACele.Data.ModelName>({
         children,
-    }: IACeleV2.View.FormComponents<M>['Header']) => {
+    }: IACele.View.FormComponents<M>['Header']) => {
 
         // Obtención de función para renderizar los controles en el encabezado de la app
         const { renderHeaderControls } = useAppHeaderControls();
@@ -57,12 +57,12 @@ const FormComponent = {
         return renderHeaderControls(children);
     },
 
-    Action: <M extends IACeleV2.Data.ModelName>({
+    Action: <M extends IACele.Data.ModelName>({
         name,
         label,
         decoration = 'default',
         invisible,
-    }: IACeleV2.View.FormComponents<M>['Action']) => {
+    }: IACele.View.FormComponents<M>['Action']) => {
 
         // Obtención de instancia de API y estado de carga de la app
         const { api, appLoading } = useAPI();
@@ -81,7 +81,7 @@ const FormComponent = {
                 };
 
                 // Ejecución de la acción
-                await api.actionV2({
+                await api.action({
                     'model_name': modelName,
                     'name': name,
                     'record_id': recordId,
@@ -105,12 +105,12 @@ const FormComponent = {
         );
     },
 
-    Wizard: <M extends IACeleV2.Data.ModelName>({
+    Wizard: <M extends IACele.Data.ModelName>({
         view,
         label,
         contextData,
         decoration,
-    }: IACeleV2.View.FormComponents<M>['Wizard']) => {
+    }: IACele.View.FormComponents<M>['Wizard']) => {
 
         // Obtención de parámetros desde el contexto de formulario
         const { recordInView, reload } = useRecordEditionParams<M>();
@@ -118,7 +118,7 @@ const FormComponent = {
         const { appLoading } = useAPI();
 
         // Construcción de objeto de contexto para establecer valores iniciales en el registro
-        const contextDataForRecord = useMemo<Partial<IACeleV2.Data.RecordForView<IACeleV2.Data.ModelName>>>(
+        const contextDataForRecord = useMemo<Partial<IACele.Data.RecordForView<IACele.Data.ModelName>>>(
             () => (
                 contextData === undefined
                     ? {}
@@ -185,7 +185,7 @@ const FormComponent = {
 
     Sheet: ({
         children,
-    }: IACeleV2.Common.SupportsChildren) => {
+    }: IACele.Common.SupportsChildren) => {
 
         // Obtención de tipo de renderización
         const { display } = useDataView();
@@ -199,11 +199,11 @@ const FormComponent = {
         );
     },
 
-    Group: <M extends IACeleV2.Data.ModelName>({
+    Group: <M extends IACele.Data.ModelName>({
         label,
         children,
         invisible,
-    }: IACeleV2.View.FormComponents<M>['Group']) => {
+    }: IACele.View.FormComponents<M>['Group']) => {
 
         return (
             <InvisibleComponent invisible={invisible}>

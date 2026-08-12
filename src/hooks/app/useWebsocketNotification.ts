@@ -2,7 +2,7 @@ import APIContext from "@/contexts/app/apiContext"
 import { useContext, useEffect } from "react"
 
 const useWebsocketNotification = (
-    eventName: IACeleV2.API.Websocket.MessageName,
+    eventName: IACele.API.Websocket.MessageName,
     callback: ( () => (void) ),
 ) => {
 

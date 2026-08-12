@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const ModelMetadataContext = createContext<IACeleV2.Context.ViewContext.ModelMetadata<any>>({
+const ModelMetadataContext = createContext<IACele.Context.ViewContext.ModelMetadata<any>>({
     modelMetadata: {},
 });
 

@@ -2,13 +2,13 @@ import { useCallback, useEffect, useMemo } from "react";
 import useEditableRecord from "./useEditableRecord";
 import useOriginalRecord from "./useOriginalRecord"
 import useRecordInView from "./useRecordInView";
-import RecordEvaluator from "@/core/ttypesV2";
+import RecordEvaluator from "@/core/ttypes";
 import useModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import useDataContext from "./useDataContext";
 import EMPTY_CALLBACK from "@/constants/app/callbacks";
 
-const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
+const useRecordEdition = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los hooks
     const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
@@ -25,9 +25,9 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
 
     // Función para modificación de valor de campo en registros de edición y vista
     const updateRecordField = useCallback(
-        <F extends IACeleV2.Data.FieldName<M>>(
+        <F extends IACele.Data.FieldName<M>>(
             fieldName: F,
-            value: IACeleV2.Data.RecordForView<M>[F],
+            value: IACele.Data.RecordForView<M>[F],
         ) => {
 
             // Actualización de valor en registro de vista
@@ -57,7 +57,7 @@ const useRecordEdition = <M extends IACeleV2.Data.ModelName>() => {
     useEffect(
         () => {
             // Obtención de los nombres de campos de datos del contexto
-            const fieldNames = Object.keys(contextData) as IACeleV2.Data.FieldName<M>[];
+            const fieldNames = Object.keys(contextData) as IACele.Data.FieldName<M>[];
             // Iteración por los nombres de campo
             fieldNames.forEach(
                 (fieldName) => {

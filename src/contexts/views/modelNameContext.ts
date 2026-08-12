@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-interface ModelNameContextParams <M extends IACeleV2.Data.ModelName>{
+interface ModelNameContextParams <M extends IACele.Data.ModelName>{
     modelName: M;
 };
 

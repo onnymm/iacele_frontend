@@ -2,22 +2,22 @@ import useRequiresField from "@/hooks/views/useRequiresField";
 import type FieldComponent from "../FieldComponent";
 import { useEffect } from "react";
 
-const TreeViewInspector = <M extends IACeleV2.Data.ModelName>({
+const TreeViewInspector = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.View.TreeStructure<M, typeof FieldComponent>) => {
+}: IACele.View.TreeStructure<M, typeof FieldComponent>) => {
 
     return (children({ ...InspectView }));
 };
 
 const InspectView = {
 
-    Page: <M extends IACeleV2.Data.ModelName>({
+    Page: <M extends IACele.Data.ModelName>({
         children,
-    }: IACeleV2.View.TreeComponents<M, typeof FieldComponent>['Page']) => (children),
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Page']) => (children),
 
-    Field: <M extends IACeleV2.Data.ModelName>({
+    Field: <M extends IACele.Data.ModelName>({
         name,
-    }: IACeleV2.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
         // Obtención de función de campo requerido
         const { requiresField } = useRequiresField<M>();
         // Registro de campo requerido

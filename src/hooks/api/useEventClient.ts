@@ -4,7 +4,7 @@ import useUserToken from "../app/useUserToken";
 import showToast from "@/components/ui/toast/toast";
 import { Unplug } from "lucide-react";
 
-const clientConfig: IACeleV2.API.Websocket.EventClientConfig = {
+const clientConfig: IACele.API.Websocket.EventClientConfig = {
     onopen: () => {showToast({title: 'Websocket', content: 'La conexión ha sido establecida.', type: 'success', icon: Unplug})},
     onclose: () => {showToast({title: 'Websocket', content: 'La conexión ha sido cerrada.', type: 'danger', icon: Unplug})},
     defaultNotification: (payload) => {showToast({content: JSON.stringify(payload)})}

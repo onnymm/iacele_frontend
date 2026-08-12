@@ -2,7 +2,7 @@ import APIContext from "../contexts/app/apiContext";
 import useEventClient from "@/hooks/api/useEventClient";
 import useHTTPClient from "@/hooks/api/useHTTPClient";
 
-const APIProvider: React.FC<IACeleV2.Common.SupportsChildren> = ({
+const APIProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 

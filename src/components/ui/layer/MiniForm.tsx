@@ -1,4 +1,4 @@
-interface MiniWrapperParams extends IACeleV2.Common.SupportsChildren {
+interface MiniWrapperParams extends IACele.Common.SupportsChildren {
     onSubmit?: (e: React.SubmitEvent) => void;
 };
 

@@ -19,7 +19,7 @@ interface InputParams {
     end?: React.ReactNode;
 };
 
-interface SubmitButtonParams extends IACeleV2.Common.SupportsChildren {
+interface SubmitButtonParams extends IACele.Common.SupportsChildren {
     isDisabled?: boolean;
     isLoading?: boolean;
 };

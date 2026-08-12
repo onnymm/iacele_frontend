@@ -5,12 +5,12 @@ import RecordEditionContext from "@/contexts/views/recordEditionContext";
 import useDataView from "@/hooks/routes/useDataView";
 import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
 
-const RecordEditionRender = <M extends IACeleV2.Data.ModelName> ({
+const RecordEditionRender = <M extends IACele.Data.ModelName> ({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Contexto tipado
-    const ClosureRecordContext: Context<IACeleV2.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
+    const ClosureRecordContext: Context<IACele.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
     // Obtención de modo de visualización del formulario
     const { display } = useDataView();
 

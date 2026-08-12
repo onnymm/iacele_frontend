@@ -8,9 +8,9 @@ import useSuscribeFieldsToRead from "@/hooks/views/useSuscribeFieldsToRead";
 import CollectFormRequiredFields from "@/views/inspectors/CollectFormRequiredFields";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const EmptyRecordProvider = <M extends IACeleV2.Data.ModelName>({
+const EmptyRecordProvider = <M extends IACele.Data.ModelName>({
     children,
-}: IACeleV2.Common.SupportsChildren) => {
+}: IACele.Common.SupportsChildren) => {
 
     // Obtención de referencia y función para suscripción de campos a leer
     const { fieldsToRead, suscribeFieldToRead } = useSuscribeFieldsToRead<M>();
@@ -35,10 +35,10 @@ const EmptyRecordProvider = <M extends IACeleV2.Data.ModelName>({
 
 export default EmptyRecordProvider;
 
-const InitializeRecordProvider = <M extends IACeleV2.Data.ModelName>({
+const InitializeRecordProvider = <M extends IACele.Data.ModelName>({
     fieldsToRead,
     children,
-}: IACeleV2.Provider.EmptyRecordParams<M>) => {
+}: IACele.Provider.EmptyRecordParams<M>) => {
 
     // Obtención de instancia de conexión a la API
     const { api } = useAPI();
@@ -51,14 +51,14 @@ const InitializeRecordProvider = <M extends IACeleV2.Data.ModelName>({
         () => (fieldsToRead.current), [fieldsToRead]
     );
     // Inicialización de estado de registro vacío
-    const [ emptyRecord, setEmptyRecord ] = useState<IACeleV2.Data.RecordFromDatabase<M>>({} as IACeleV2.Data.RecordFromDatabase<M>);
+    const [ emptyRecord, setEmptyRecord ] = useState<IACele.Data.RecordFromDatabase<M>>({} as IACele.Data.RecordFromDatabase<M>);
 
     // Función para crear registro
     const createRecord = useCallback(
-        async (recordInEdition: IACeleV2.Data.EditableRecord<M>) => {
+        async (recordInEdition: IACele.Data.EditableRecord<M>) => {
 
             // Creación del registro en la base de datos
-            const [ recordId ] = await api.createV2<M>({
+            const [ recordId ] = await api.create<M>({
                 'model_name': modelName,
                 'data': recordInEdition,
             });

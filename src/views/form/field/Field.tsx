@@ -7,7 +7,7 @@ import { CircleQuestionMark } from "lucide-react";
 import { useMemo, type Context } from "react";
 import InvisibleComponent from "../ui/InvisibleComponent";
 
-const FieldLabel = <M extends IACeleV2.Data.ModelName>() => {
+const FieldLabel = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de los metadatos del campo
     const { fieldMetadata } = useFieldParams<M>();
@@ -29,16 +29,16 @@ const FieldLabel = <M extends IACeleV2.Data.ModelName>() => {
     );
 };
 
-const Field = <M extends IACeleV2.Data.ModelName>({
+const Field = <M extends IACele.Data.ModelName>({
     name,
     invisible,
     readonly,
     domain = [],
     widget = 'default',
-}: IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
+}: IACele.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Contexto tipado
-    const ClosureFieldContext: Context<IACeleV2.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
+    const ClosureFieldContext: Context<IACele.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
 
     // Obtención de los metadatos del campo
     const { modelMetadata } = useModelMetadata<M>();
@@ -58,7 +58,7 @@ const Field = <M extends IACeleV2.Data.ModelName>({
     return (
         <InvisibleComponent invisible={invisible}>
             <ClosureFieldContext.Provider value={{
-                params: { name, domain, invisible, widget, readonly } as IACeleV2.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                params: { name, domain, invisible, widget, readonly } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 <FieldLabel />
