@@ -6,12 +6,13 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="relative w-full"
     >
       <table
         data-slot="table"
         className={cn("w-full text-sm caption-bottom", className)}
         {...props}
+        // style={{"tableLayout": "fixed"}}
       />
     </div>
   )
@@ -55,7 +56,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "data-[state=selected]:bg-muted has-aria-expanded:bg-muted/50 hover:bg-muted/50 border-b transition-colors",
+        "border-b transition-colors",
         className
       )}
       {...props}

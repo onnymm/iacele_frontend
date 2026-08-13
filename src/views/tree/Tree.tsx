@@ -91,18 +91,20 @@ const TreeRender = () => {
     if (!loaded) return null;
 
     return (
-        <Table>
-            <TableHeader>
-                <TreeComponent.Columns />
-            </TableHeader>
-            <TableBody>
-                <TreeComponent.Rows>
-                    <TreeComponent.RecordRowProvider>
-                        <TreeComponent.Row />
-                    </TreeComponent.RecordRowProvider>
-                </TreeComponent.Rows>
-            </TableBody>
-        </Table>
+        <div className="size-full">
+            <Table className="relative">
+                <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
+                    <TreeComponent.Columns />
+                </TableHeader>
+                <TableBody>
+                    <TreeComponent.Rows>
+                        <TreeComponent.RecordRowProvider>
+                            <TreeComponent.Row />
+                        </TreeComponent.RecordRowProvider>
+                    </TreeComponent.Rows>
+                </TableBody>
+            </Table>
+        </div>
     );
 };
 
@@ -120,7 +122,7 @@ const TreeComponent = {
                 {
                     fieldConfig.current.map(
                         (config, i) => (
-                            <TableHead key={i}>
+                            <TableHead className="hover:bg-primary/30 transition-colors duration-300 select-none" key={i}>
                                 {modelMetadata[config.name].label}
                             </TableHead>
                         )
