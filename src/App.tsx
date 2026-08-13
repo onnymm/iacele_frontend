@@ -12,11 +12,13 @@ const App = () => {
     useDefaultToastNotifications();
 
     return (
-        <>
+        <main className="flex flex-col h-svh">
             <Navbar />
             <HeaderControlsBearer />
-            <Outlet />
-        </>
+            <section className="h-full overflow-scroll">
+                <Outlet />
+            </section>
+        </main>
     );
 };
 

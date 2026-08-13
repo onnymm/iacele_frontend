@@ -15,6 +15,8 @@ const HeaderControlsBearer = () => {
         }, [setPortalRef]
     );
 
+    // Si no hay componentes para renderizar no se retorna nada
+    if ( !headerControls ) return (null);
     return (
         <div className="flex flex-wrap gap-2 mx-2 mt-2 w-full" ref={headerControlsRef}>
             {headerControls}
