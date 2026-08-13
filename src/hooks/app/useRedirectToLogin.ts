@@ -1,3 +1,4 @@
+import PATH from "@/constants/routes/paths";
 import TokenContext from "@/contexts/app/tokenContext";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router"
@@ -13,7 +14,7 @@ const useRedirectToLogin = () => {
     useEffect(
         () => {
             if ( !userToken ) {
-                navigateTo('/login');
+                navigateTo(PATH.LOGIN);
             };
         }, [userToken, navigateTo]
     );

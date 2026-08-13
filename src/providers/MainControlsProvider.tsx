@@ -7,7 +7,7 @@ const MainControlsProvider: React.FC<IACele.Common.SupportsChildren> = ({
 
     // Inicialización de estado de componente
     const [ mainControls, setMainControls ] = useState<React.ReactNode>(null);
-
+    // Inicialización de estado para almacenar el elemento JSX
     const [ element, setElement ] = useState<HTMLDivElement | null>(null);
 
     return (

@@ -9,6 +9,7 @@ const DarkModeProvider: React.FC<IACele.Common.SupportsChildren> = ({
     children,
 }) => {
 
+    // Inicialización de estado de modo oscuro
     const [ darkMode, setDarkMode ] = useState<boolean>(
         () => {
 

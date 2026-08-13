@@ -1,6 +1,6 @@
-const EMPTY_CALLBACK = {
+const VOID_CALLBACK = {
     SYNC: () => {},
     ASYNC: async () => {},
 };
 
-export default EMPTY_CALLBACK;
+export default VOID_CALLBACK;

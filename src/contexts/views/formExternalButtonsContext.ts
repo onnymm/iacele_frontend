@@ -1,4 +1,4 @@
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface FormExternalButtonsContextParams {
@@ -6,7 +6,7 @@ interface FormExternalButtonsContextParams {
 };
 
 const FormExternalButtonsContext = createContext<FormExternalButtonsContextParams>({
-    setSaveChanges: EMPTY_CALLBACK.ASYNC,
+    setSaveChanges: VOID_CALLBACK.ASYNC,
 });
 
 export default FormExternalButtonsContext;

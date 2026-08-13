@@ -9,7 +9,6 @@ import { KeyRound } from "lucide-react";
 const App = () => {
 
     useRedirectToLogin();
-
     useDefaultToastNotifications();
 
     return (

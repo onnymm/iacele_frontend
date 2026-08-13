@@ -9,18 +9,17 @@ const useMainControls = (children: React.ReactNode) => {
 
     useEffect(
         () => {
-            console.log(children, 'element');
-            
+
+            // SI no hay elemento para renderizar se termina la ejecución
             if ( element === null ) return;
-            console.log('Se creó el portal');
-            
+
+            // Creación del portal
             createPortal(
                 children,
                 element as HTMLDivElement,
             );
         }, [children, element]
     );
-
 };
 
 export default useMainControls;

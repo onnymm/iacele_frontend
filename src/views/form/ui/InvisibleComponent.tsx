@@ -21,7 +21,7 @@ const InvisibleComponent = <M extends IACele.Data.ModelName>({
     );
 
     // Si se determina que el componente es invisible no se retorna nada
-    if ( isComponentInvisible ) return null;
+    if ( isComponentInvisible ) return (null);
 
     return (children);
 };

@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface ModelsMetadataContextParams <M extends IACele.Data.ModelName>{
@@ -7,7 +8,7 @@ interface ModelsMetadataContextParams <M extends IACele.Data.ModelName>{
 
 const ModelsMetadataContext = createContext<ModelsMetadataContextParams<any>>({
     modelsMetadata: {},
-    getFieldsMetadata: async () => {},
+    getFieldsMetadata: VOID_CALLBACK.ASYNC,
 });
 
 export default ModelsMetadataContext;

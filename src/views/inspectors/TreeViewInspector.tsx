@@ -23,7 +23,7 @@ const InspectView = {
         // Registro de campo requerido
         useEffect(() => {requiresField(name)}, [name, requiresField]);
 
-        return null;
+        return (null);
     },
 
 } as const;

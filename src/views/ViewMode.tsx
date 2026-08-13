@@ -21,5 +21,3 @@ const ViewMode = () => {
 };
 
 export default ViewMode;
-
-

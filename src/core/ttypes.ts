@@ -326,7 +326,7 @@ class Time<
     M extends IACele.Data.ModelName,
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Time<'not_null'>, M, F> {
-    replaceChars = ['-', ' ', ':'];
+    replaceChars = [':'];
     isValidFormat = validate.isTime;
 };
 
@@ -334,7 +334,7 @@ class Duration<
     M extends IACele.Data.ModelName,
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Duration<'not_null'>, M, F> {
-    replaceChars = ['-', ' ', ':'];
+    replaceChars = [':'];
     isValidFormat = validate.isDuration;
 };
 
@@ -453,6 +453,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
         conditionOrBoolean: IACele.Data.CriteriaStructure<M> | boolean,
     ) => {
 
+        // Si la condición provista es un booleano...
         if ( typeof conditionOrBoolean === 'boolean' ) {
             return conditionOrBoolean;
         };

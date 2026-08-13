@@ -1,30 +1,6 @@
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 
-const buildPath = (
-    pathname: string,
-    params: Record<string, any> = {},
-) => {
-
-    // Obtención de los nombres de los parámetros de query
-    const queryParamNames = Object.keys(params) as (keyof typeof params)[];
-
-    // Si existen resultados...
-    if ( queryParamNames.length ) {
-        // Se construye el fragmento de URL de parámetros
-        const queryParamsURLFragment = (
-            queryParamNames
-            .map(
-                (k) => (`${k}=${params[k]}`)
-            ).join('&')
-        );
-
-        return `${pathname}?${queryParamsURLFragment}`;
-    };
-
-    return pathname;
-};
-
 const useUpdateQueryParams = () => {
 
     // Obtención de ruta
@@ -46,3 +22,26 @@ const useUpdateQueryParams = () => {
 };
 
 export default useUpdateQueryParams;
+
+const buildPath = (
+    pathname: string,
+    params: Record<string, any> = {},
+) => {
+
+    // Obtención de los nombres de los parámetros de query
+    const queryParamNames = Object.keys(params) as (keyof typeof params)[];
+
+    // Si existen resultados...
+    if ( queryParamNames.length ) {
+        // Se construye el fragmento de URL de parámetros
+        const queryParamsURLFragment = (
+            queryParamNames
+            .map( (k) => (`${k}=${params[k]}`) )
+            .join('&')
+        );
+
+        return `${pathname}?${queryParamsURLFragment}`;
+    };
+
+    return pathname;
+};

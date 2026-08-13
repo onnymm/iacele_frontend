@@ -1,4 +1,4 @@
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import ModelNameContext from "@/contexts/views/modelNameContext";
 import OriginalRecordContext from "@/contexts/views/originalRecordContext";
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
@@ -128,8 +128,8 @@ const InitializeRecordProvider = <M extends IACele.Data.ModelName>({
                 recordId: 0,
                 originalRecord: emptyRecord,
                 updateOriginalRecord: createRecord,
-                deleteOriginalRecord: EMPTY_CALLBACK.ASYNC,
-                reload: EMPTY_CALLBACK.SYNC,
+                deleteOriginalRecord: VOID_CALLBACK.ASYNC,
+                reload: VOID_CALLBACK.SYNC,
             }}>
                 {children}
             </OriginalRecordContext.Provider>

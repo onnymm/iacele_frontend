@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import useUserToken from "./useUserToken";
 import useAlert from "../ui/useAlert";
 import { ServerOff, ShieldAlert } from "lucide-react";
+import LABEL from "@/constants/app/label";
+import PATH from "@/constants/routes/paths";
 
 const useLogin = () => {
 
@@ -35,7 +37,7 @@ const useLogin = () => {
     const onError = useCallback(
         (e: {status?: number; detail?: string;}) => {
             if ( e.status === 408 ) {
-                setAlertDetail('connection', 'No se puede conectar con el servidor.');
+                setAlertDetail('connection', LABEL.ERROR.SERVER_CONNECTION);
             } else {
                 setAlertDetail('password', e.detail as string);
                 setAuthenticationError(true);
@@ -79,7 +81,7 @@ const useLogin = () => {
             // Si es estableció un valor de token...
             if ( userToken ) {
                 // Se navega hacia el inicio
-                navigateTo('/');
+                navigateTo(PATH.ROOT);
             };
         }, [userToken, navigateTo]
     );

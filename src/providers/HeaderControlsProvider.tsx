@@ -24,7 +24,7 @@ const HeaderControlsProvider: React.FC<IACele.Common.SupportsChildren> = ({
                 );
             };
 
-            return null;
+            return (null);
         }, [portalRef]
     );
 

@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface HeaderControlsContextParams {
@@ -9,9 +10,9 @@ interface HeaderControlsContextParams {
 
 const HeaderControlsContext = createContext<HeaderControlsContextParams>({
     headerControls: null,
-    setHeaderControls: () => {},
+    setHeaderControls: VOID_CALLBACK.SYNC,
     portalRef: null,
-    setPortalRef: () => {},
+    setPortalRef: VOID_CALLBACK.SYNC,
 });
 
 export default HeaderControlsContext;

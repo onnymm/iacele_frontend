@@ -6,7 +6,7 @@ import RecordEvaluator from "@/core/ttypes";
 import useModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import useDataContext from "./useDataContext";
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 
 const useRecordEdition = <M extends IACele.Data.ModelName>() => {
 
@@ -80,8 +80,8 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
         reload,
         evaluator,
         createMode,
-        newRecord: newRecord ?? (EMPTY_CALLBACK.SYNC),
-        undoNewRecord: undoNewRecord ?? (EMPTY_CALLBACK.SYNC),
+        newRecord: newRecord ?? (VOID_CALLBACK.SYNC),
+        undoNewRecord: undoNewRecord ?? (VOID_CALLBACK.SYNC),
     };
 };
 

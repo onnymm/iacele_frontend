@@ -13,7 +13,7 @@ const RecordEditionRender = <M extends IACele.Data.ModelName> ({
     const ClosureRecordContext: Context<IACele.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
     // Obtención de modo de visualización del formulario
     const { display } = useDataView();
-
+    // Obtención de función de cambio de estado desde el contexto
     const { setSaveChanges } = useContext(FormExternalButtonsContext);
 
     // Obtención de valores desde el hook
@@ -35,7 +35,8 @@ const RecordEditionRender = <M extends IACele.Data.ModelName> ({
 
     useEffect(
         () => {
-            setSaveChanges(() => (saveChanges))
+            // Se establece la función como valor
+            setSaveChanges(() => (saveChanges));
         }, [saveChanges, setSaveChanges]
     );
 

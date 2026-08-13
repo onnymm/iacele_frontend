@@ -4,16 +4,18 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { Eye, EyeClosed, LockKeyhole, UserRound, type LucideProps } from 'lucide-react';
 import Group from "../ui/layer/Group";
 import { Button } from "../ui/button";
-import useFocus__ from "@/hooks/ui/useFocus";
+import useFocus from "@/hooks/ui/useFocus";
 import useLogin from "@/hooks/app/useLogin";
 import { Spinner } from "../ui/spinner";
 import Alert from "../ui/Alerts/Alert";
+import VOID_CALLBACK from "@/constants/app/callbacks";
+import LABEL from "@/constants/app/label";
 
 interface InputParams {
     id?: string;
     icon?: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
     placeholder?: string;
-    onValueChange?: (value: string) => void;
+    onValueChange?: (value: string) => (void);
     type?: React.HTMLInputTypeAttribute;
     isInvalid?: boolean;
     end?: React.ReactNode;
@@ -22,6 +24,11 @@ interface InputParams {
 interface SubmitButtonParams extends IACele.Common.SupportsChildren {
     isDisabled?: boolean;
     isLoading?: boolean;
+};
+
+interface TogglePasswordVisibilityButtonParams {
+    isPasswordVisible: boolean;
+    togglePasswordVisibility: () => (void);
 };
 
 const LoginForm = () => {
@@ -56,37 +63,23 @@ const LoginForm = () => {
                 <Input
                     id="username"
                     icon={UserRound}
-                    placeholder="Usuario"
+                    placeholder={LABEL.PLACEHOLDER.USER}
                     onValueChange={setUser}
                     isInvalid={authenticationError}
                 />
                 <Input
                     id="password"
                     icon={LockKeyhole}
-                    placeholder="Contraseña"
+                    placeholder={LABEL.PLACEHOLDER.PASSWORD}
                     onValueChange={setPassword}
                     type={isPasswordVisible ? "text" : "password"}
                     isInvalid={authenticationError}
-                    end={
-                        <Button
-                            onMouseDown={(e) => {e.preventDefault()}}
-                            type="button"
-                            className="group/eye bg-transparent focus-visible:border-transparent focus-visible:ring-transparent cursor-pointer buttonn"
-                            variant="link"
-                            size="icon"
-                            onClick={togglePasswordVisibility}
-                            tabIndex={-1}
-                        >
-                            {
-                                isPasswordVisible
-                                    ? <Eye className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
-                                    : <EyeClosed className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
-                            }
-                        </Button>
-                    }
+                    end={<TogglePasswordVisibilityButton isPasswordVisible={isPasswordVisible} togglePasswordVisibility={togglePasswordVisibility} />}
                 />
             </Group>
-            <SubmitButton isDisabled={isSubmitDisabled} isLoading={loading}>Iniciar sesión</SubmitButton>
+            <SubmitButton isDisabled={isSubmitDisabled} isLoading={loading}>
+                {LABEL.BUTTON.LOGIN}
+            </SubmitButton>
             <Alert detail={detail} />
         </MiniForm>
     );
@@ -94,11 +87,35 @@ const LoginForm = () => {
 
 export default LoginForm;
 
-const SubmitButton: React.FC<SubmitButtonParams> = ({
+const TogglePasswordVisibilityButton = ({
+    isPasswordVisible,
+    togglePasswordVisibility,
+}: TogglePasswordVisibilityButtonParams) => {
+
+    return (
+        <Button
+            onMouseDown={(e) => {e.preventDefault()}}
+            type="button"
+            className="group/eye bg-transparent focus-visible:border-transparent focus-visible:ring-transparent cursor-pointer buttonn"
+            variant="link"
+            size="icon"
+            onClick={togglePasswordVisibility}
+            tabIndex={-1}
+        >
+            {
+                isPasswordVisible
+                    ? <Eye className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
+                    : <EyeClosed className={`stroke-muted-foreground group-hover/eye:stroke-primary group-focus-visible:stroke-primary`} />
+            }
+        </Button>
+    )
+};
+
+const SubmitButton = ({
     isDisabled,
     isLoading,
     children,
-}) => {
+}: SubmitButtonParams) => {
 
     return (
         <Button
@@ -119,14 +136,14 @@ const SubmitButton: React.FC<SubmitButtonParams> = ({
 const Input = ({
     icon: Icon,
     placeholder,
-    onValueChange = () => null,
+    onValueChange = VOID_CALLBACK.SYNC,
     type = undefined,
     isInvalid = false,
     end,
 }: InputParams) => {
 
     // Uso de valores de enfoque
-    const { isFocused, setFocusOn, setFocusOff } = useFocus__();
+    const { isFocused, setFocusOn, setFocusOff } = useFocus();
 
     // Función para ejecución de cambios
     const onChange = useCallback(
@@ -147,11 +164,13 @@ const Input = ({
                 spellCheck={false}
             />
             <InputGroupAddon>
-                {Icon && <Icon className={isFocused ? 'stroke-primary' : 'stroke-muted-foreground'} />}
+                {Icon &&
+                    <Icon className={isFocused ? 'stroke-primary' : 'stroke-muted-foreground'} />
+                }
             </InputGroupAddon>
-            {end &&
-                <InputGroupAddon align='inline-end'>{end}</InputGroupAddon>
-            }
+                {end &&
+                    <InputGroupAddon align='inline-end'>{end}</InputGroupAddon>
+                }
         </InputGroup>
     );
 };

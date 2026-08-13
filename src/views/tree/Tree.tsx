@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import FieldConfigContext from "@/contexts/views/fieldConfigContext";
 import FieldContext from "@/contexts/views/fieldContext";
 import OriginalRecordContext from "@/contexts/views/originalRecordContext";
@@ -143,9 +143,9 @@ const TreeComponent = {
 
                     <OriginalRecordContext.Provider key={indexI} value={{
                         originalRecord: record,
-                        reload: EMPTY_CALLBACK.SYNC,
-                        deleteOriginalRecord: EMPTY_CALLBACK.ASYNC,
-                        updateOriginalRecord: EMPTY_CALLBACK.ASYNC as unknown as () => (Promise<number>),
+                        reload: VOID_CALLBACK.SYNC,
+                        deleteOriginalRecord: VOID_CALLBACK.ASYNC,
+                        updateOriginalRecord: VOID_CALLBACK.ASYNC as unknown as () => (Promise<number>),
                         recordId: record.id as number,
                     }}>
                         <RecordInViewProvider>

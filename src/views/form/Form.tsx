@@ -16,7 +16,8 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from 
 import ContextDataContext from "@/contexts/views/contextDataContext";
 import { Spinner } from "@/components/ui/spinner";
 import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
+import LABEL from "@/constants/app/label";
 
 const Form = <M extends IACele.Data.ModelName>({
     children,
@@ -60,8 +61,8 @@ const FormComponent = {
     Action: <M extends IACele.Data.ModelName>({
         name,
         label,
-        decoration = 'default',
         invisible,
+        decoration = 'default',
     }: IACele.View.FormComponents<M>['Action']) => {
 
         // Obtención de instancia de API y estado de carga de la app
@@ -148,7 +149,7 @@ const FormComponent = {
                 recordId: 0,
                 display: 'window',
                 onCreate,
-                onUpdate: EMPTY_CALLBACK.SYNC,
+                onUpdate: VOID_CALLBACK.SYNC,
             }}>
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
@@ -171,7 +172,7 @@ const FormComponent = {
                                     {
                                         appLoading
                                             ? <Spinner />
-                                            : 'Aceptar'
+                                            : LABEL.ACTION.ACCEPT
                                     }
                                 </Button>
                             }

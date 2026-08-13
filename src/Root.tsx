@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router";
 import Router from "./router";
 
-const Root: React.FC = () => {
+const Root = () => {
 
     return (
         <div className='bg-background w-full h-full'>

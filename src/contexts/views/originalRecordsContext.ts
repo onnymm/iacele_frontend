@@ -1,9 +1,9 @@
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 const OriginalRecordsContext = createContext<IACele.Context.ViewContext.OriginalRecords<any>>({
     originalRecords: [],
-    reload: EMPTY_CALLBACK.SYNC,
+    reload: VOID_CALLBACK.SYNC,
     fieldsToRead: { current: [] },
 });
 

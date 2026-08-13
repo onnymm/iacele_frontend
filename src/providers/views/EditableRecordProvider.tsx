@@ -40,10 +40,10 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
 
             // Si el valor entrante es nulo...
             if ( m2oValue === null ) {
-                return null;
+                return (null);
             };
             // Se retorna el valor de ID de éste
-            return m2oValue[0];
+            return (m2oValue[0]);
         }, []
     );
 

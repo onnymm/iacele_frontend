@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface MainControlsContextParams {
@@ -9,9 +10,9 @@ interface MainControlsContextParams {
 
 const MainControlsContext = createContext<MainControlsContextParams>({
     mainControls: null,
-    setMainControls: () => null,
+    setMainControls: VOID_CALLBACK.SYNC,
     element: null,
-    setElement: () => null,
+    setElement: VOID_CALLBACK.SYNC,
 })
 
 export default MainControlsContext;

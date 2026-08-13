@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import type VIEW from "@/views/Views";
 import { createContext } from "react";
 
@@ -23,9 +24,9 @@ const ViewDataContext = createContext<ViewDataContextParams>({
     viewDataName: null as any,
     recordId: 0,
     display: 'screen',
-    onCreate: () => {},
-    onUpdate: () => {},
-    newRecord: () => {},
+    onCreate: VOID_CALLBACK.SYNC,
+    onUpdate: VOID_CALLBACK.SYNC,
+    newRecord: VOID_CALLBACK.SYNC,
 });
 
 export default ViewDataContext;

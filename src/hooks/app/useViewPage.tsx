@@ -16,7 +16,7 @@ const useViewName = () => {
 
             // Retorno para establecer a nulo el nombre cuando el componente se desmonte
             return (
-                () => setPageName(null)
+                () => {setPageName(null);}
             );
         }, [setPageName, viewName]
     );

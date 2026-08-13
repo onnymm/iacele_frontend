@@ -7,28 +7,6 @@ import { CircleQuestionMark } from "lucide-react";
 import { useMemo, type Context } from "react";
 import InvisibleComponent from "../ui/InvisibleComponent";
 
-const FieldLabel = <M extends IACele.Data.ModelName>() => {
-
-    // Obtención de los metadatos del campo
-    const { fieldMetadata } = useFieldParams<M>();
-
-        return (
-        <p className="flex flex-row items-center gap-1 my-1 text-primary text-sm select-none">
-            {fieldMetadata['label']}
-            {fieldMetadata['help_info'] &&
-                <Tooltip>
-                    <TooltipTrigger tabIndex={-1}>
-                        <CircleQuestionMark className="size-3" />
-                    </TooltipTrigger>
-                    <TooltipContent side="right">
-                        {fieldMetadata['help_info']}
-                    </TooltipContent>
-                </Tooltip>
-            }
-        </p>
-    );
-};
-
 const Field = <M extends IACele.Data.ModelName>({
     name,
     invisible,
@@ -61,7 +39,7 @@ const Field = <M extends IACele.Data.ModelName>({
                 params: { name, domain, invisible, widget, readonly } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
-                <FieldLabel />
+                <Label />
                 {Component !== undefined
                     ? <Component />
                     : <div>{String(name)}</div>
@@ -72,3 +50,25 @@ const Field = <M extends IACele.Data.ModelName>({
 };
 
 export default Field;
+
+const Label = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de los metadatos del campo
+    const { fieldMetadata } = useFieldParams<M>();
+
+        return (
+        <p className="flex flex-row items-center gap-1 my-1 text-primary text-sm select-none">
+            {fieldMetadata['label']}
+            {fieldMetadata['help_info'] &&
+                <Tooltip>
+                    <TooltipTrigger tabIndex={-1}>
+                        <CircleQuestionMark className="size-3" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                        {fieldMetadata['help_info']}
+                    </TooltipContent>
+                </Tooltip>
+            }
+        </p>
+    );
+};

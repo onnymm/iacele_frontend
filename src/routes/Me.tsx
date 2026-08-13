@@ -1,4 +1,4 @@
-import EMPTY_CALLBACK from "@/constants/app/callbacks";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import ViewDataContext from "@/contexts/routes/viewDataContext"
 import useUserData from "@/hooks/app/useUserData";
 import ModelDataProvider from "@/providers/views/ModelDataProvider";
@@ -14,7 +14,7 @@ const Me = () => {
             display: 'screen',
             recordId: userData['id'],
             viewDataName: 'base.users.me.form',
-            onCreate: EMPTY_CALLBACK.SYNC,
+            onCreate: VOID_CALLBACK.SYNC,
             onUpdate: ({ reload }) => {reload()},
         }}>
             <ModelDataProvider>

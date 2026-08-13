@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface DarkModeContextParams {
@@ -7,7 +8,7 @@ interface DarkModeContextParams {
 
 const DarkModeContext = createContext<DarkModeContextParams>({
     darkMode: false,
-    setDarkMode: () => null,
+    setDarkMode: VOID_CALLBACK.SYNC,
 });
 
 export default DarkModeContext;

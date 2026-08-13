@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import APIContext from "@/contexts/app/apiContext"
 import { useContext, useEffect } from "react"
 
@@ -15,7 +16,7 @@ const useWebsocketNotification = (
             // Si el valor del estado es nulo...
             if ( eventClient === null ) {
                 // Se retorna una función vacía
-                return ( () => {} );
+                return ( VOID_CALLBACK.SYNC );
             };
 
             // Obtención de la función de desuscripción tras la suscripción de la función

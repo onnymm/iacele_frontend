@@ -1,3 +1,4 @@
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import { createContext } from "react";
 
 interface SaveChangesContextParams {
@@ -5,7 +6,7 @@ interface SaveChangesContextParams {
 };
 
 const SaveChangesContext = createContext<SaveChangesContextParams>({
-    saveChanges: async () => {},
+    saveChanges: VOID_CALLBACK.ASYNC,
 });
 
 export default SaveChangesContext;

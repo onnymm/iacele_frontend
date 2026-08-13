@@ -1,21 +1,8 @@
 import PATH from "@/constants/api/path";
 import BACKEND_URL from "@/constants/app/backendURL";
+import VOID_CALLBACK from "@/constants/app/callbacks";
 import QUERY_PARAMS from "@/constants/routes/queryParams";
 import CONFIG from "@/settings/config";
-
-const DEFAULT_CONFIG: IACele.API.Websocket.EventClientConfig = {
-    onopen: () => {
-        console.log('Websocket conectado');
-    },
-    onclose: () => {
-        console.log('Websocket desconectado');
-    },
-    defaultNotification: (
-        payload
-    ) => {
-        console.log(payload);
-    },
-};
 
 class EventClient {
     private userToken: string;
@@ -24,6 +11,13 @@ class EventClient {
     private hub: Record<string, Record<number, () => (void)>>;
     private config: IACele.API.Websocket.EventClientConfig;
     private mustReconnect: boolean = true;
+    private DEFAULT_CONFIG: IACele.API.Websocket.EventClientConfig = {
+        onopen: VOID_CALLBACK.SYNC,
+        onclose: VOID_CALLBACK.SYNC,
+        defaultNotification: (payload) => {
+            console.log(payload);
+        },
+    };
 
     constructor (
         userToken: string,
@@ -38,7 +32,7 @@ class EventClient {
         // Inicialización del objeto de centro de funciones a ejecutar en los mensajes de websocket
         this.hub = {};
         // Inicialización del objeto de configuración
-        this.config = { ...DEFAULT_CONFIG, ...config};
+        this.config = { ...this.DEFAULT_CONFIG, ...config};
         // Inicialización del websocket
         this.ws = this.initializeWebsocket();
     };
@@ -69,15 +63,17 @@ class EventClient {
         const messageCallbacks = this.hub[messageName];
 
         // Obtención de los índices del objeto
-        const indexes = Object.keys(messageCallbacks).map((k) => (Number(k)));
+        const indexes = Object.keys(messageCallbacks).map( (k) => (Number(k)) );
         // Obtención del índice mayor
         const max = Math.max(...indexes);
         // Índice a usar
         const index = max + 1;
-        // Registro de la funci+on
+        // Registro de la función
         messageCallbacks[index] = callback;
         // Creación de función de desuscripción
-        const unsuscribeCallback = () => {delete messageCallbacks[index]};
+        const unsuscribeCallback = () => {
+            delete messageCallbacks[index];
+        };
 
         return unsuscribeCallback;
     };
