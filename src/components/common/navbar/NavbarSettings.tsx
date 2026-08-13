@@ -20,13 +20,13 @@ const NavbarSettings = () => {
             <DropdownMenuContent className="py-2">
 
                 <DropdownMenuLabel>{LABEL.NAVBAR.PREFERENCES}</DropdownMenuLabel>
-                <div className="flex flex-row items-center gap-2 px-2 text-sm transition-colors duration-300">
+                <label htmlFor="dark-mode" className="flex flex-row items-center gap-2 hover:bg-accent px-2 rounded-lg h-8 text-sm transition-colors duration-300 cursor-pointer select-none">
                     <SunMoon />
                     <div className="flex flex-row justify-between w-full">
                         {LABEL.NAVBAR.DARK_MODE}
                         <DarkModeSwitch />
                     </div>
-                </div>
+                </label>
 
                 <DropdownMenuSeparator />
 
