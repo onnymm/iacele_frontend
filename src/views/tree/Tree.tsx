@@ -12,7 +12,12 @@ import useRecordEdition from "@/hooks/views/useRecordEdition";
 import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/views/FieldComponent";
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+
+interface LeadingAndTrailingContextParams {
+    setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
+    setTrailing: React.Dispatch<React.SetStateAction<React.ReactNode>>;
+};
 
 const Tree = <M extends IACele.Data.ModelName>({
     children,
@@ -24,7 +29,7 @@ const Tree = <M extends IACele.Data.ModelName>({
 
     // Tipado de contexto a usar como proveedor
     const ClosureFieldConfigContext: React.Context<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>> = FieldConfigContext;
-
+    // Obtención de función para cuando se da clic en un registro
     const { onRowClick } = useOpenRecord(open);
 
     return (
@@ -36,7 +41,9 @@ const Tree = <M extends IACele.Data.ModelName>({
             {/* Aquí se obtienen los metadatos de la vista */}
             {children({ ...TreeInspector })}
             {/* Aquí se renderiza la vista */}
-            <TreeRender />
+            <TreeRender open={open}>
+                {children}
+            </TreeRender>
         </ClosureFieldConfigContext.Provider>
     );
 };
@@ -73,9 +80,274 @@ const TreeInspector = {
         return null;
     },
 
+    List: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['List']) => {
+
+        return (children({ ...ListInspector }));
+    },
+
 } as const;
 
-const TreeRender = () => {
+const ListInspector = {
+
+    Item: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Item']) => {
+
+        return (children);
+    },
+
+    Leading: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Leading']) => {
+
+        return (children);
+    },
+
+    Title: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Title']) => {
+
+        return (children);
+    },
+
+    Trailing: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Trailing']) => {
+
+        return (children);
+    },
+
+    Field: <M extends IACele.Data.ModelName>({
+        name,
+        widget,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Field']) => {
+
+        // Obtención de función para suscribir configuración de campo
+        const { suscribeFieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
+
+        // Suscripción de campo en efecto
+        useEffect(
+            () => {
+                suscribeFieldConfig({
+                    name: name,
+                    widget: widget,
+                } as any);
+            }, [name, suscribeFieldConfig, widget]
+        );
+
+        return null;
+    },
+
+};
+
+const ListComponent = {
+
+    Page: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Page']) => {
+
+        return (children);
+    },
+
+    Field: () => {
+
+        return (null);
+    },
+
+    List: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.TreeComponents<M, typeof FieldComponent>['List']) => {
+
+        // Obtención de los registros originales desde el contexto
+        const { originalRecords } = useOriginalRecords<M>();
+
+        return (
+            originalRecords.map(
+                (record, indexI) => (
+                    <OriginalRecordContext.Provider key={indexI} value={{
+                        originalRecord: record,
+                        reload: VOID_CALLBACK.SYNC,
+                        deleteOriginalRecord: VOID_CALLBACK.ASYNC,
+                        updateOriginalRecord: VOID_CALLBACK.ASYNC as unknown as () => (Promise<number>),
+                        recordId: record.id as number,
+                    }}>
+                        <RecordInViewProvider>
+                        <EditableRecordProvider>
+                            {children({ ...ItemComponent })}
+                        </EditableRecordProvider>
+                        </RecordInViewProvider>
+
+                    </OriginalRecordContext.Provider>
+                )
+            )
+        );
+    },
+
+} as const;
+
+const LeadingAndTrailingContext = createContext<LeadingAndTrailingContextParams>({
+    setLeading: VOID_CALLBACK.SYNC,
+    setTrailing: VOID_CALLBACK.SYNC,
+});
+
+const ItemComponent = {
+
+    Item: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Item']) => {
+
+        // Contexto tipado
+        const ClosureRecordContext: React.Context<IACele.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
+        // Obtención de función para cuando se da clic en un registro
+        const { onRowClick } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
+
+        // Obtención de valores desde el hook
+        const {
+            recordId,
+            recordInView,
+            existingChanges,
+            undoChanges,
+            updateRecordField,
+            saveChanges,
+            deleteRecord,
+            reload,
+            executeAction,
+            evaluator,
+            createMode,
+            newRecord,
+            undoNewRecord,
+        } = useRecordEdition<M>();
+
+        // Inicialización de estado de elemento JSX Leading
+        const [ leading, setLeading ] = useState<React.ReactNode>(null);
+        // Inicialización de estado de elemento JSX Trailing
+        const [ trailing, setTrailing ] = useState<React.ReactNode>(null);
+
+        return (
+            <ClosureRecordContext.Provider value={{
+                recordId,
+                recordInView,
+                existingChanges,
+                undoChanges,
+                updateRecordField,
+                saveChanges,
+                deleteRecord,
+                executeAction,
+                reload,
+                evaluator,
+                createMode,
+                newRecord,
+                undoNewRecord,
+            }}>
+                <LeadingAndTrailingContext.Provider value={{ setLeading, setTrailing }}>
+                    <div className="flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer" onClick={() => {onRowClick(recordInView)}}>
+                        <div className="relative flex flex-row justify-between gap-2 w-full">
+                            {/* Leading */}
+                            <div className="flex justify-end items-center shrink">{leading}</div>
+                            {/* Contenido */}
+                            <div className="flex flex-col w-full text-gray-400">
+                                {children}
+                            </div>
+                            {/* Trailing */}
+                            <div className="flex flex-col items-end gap-2 w-max">{trailing}</div>
+                        </div>
+                    </div>
+                </LeadingAndTrailingContext.Provider>
+            </ClosureRecordContext.Provider>
+        );
+    },
+
+    Title: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Title']) => {
+
+        return (
+            <div className="text-foreground">
+                {children}
+            </div>
+        );
+    },
+
+    Leading: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Leading']) => {
+
+        // Obtención de función para obtener el leading
+        const { setLeading } = useContext<LeadingAndTrailingContextParams>(LeadingAndTrailingContext);
+
+        useEffect(
+            () => {
+                // Si no existen elementos a renderizar se termina la ejecución
+                if (!children) return;
+                // Se establecen los elementos a renderizar en el estado
+                setLeading(children);
+            }, [children, setLeading]
+        );
+
+        return (null);
+    },
+
+    Trailing: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Trailing']) => {
+
+        // Obtención de función para obtener el leading
+        const { setTrailing } = useContext<LeadingAndTrailingContextParams>(LeadingAndTrailingContext);
+
+        useEffect(
+            () => {
+                // Si no existen elementos a renderizar se termina la ejecución
+                if (!children) return;
+                // Se establecen los elementos a renderizar en el estado
+                setTrailing(children);
+            }, [children, setTrailing]
+        );
+
+        return (null);
+    },
+
+    Field: <M extends IACele.Data.ModelName>({
+        name,
+        widget = 'default',
+    }: IACele.View.ListComponents<M, typeof FieldComponent>['Field']) => {
+
+        // Contexto tipado
+        const ClosureFieldContext: React.Context<IACele.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
+
+        // Obtención de los metadatos del campo
+        const { modelMetadata } = useModelMetadata<M>();
+
+        // Obtención del tipo de dato del campo
+        const ttype = useMemo(
+            () => (modelMetadata[name]['ttype']),
+            [modelMetadata, name]
+        );
+
+        // Definición del componente a usar para renderizar el valor del campo
+        const Component = useMemo(
+            () => (FieldComponent[ttype][widget as 'default']),
+            [ttype, widget]
+        );
+
+        return (
+            <ClosureFieldContext.Provider value={{
+                params: { name,  widget, readonly: true } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                fieldMetadata: modelMetadata[name],
+            }}>
+                {Component !== undefined
+                    ? <Component />
+                    : <div>{String(name)}</div>
+                }
+            </ClosureFieldContext.Provider>
+        );
+    }
+};
+
+const TreeRender = <M extends IACele.Data.ModelName>({
+    children,
+}: IACele.View.TreeStructure<M, typeof FieldComponent>) => {
 
     // Inicialización de estado de carga en falso
     const [ loaded, setLoaded ] = useState<boolean>(false);
@@ -91,20 +363,25 @@ const TreeRender = () => {
     if (!loaded) return null;
 
     return (
-        <div className="size-full">
-            <Table className="relative">
-                <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
-                    <TreeComponent.Columns />
-                </TableHeader>
-                <TableBody>
-                    <TreeComponent.Rows>
-                        <TreeComponent.RecordRowProvider>
-                            <TreeComponent.Row />
-                        </TreeComponent.RecordRowProvider>
-                    </TreeComponent.Rows>
-                </TableBody>
-            </Table>
-        </div>
+        <>
+            <div className="hidden lg:block size-full">
+                <Table className="relative">
+                    <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
+                        <TreeComponent.Columns />
+                    </TableHeader>
+                    <TableBody>
+                        <TreeComponent.Rows>
+                            <TreeComponent.RecordRowProvider>
+                                <TreeComponent.Row />
+                            </TreeComponent.RecordRowProvider>
+                        </TreeComponent.Rows>
+                    </TableBody>
+                </Table>
+            </div>
+            <div className="lg:hidden flex flex-col gap-2 md:grid md:grid-cols-2 p-2">
+                {children({ ...ListComponent })}
+            </div>
+        </>
     );
 };
 
@@ -212,7 +489,7 @@ const TreeComponent = {
         // Obtención de la configuración de campos desde el contexto
         const { fieldConfig, onRowClick } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
         // Obtención del registro en vista
-        const { recordInView } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext)
+        const { recordInView } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
         return (
             <TableRow onClick={() => {onRowClick(recordInView)}} className="cursor-pointer">

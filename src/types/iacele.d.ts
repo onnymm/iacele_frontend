@@ -817,6 +817,35 @@ declare namespace IACele {
                     children: React.ReactNode;
                 };
                 'Field': _TreeWidgetDistribution<M, O>;
+                'List': ListRenderer<M, O>;
+            };
+
+            interface _ListComponents <M extends Data.ModelName, O extends FieldComponent>{
+                'Item': {
+                    children: React.ReactNode;
+                };
+                'Leading': {
+                    children: React.ReactNode;
+                };
+                'Title': {
+                    children: React.ReactNode;
+                };
+                'Field': _TreeWidgetDistribution<M, O>;
+                'Trailing': {
+                    children: React.ReactNode;
+                };
+            };
+
+            interface ListComponents <M extends Data.ModelName, O extends FieldComponent>{
+                'Item': React.FC<_ListComponents<M, O>['Item']>;
+                'Leading': React.FC<_ListComponents<M, O>['Leading']>;
+                'Title': React.FC<_ListComponents<M, O>['Title']>;
+                'Field': React.FC<_ListComponents<M, O>['Field']>;
+                'Trailing': React.FC<_ListComponents<M, O>['Trailing']>;
+            };
+
+            interface ListRenderer <M extends Data.ModelName, O extends FieldComponent>{
+                children: (components: ListComponents<M, O>) => (React.ReactNode);
             };
 
             type _FormFieldWidget<
@@ -883,6 +912,7 @@ declare namespace IACele {
         interface _TreeChildren <M extends Data.ModelName, O extends FieldComponent>{
             Page: React.FC<TreeComponents<M, O>['Page']>;
             Field: React.FC<TreeComponents<M, O>['Field']>;
+            List: React.FC<TreeComponents<M, O>['List']>;
         };
 
         type OpenView<M extends Data.ModelName> = _Definition.OpenView<M>
@@ -891,6 +921,8 @@ declare namespace IACele {
             children: (components: _TreeChildren<M, O>) => (React.ReactNode);
             open?: OpenView<M>;
         };
+
+        type ListComponents<M extends Data.ModelName, O extends FieldComponent> = _Definition._ListComponents<M, O>;
 
         interface _FormChildren <M extends Data.ModelName, O extends FieldComponent>{
             Page: React.FC<_Definition.FormComponents<M>['Page']>;
