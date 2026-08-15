@@ -39,12 +39,20 @@ const RecordInViewProvider = <M extends IACele.Data.ModelName>({
         }, []
     );
 
+    // Función para recomputar el registro en vista
+    const recomputeRecordInView = useCallback(
+        () => {
+            setRecordInView({ ...originalRecord } as IACele.Data.RecordForView<M>);
+        }, [originalRecord]
+    );
+
     return (
         <RecordInViewContext.Provider
             value={{
                 recordInView,
                 updateRecordInViewField: updateRecordInViewField as (() => {}),
                 undoChangesInRecordInView,
+                recomputeRecordInView,
             }}
         >
             {children}

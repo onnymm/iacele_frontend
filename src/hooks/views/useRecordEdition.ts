@@ -11,8 +11,8 @@ import VOID_CALLBACK from "@/constants/app/callbacks";
 const useRecordEdition = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de valores desde los hooks
-    const { recordId, deleteOriginalRecord, reload } = useOriginalRecord<M>();
-    const { recordInView, updateRecordInViewField, undoChangesInRecordInView } = useRecordInView<M>();
+    const { recordId, originalRecord, deleteOriginalRecord, reload } = useOriginalRecord<M>();
+    const { recordInView, updateRecordInViewField, undoChangesInRecordInView, recomputeRecordInView } = useRecordInView<M>();
     const { updateEditableRecordField, undoChangesInEditableRecord, existingChanges, saveChanges, executeAction, createMode } = useEditableRecord<M>();
     // Obtención de datos de contexto
     const { contextData } = useDataContext<M>();
@@ -52,6 +52,14 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
     const evaluator = useMemo(
         () => (new RecordEvaluator<M>(recordInView, modelMetadata)),
         [modelMetadata, recordInView]
+    );
+
+    // Restauración de los objetos de vista y edición cuando el objeto original cambia
+    useEffect(
+        () => {
+            undoChangesInEditableRecord();
+            recomputeRecordInView();
+        }, [originalRecord, undoChangesInEditableRecord, recomputeRecordInView]
     );
 
     useEffect(

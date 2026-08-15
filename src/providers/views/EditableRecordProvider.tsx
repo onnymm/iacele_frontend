@@ -4,7 +4,7 @@ import useDataView from "@/hooks/routes/useDataView";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
 import useOriginalRecord from "@/hooks/views/useOriginalRecord";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     children,
@@ -197,13 +197,6 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
             // Se vuelve a cargar el registro
             reload();
         }, [api, existingChanges, modelName, recordId, reload, saveChanges]
-    );
-
-    // Restauración del objeto de edición cuando el objeto original cambia
-    useEffect(
-        () => {
-            setEditableRecord({});
-        }, [originalRecord]
     );
 
     return (

@@ -5,6 +5,8 @@ const RecordInViewContext = createContext<IACele.Context.ViewContext.RecordInVie
     recordInView: {},
     updateRecordInViewField: VOID_CALLBACK.SYNC,
     undoChangesInRecordInView: VOID_CALLBACK.SYNC,
+    recomputeRecordInView: VOID_CALLBACK.SYNC,
+
 });
 
 export default RecordInViewContext;

@@ -1023,6 +1023,7 @@ declare namespace IACele {
                     value: Data.RecordForView<M>[F],
                 ) => void;
                 undoChangesInRecordInView: () => void;
+                recomputeRecordInView: () => void;
             };
 
             interface EditableRecord <M extends Data.ModelName>{
