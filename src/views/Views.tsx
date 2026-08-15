@@ -1,6 +1,7 @@
 import type FieldComponent from "./FieldComponent";
+import type IconOption from "./IconOption";
 
-const packedView = <M extends IACele.Data.ModelName>(params: IACele.View.PackedParams<M, typeof FieldComponent>) => (params);
+const packedView = <M extends IACele.Data.ModelName>(params: IACele.View.PackedParams<M, typeof FieldComponent, keyof typeof IconOption>) => (params);
 
 const VIEW = {
 
@@ -103,6 +104,41 @@ const VIEW = {
         ),
     }),
 
+    'assistance.registry.event.tree': packedView({
+        modelName: 'assistance.registry.event',
+        type: 'tree',
+        View: (Tree) => (
+            <Tree open="assistance.registry.event.form">
+                {({ Page, Field, List }) => (
+                    <Page>
+                        <Field name="device_id" />
+                        <Field name="day_id" />
+
+                        <List>
+                            {({ Item, Title, Field, Trailing, Icon }) => (
+                                <Item>
+                                    <Field name="from_api" invisible />
+                                    <Field name="has_corrections" invisible />
+                                    <Field name="display_name" invisible />
+
+                                    <Title>
+                                        <Field name="employee_id" />
+                                    </Title>
+                                    <Field name="device_id" />
+                                    <Field name="day_id" />
+                                    <Trailing>
+                                        <Icon icon="scan-face" decoration={{ success: true }} invisible={[['from_api', '=', false]]} />
+                                        <Icon icon="file-pen" decoration={{ info: true }} invisible={[['has_corrections', '=', false]]} />
+                                    </Trailing>
+                                </Item>
+                            )}
+                        </List>
+                    </Page>
+                )}
+            </Tree>
+        ),
+    }),
+
     'assistance.registry.event.form': packedView({
         modelName: 'assistance.registry.event',
         type: 'form',
@@ -111,7 +147,7 @@ const VIEW = {
                 {({ Page, Sheet, Action, Group, Field, Header, Wizard, }) => (
                     <Page>
                         <Header>
-                            <Wizard label="Aplicar corrección" view="assistance.registry.event.correction.form" contextData={({ id }) => ({ event_id: id as any as [number, string] })} />
+                            <Wizard label="Aplicar corrección" view="assistance.registry.event.correction.form" contextData={({ id, display_name }) => ({ event_id: [id, display_name] as any as [number, string] })} />
                             <Action name="undo_corrections" label="Deshacer correcciones" decoration="danger" invisible={[['has_corrections', '=', false]]} />
                         </Header>
                         <Sheet>
@@ -142,7 +178,7 @@ const VIEW = {
                     </Page>
                 )}
             </Form>
-        )
+        ),
     }),
 
     'assistance.registry.event.correction.form': packedView({
@@ -226,7 +262,7 @@ const VIEW = {
         type: 'form',
         View: (Form) => (
             <Form>
-                {({ Page, Sheet, Group, Field }) => (
+                {({ Page, Sheet, Group, Field, Icon }) => (
                     <Page>
                         <Sheet>
                             <Group label="Personalizar">
@@ -236,10 +272,11 @@ const VIEW = {
                             <Group label="General">
                                 <Field name="login" />
                                 <Field name="name" />
+                                <Icon icon="x" invisible={[['active', '=', false]]} />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" widget="switch" />
-                                <Field name="role_ids" readonly />
+                                <Field name="active" widget="switch" decoration={{ success: [['active', '=', true]] }} />
+                                <Field name="role_ids" readonly decoration={{ success: [['active', '=', true]] }} />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />
                             </Group>

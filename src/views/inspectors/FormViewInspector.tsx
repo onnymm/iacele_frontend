@@ -1,10 +1,11 @@
 import useRequiresField from "@/hooks/views/useRequiresField";
 import { useEffect } from "react";
 import type FieldComponent from "../FieldComponent";
+import type IconOption from "../IconOption";
 
 const FormViewInspector = <M extends IACele.Data.ModelName>({
     children,
-}: IACele.View.FormStructure<M, typeof FieldComponent>) => {
+}: IACele.View.FormStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     return children({
         Field: InspectView.Field,
@@ -14,6 +15,7 @@ const FormViewInspector = <M extends IACele.Data.ModelName>({
         Page: InspectView.Page,
         Sheet: InspectView.Sheet,
         Group: InspectView.Group,
+        Icon: InspectView.Icon,
     });
 };
 
@@ -41,6 +43,8 @@ const InspectView = {
 
         return null;
     },
+
+    Icon: () => (null),
 
 } as const;
 

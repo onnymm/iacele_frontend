@@ -741,21 +741,21 @@ declare namespace IACele {
                     modelName: M;
                 };
 
-                interface _FormDeclaration <M extends Data.ModelName, O extends FieldComponent>{
+                interface _FormDeclaration <M extends Data.ModelName, O extends FieldComponent, I extends string>{
                     type: 'form';
-                    View: (component: React.FC<FormStructure<M, O>>) => (React.ReactNode);
+                    View: (component: React.FC<FormStructure<M, O, I>>) => (React.ReactNode);
                 };
 
-                interface _TreeDeclaration <M extends Data.ModelName, O extends FieldComponent>{
+                interface _TreeDeclaration <M extends Data.ModelName, O extends FieldComponent, I extends string>{
                     type: 'tree';
-                    View: (component: React.FC<TreeStructure<M, O>>) => (React.ReactNode);
+                    View: (component: React.FC<TreeStructure<M, O, I>>) => (React.ReactNode);
                 };
 
-                type PackedParams <M extends Data.ModelName, O extends FieldComponent> = (
+                type PackedParams <M extends Data.ModelName, O extends FieldComponent, I extends string> = (
                     & PackedParams._Base<M>
                     & (
-                        | _FormDeclaration<M, O>
-                        | _TreeDeclaration<M, O>
+                        | _FormDeclaration<M, O, I>
+                        | _TreeDeclaration<M, O, I>
                     )
                 );
 
@@ -764,6 +764,7 @@ declare namespace IACele {
             type ViewToModelName = {
                 'assistance.registry.day.form': 'assistance.registry.day';
                 'assistance.registry.event.add.form': 'assistance.registry.event';
+                'assistance.registry.event.form': 'assistance.registry.event';
                 'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
                 'base.users.form': 'base.users';
                 'base.users.update.password.form': 'base.users.update.password';
@@ -788,7 +789,7 @@ declare namespace IACele {
                 }
             }[keyof ViewToModelName];
 
-            interface FormComponents <M extends Data.ModelName>{
+            interface FormComponents <M extends Data.ModelName, I extends string>{
                 'Page': {
                     children: React.ReactNode;
                 };
@@ -810,17 +811,22 @@ declare namespace IACele {
                     invisible?: BooleanOrConditionalStatement<M>;
                 };
                 'Wizard': _Wizard<M>;
+                'Icon': {
+                    invisible?: BooleanOrConditionalStatement<M>;
+                    decoration?: _Decoration<M>;
+                    icon: I;
+                };
             };
 
-            interface TreeComponents <M extends Data.ModelName, O extends FieldComponent>{
+            interface TreeComponents <M extends Data.ModelName, O extends FieldComponent, I extends string>{
                 'Page': {
                     children: React.ReactNode;
                 };
                 'Field': _TreeWidgetDistribution<M, O>;
-                'List': ListRenderer<M, O>;
+                'List': ListRenderer<M, O, I>;
             };
 
-            interface _ListComponents <M extends Data.ModelName, O extends FieldComponent>{
+            interface _ListComponents <M extends Data.ModelName, O extends FieldComponent, I extends string>{
                 'Item': {
                     children: React.ReactNode;
                 };
@@ -834,18 +840,24 @@ declare namespace IACele {
                 'Trailing': {
                     children: React.ReactNode;
                 };
+                'Icon': {
+                    invisible?: BooleanOrConditionalStatement<M>;
+                    decoration?: _Decoration<M>;
+                    icon: I;
+                };
             };
 
-            interface ListComponents <M extends Data.ModelName, O extends FieldComponent>{
-                'Item': React.FC<_ListComponents<M, O>['Item']>;
-                'Leading': React.FC<_ListComponents<M, O>['Leading']>;
-                'Title': React.FC<_ListComponents<M, O>['Title']>;
-                'Field': React.FC<_ListComponents<M, O>['Field']>;
-                'Trailing': React.FC<_ListComponents<M, O>['Trailing']>;
+            interface ListComponents <M extends Data.ModelName, O extends FieldComponent, I extends string>{
+                'Item': React.FC<_ListComponents<M, O, I>['Item']>;
+                'Leading': React.FC<_ListComponents<M, O, I>['Leading']>;
+                'Title': React.FC<_ListComponents<M, O, I>['Title']>;
+                'Field': React.FC<_ListComponents<M, O, I>['Field']>;
+                'Trailing': React.FC<_ListComponents<M, O, I>['Trailing']>;
+                'Icon': React.FC<_ListComponents<M, O, I>['Icon']>;
             };
 
-            interface ListRenderer <M extends Data.ModelName, O extends FieldComponent>{
-                children: (components: ListComponents<M, O>) => (React.ReactNode);
+            interface ListRenderer <M extends Data.ModelName, O extends FieldComponent, I extends string>{
+                children: (components: ListComponents<M, O, I>) => (React.ReactNode);
             };
 
             interface _Decoration <M extends Data.ModelName>{
@@ -873,6 +885,7 @@ declare namespace IACele {
                 name: F;
                 widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
                 decoration?: _Decoration<M>;
+                invisible?: BooleanOrConditionalStatement<M>;
             };
 
             type _TreeWidgetDistribution<
@@ -895,9 +908,9 @@ declare namespace IACele {
 
         };
 
-        type PackedParams<M extends Data.ModelName, O extends FieldComponent> = _Definition.PackedParams.PackedParams<M, O>;
+        type PackedParams<M extends Data.ModelName, O extends FieldComponent, I extends string> = _Definition.PackedParams.PackedParams<M, O, I>;
 
-        type FormComponents <M extends Data.ModelName> = _Definition.FormComponents<M>
+        type FormComponents <M extends Data.ModelName, I extends string> = _Definition.FormComponents<M, I>
 
         type BooleanOrConditionalStatement<M extends Data.ModelName> = _Definition.BooleanOrConditionalStatement<M>;
 
@@ -919,35 +932,37 @@ declare namespace IACele {
             O extends FieldComponent,
         > = _Definition._TreeWidgetDistribution<M, O>;
 
-        type TreeComponents<M extends Data.ModelName, O extends View.FieldComponent> = _Definition.TreeComponents<M, O>;
+        type TreeComponents<M extends Data.ModelName, O extends View.FieldComponent, I extends string> = _Definition.TreeComponents<M, O, I>;
 
-        interface _TreeChildren <M extends Data.ModelName, O extends FieldComponent>{
-            Page: React.FC<TreeComponents<M, O>['Page']>;
-            Field: React.FC<TreeComponents<M, O>['Field']>;
-            List: React.FC<TreeComponents<M, O>['List']>;
+        interface _TreeChildren <M extends Data.ModelName, O extends FieldComponent, I extends string>{
+            Page: React.FC<TreeComponents<M, O, I>['Page']>;
+            Field: React.FC<TreeComponents<M, O, I>['Field']>;
+            List: React.FC<TreeComponents<M, O, I>['List']>;
         };
 
         type OpenView<M extends Data.ModelName> = _Definition.OpenView<M>
 
-        interface TreeStructure <M extends Data.ModelName, O extends FieldComponent>{
-            children: (components: _TreeChildren<M, O>) => (React.ReactNode);
+        interface TreeStructure <M extends Data.ModelName, O extends FieldComponent, I extends string>{
+            children: (components: _TreeChildren<M, O, I>) => (React.ReactNode);
             open?: OpenView<M>;
         };
 
-        type ListComponents<M extends Data.ModelName, O extends FieldComponent> = _Definition._ListComponents<M, O>;
+        type ListComponents<M extends Data.ModelName, O extends FieldComponent, I extends string> = _Definition._ListComponents<M, O, I>;
 
-        interface _FormChildren <M extends Data.ModelName, O extends FieldComponent>{
-            Page: React.FC<_Definition.FormComponents<M>['Page']>;
-            Header: React.FC<_Definition.FormComponents<M>['Header']>;
-            Action: React.FC<_Definition.FormComponents<M>['Action']>;
-            Sheet: React.FC<_Definition.FormComponents<M>['Sheet']>;
-            Group: React.FC<_Definition.FormComponents<M>['Group']>;
+        interface _FormChildren <M extends Data.ModelName, O extends FieldComponent, I extends string>{
+            Page: React.FC<_Definition.FormComponents<M, I>['Page']>;
+            Header: React.FC<_Definition.FormComponents<M, I>['Header']>;
+            Action: React.FC<_Definition.FormComponents<M, I>['Action']>;
+            Sheet: React.FC<_Definition.FormComponents<M, I>['Sheet']>;
+            Group: React.FC<_Definition.FormComponents<M, I>['Group']>;
             Field: React.FC<FormFieldComponentProps<M, O>>;
-            Wizard: React.FC<_Definition.FormComponents<M>['Wizard']>;
+            Wizard: React.FC<_Definition.FormComponents<M, I>['Wizard']>;
+            Icon: React.FC<_Definition.FormComponents<M, I>['Icon']>;
+
         };
 
-        interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent>{
-            children: (comps: _FormChildren<M, O>) => (React.ReactNode);
+        interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent, I extends string>{
+            children: (comps: _FormChildren<M, O, I>) => (React.ReactNode);
         };
 
         interface CreateOrUpdateModeParams {

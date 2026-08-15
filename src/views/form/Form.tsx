@@ -18,10 +18,11 @@ import { Spinner } from "@/components/ui/spinner";
 import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
 import VOID_CALLBACK from "@/constants/app/callbacks";
 import LABEL from "@/constants/app/label";
+import IconOption from "../IconOption";
 
 const Form = <M extends IACele.Data.ModelName>({
     children,
-}: IACele.View.FormStructure<M, typeof FieldComponent>) => {
+}: IACele.View.FormStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     return (
         <RecordEditionRender>
@@ -50,7 +51,7 @@ const FormComponent = {
 
     Header: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.FormComponents<M>['Header']) => {
+    }: IACele.View.FormComponents<M, keyof typeof IconOption>['Header']) => {
 
         // Obtención de función para renderizar los controles en el encabezado de la app
         const { renderHeaderControls } = useAppHeaderControls();
@@ -63,7 +64,7 @@ const FormComponent = {
         label,
         invisible,
         decoration = 'default',
-    }: IACele.View.FormComponents<M>['Action']) => {
+    }: IACele.View.FormComponents<M, keyof typeof IconOption>['Action']) => {
 
         // Obtención de instancia de API y estado de carga de la app
         const { api, appLoading } = useAPI();
@@ -111,7 +112,7 @@ const FormComponent = {
         label,
         contextData,
         decoration,
-    }: IACele.View.FormComponents<M>['Wizard']) => {
+    }: IACele.View.FormComponents<M, keyof typeof IconOption>['Wizard']) => {
 
         // Obtención de parámetros desde el contexto de formulario
         const { recordInView, reload } = useRecordEditionParams<M>();
@@ -204,7 +205,7 @@ const FormComponent = {
         label,
         children,
         invisible,
-    }: IACele.View.FormComponents<M>['Group']) => {
+    }: IACele.View.FormComponents<M, keyof typeof IconOption>['Group']) => {
 
         return (
             <InvisibleComponent invisible={invisible}>
@@ -221,5 +222,55 @@ const FormComponent = {
     },
 
     Field: Field,
+
+    Icon: <M extends IACele.Data.ModelName>({
+        decoration,
+        invisible,
+        icon,
+    }: IACele.View.FormComponents<M, keyof typeof IconOption>['Icon']) => {
+
+        // Obtención de la instancia de evaluador
+        const { evaluator } = useRecordEditionParams<M>();
+
+        // Evaluación de color de decoración
+        const decorationColor = useMemo(
+            () => {
+                // Inicialización de un color predeterminado
+                let color: IACele.UI.Variant = 'default';
+
+                // Si existen valor de decoración provisto...
+                if ( decoration ) {
+                    // Validación de color por orden prioritario, se sobreescriben si más de uno es verdadero
+                    if ( decoration.info && evaluator.evaluate(decoration.info) ) {
+                        color = 'info';
+                    };
+                    if ( decoration.primary && evaluator.evaluate(decoration.primary) ) {
+                        color = 'primary';
+                    };
+                    if ( decoration.success && evaluator.evaluate(decoration.success) ) {
+                        color = 'success';
+                    };
+                    if ( decoration.warning && evaluator.evaluate(decoration.warning) ) {
+                        color = 'warning';
+                    };
+                    if ( decoration.danger && evaluator.evaluate(decoration.danger) ) {
+                        color = 'danger';
+                    };
+                };
+
+                return color;
+            }, [decoration, evaluator]
+        );
+
+        const Icon = useMemo(
+            () => (IconOption[icon]), [icon]
+        );
+
+        return (
+            <InvisibleComponent invisible={invisible}>
+                <Icon className={`stroke-${decorationColor} size-6`} />
+            </InvisibleComponent>
+        );
+    },
 
 };

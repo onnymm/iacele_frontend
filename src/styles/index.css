@@ -168,6 +168,7 @@ a:not(:has(*)) {
 @source inline("{,dark:}data-checked:bg-{default,info,primary,success,warning,danger}");
 @source inline("data-checked:border-{default,info,primary,success,warning,danger}");
 @source inline("bg-{default,info,primary,success,warning,danger}");
+@source inline("stroke-{default,info,primary,success,warning,danger}");
 
 @layer base {
   * {

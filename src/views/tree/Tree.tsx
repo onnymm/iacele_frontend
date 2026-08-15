@@ -13,6 +13,9 @@ import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/views/FieldComponent";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import IconOption from "../IconOption";
+import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
+import InvisibleComponent from "../form/ui/InvisibleComponent";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -22,7 +25,7 @@ interface LeadingAndTrailingContextParams {
 const Tree = <M extends IACele.Data.ModelName>({
     children,
     open,
-}: IACele.View.TreeStructure<M, typeof FieldComponent>) => {
+}: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     // Obtención de configuración de vista y función para suscribir configuración de campos
     const { fieldConfig, suscribeFieldConfig } = useFieldConfig<M>();
@@ -54,7 +57,7 @@ const TreeInspector = {
 
     Page: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Page']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Page']) => {
 
         return (children);
     },
@@ -63,7 +66,7 @@ const TreeInspector = {
         name,
         widget,
         decoration,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
         const { suscribeFieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
@@ -84,7 +87,7 @@ const TreeInspector = {
 
     List: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent>['List']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['List']) => {
 
         return (children({ ...ListInspector }));
     },
@@ -95,28 +98,28 @@ const ListInspector = {
 
     Item: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Item']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Item']) => {
 
         return (children);
     },
 
     Leading: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Leading']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Leading']) => {
 
         return (children);
     },
 
     Title: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Title']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Title']) => {
 
         return (children);
     },
 
     Trailing: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Trailing']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Trailing']) => {
 
         return (children);
     },
@@ -124,7 +127,7 @@ const ListInspector = {
     Field: <M extends IACele.Data.ModelName>({
         name,
         widget,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Field']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
         const { suscribeFieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
@@ -142,13 +145,15 @@ const ListInspector = {
         return null;
     },
 
+    Icon: () => (null),
+
 };
 
 const ListComponent = {
 
     Page: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent>['Page']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Page']) => {
 
         return (children);
     },
@@ -160,7 +165,7 @@ const ListComponent = {
 
     List: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent>['List']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['List']) => {
 
         // Obtención de los registros originales desde el contexto
         const { originalRecords } = useOriginalRecords<M>();
@@ -198,7 +203,7 @@ const ItemComponent = {
 
     Item: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Item']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Item']) => {
 
         // Contexto tipado
         const ClosureRecordContext: React.Context<IACele.Context.ViewContext.RecordEdition<M>> = RecordEditionContext;
@@ -244,7 +249,7 @@ const ItemComponent = {
                 undoNewRecord,
             }}>
                 <LeadingAndTrailingContext.Provider value={{ setLeading, setTrailing }}>
-                    <div className="flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer" onClick={() => {onRowClick(recordInView)}}>
+                    <div className="flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer iacele-item" onClick={() => {onRowClick(recordInView)}}>
                         <div className="relative flex flex-row justify-between gap-2 w-full">
                             {/* Leading */}
                             <div className="flex justify-end items-center shrink">{leading}</div>
@@ -263,7 +268,7 @@ const ItemComponent = {
 
     Title: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Title']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Title']) => {
 
         return (
             <div className="text-foreground">
@@ -274,7 +279,7 @@ const ItemComponent = {
 
     Leading: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Leading']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Leading']) => {
 
         // Obtención de función para obtener el leading
         const { setLeading } = useContext<LeadingAndTrailingContextParams>(LeadingAndTrailingContext);
@@ -293,7 +298,7 @@ const ItemComponent = {
 
     Trailing: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Trailing']) => {
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Trailing']) => {
 
         // Obtención de función para obtener el leading
         const { setTrailing } = useContext<LeadingAndTrailingContextParams>(LeadingAndTrailingContext);
@@ -314,7 +319,8 @@ const ItemComponent = {
         name,
         widget = 'default',
         decoration,
-    }: IACele.View.ListComponents<M, typeof FieldComponent>['Field']) => {
+        invisible,
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Contexto tipado
         const ClosureFieldContext: React.Context<IACele.Context.ViewContext.Field<M, typeof FieldComponent>> = FieldContext;
@@ -335,22 +341,75 @@ const ItemComponent = {
         );
 
         return (
-            <ClosureFieldContext.Provider value={{
-                params: { name,  widget, readonly: true, decoration } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
-                fieldMetadata: modelMetadata[name],
-            }}>
-                {Component !== undefined
-                    ? <Component />
-                    : <div>{String(name)}</div>
-                }
-            </ClosureFieldContext.Provider>
+            <InvisibleComponent invisible={invisible}>
+                <ClosureFieldContext.Provider value={{
+                    params: { name,  widget, readonly: true, decoration } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                    fieldMetadata: modelMetadata[name],
+                }}>
+                    {Component !== undefined
+                        ? <Component />
+                        : <div>{String(name)}</div>
+                    }
+                </ClosureFieldContext.Provider>
+            </InvisibleComponent>
         );
-    }
+    },
+
+    Icon: <M extends IACele.Data.ModelName>({
+        icon,
+        decoration,
+        invisible,
+    }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Icon']) => {
+
+        // Obtención de la instancia de evaluador
+        const { evaluator } = useRecordEditionParams<M>();
+
+        // Evaluación de color de decoración
+        const decorationColor = useMemo(
+            () => {
+                // Inicialización de un color predeterminado
+                let color: IACele.UI.Variant = 'default';
+
+                // Si existen valor de decoración provisto...
+                if ( decoration ) {
+                    // Validación de color por orden prioritario, se sobreescriben si más de uno es verdadero
+                    if ( decoration.info && evaluator.evaluate(decoration.info) ) {
+                        color = 'info';
+                    };
+                    if ( decoration.primary && evaluator.evaluate(decoration.primary) ) {
+                        color = 'primary';
+                    };
+                    if ( decoration.success && evaluator.evaluate(decoration.success) ) {
+                        color = 'success';
+                    };
+                    if ( decoration.warning && evaluator.evaluate(decoration.warning) ) {
+                        color = 'warning';
+                    };
+                    if ( decoration.danger && evaluator.evaluate(decoration.danger) ) {
+                        color = 'danger';
+                    };
+                };
+
+                return color;
+            }, [decoration, evaluator]
+        );
+
+        // Obtención de ícono a renderizar
+        const Icon = useMemo(
+            () => (IconOption[icon]), [icon]
+        );
+
+        return (
+            <InvisibleComponent invisible={invisible}>
+                <Icon className={`stroke-${decorationColor} size-5`} />
+            </InvisibleComponent>
+        );
+    },
 };
 
 const TreeRender = <M extends IACele.Data.ModelName>({
     children,
-}: IACele.View.TreeStructure<M, typeof FieldComponent>) => {
+}: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     // Inicialización de estado de carga en falso
     const [ loaded, setLoaded ] = useState<boolean>(false);
