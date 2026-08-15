@@ -570,6 +570,22 @@ const TTypeInterface = {
             () => (reshape(rawValue))
         );
 
+        // Efecto para cuando se aplican datos desde contexto de datos
+        useEffect(
+            () => {
+                // Se establece el valor de opciones cuando el valor de formulario cambia y no habían opciones
+                setOptions(
+                    (prev) => {
+                        if ( prev.length === 0 ) {
+                            return reshape(rawValue);
+                        } else {
+                            return (prev);
+                        };
+                    }
+                );
+            }, [rawValue, reshape]
+        );
+
         // Función para procesar el valor
         const process = useCallback(
             (value: string) => (

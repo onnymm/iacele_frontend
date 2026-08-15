@@ -77,7 +77,7 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     const updateFieldValue = useCallback(
         <F extends IACele.Data.FieldName<M>>(
             fieldName: F,
-            inputValue: IACele.Data.RecordForView<M>[F],
+            inputValue: IACele.Data.EditableRecord<M>[F],
         ) => {
 
             // Actualización del valor
@@ -119,7 +119,7 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
                     // Si el valor es distinto al de la base de datos...
                     if ( inputValue !== originalValue ) {
                         // Actualización del valor
-                        updateFieldValue(fieldName, inputValue);
+                        updateFieldValue(fieldName, inputValue as IACele.Data.EditableRecord<M>[F]);
                         // Si el valor no es distinto...
                     } else {
                         // Intento de actualización de estado
@@ -134,7 +134,7 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
                     // Si el valor es distinto al de la base de datos...
                     if ( inputM2OValue !== currentM2OValue ) {
                         // Actualización del valor
-                        updateFieldValue(fieldName, inputValue);
+                        updateFieldValue(fieldName, inputM2OValue as IACele.Data.EditableRecord<M>[F]);
                         // Si el valor no es distinto...
                     } else {
                         // Intento de actualización de estado
@@ -147,7 +147,7 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
                     // Si comandos de relación...
                     if ( Object.keys(inputValue as IACele.Data.RelationCommand<M>).length ) {
                         // Actualización del valor
-                        updateFieldValue(fieldName, inputValue);
+                        updateFieldValue(fieldName, inputValue as IACele.Data.EditableRecord<M>[F]);
                         // Si no existen comandos de relación
                     } else {
                         // Intento de actualización de estado
