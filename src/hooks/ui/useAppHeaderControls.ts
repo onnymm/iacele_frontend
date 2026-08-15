@@ -1,11 +1,11 @@
 import HeaderControlsContext from "@/contexts/ui/headerControlsContext";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { createPortal } from "react-dom";
 
 const useAppHeaderControls = () => {
 
     // Obtención de función para renderizar los controles
-    const { portalRef, setPortalRef } = useContext(HeaderControlsContext);
+    const { portalRef } = useContext(HeaderControlsContext);
 
     // Inicialización de función para renderizar controles de encabezado
     const renderHeaderControls = useCallback(
@@ -21,14 +21,6 @@ const useAppHeaderControls = () => {
 
             return (null);
         }, [portalRef]
-    );
-
-    useEffect(
-        () => {
-            return (
-                () => {setPortalRef(null)}
-            );
-        }, [setPortalRef]
     );
 
     return { renderHeaderControls };
