@@ -62,6 +62,7 @@ const TreeInspector = {
     Field: <M extends IACele.Data.ModelName>({
         name,
         widget,
+        decoration,
     }: IACele.View.TreeComponents<M, typeof FieldComponent>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
@@ -73,8 +74,9 @@ const TreeInspector = {
                 suscribeFieldConfig({
                     name: name,
                     widget: widget,
+                    decoration: decoration,
                 } as any);
-            }, [name, suscribeFieldConfig, widget]
+            }, [decoration, name, suscribeFieldConfig, widget]
         );
 
         return null;
@@ -311,6 +313,7 @@ const ItemComponent = {
     Field: <M extends IACele.Data.ModelName>({
         name,
         widget = 'default',
+        decoration,
     }: IACele.View.ListComponents<M, typeof FieldComponent>['Field']) => {
 
         // Contexto tipado
@@ -333,7 +336,7 @@ const ItemComponent = {
 
         return (
             <ClosureFieldContext.Provider value={{
-                params: { name,  widget, readonly: true } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                params: { name,  widget, readonly: true, decoration } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 {Component !== undefined
@@ -499,7 +502,11 @@ const TreeComponent = {
 
                             return (
                                 <TableCell className="w-min" key={indexJ}>
-                                    <CellRender name={config.name as any} widget={config.widget as any} />
+                                    <CellRender
+                                        name={config.name as any}
+                                        widget={config.widget as any}
+                                        decoration={config.decoration as any}
+                                    />
                                 </TableCell>
                             );
                         }
@@ -514,6 +521,7 @@ const TreeComponent = {
 const CellRender = <M extends IACele.Data.ModelName>({
     name,
     widget = 'default',
+    decoration,
 }: IACele.View.TreeFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Obtención de los metadatos del campo
@@ -535,6 +543,7 @@ const CellRender = <M extends IACele.Data.ModelName>({
             params: {
                 name: name as any,
                 readonly: true,
+                decoration,
             },
         }}>
             <Component />

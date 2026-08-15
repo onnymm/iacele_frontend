@@ -9,14 +9,29 @@ const VIEW = {
         type: 'tree',
         View: (Tree) => (
             <Tree open='assistance.registry.day.form'>
-                {({ Page, Field }) => (
+                {({ Page, Field, List }) => (
                     <Page>
                         <Field name="date" />
                         <Field name="employee_id" />
-                        <Field name="has_valid_events" widget="switch" />
-                        <Field name="is_complete" widget="switch" />
+                        <Field name="has_valid_events" decoration={{ primary: true }} />
+                        <Field name="is_complete" decoration={{ primary: true }} />
                         <Field name="allowed_start" />
                         <Field name="allowed_end" />
+
+                        <List>
+                            {({ Item, Title, Field, Trailing }) => (
+                                <Item>
+                                    <Title>
+                                        <Field name="employee_id" />
+                                    </Title>
+                                    <Field name="date" />
+                                    <Trailing>
+                                        <Field name="has_valid_events" />
+                                        <Field name="is_complete" />
+                                    </Trailing>
+                                </Item>
+                            )}
+                        </List>
                     </Page>
                 )}
             </Tree>
@@ -59,7 +74,7 @@ const VIEW = {
                         <Sheet>
                             <Field name="display_name" invisible />
                             <Group label="Resumen">
-                                <Field name="employee_id" />
+                                <Field name="employee_id" decoration={{ info: true }} />
                                 <Field name="start_time" />
                                 <Field name="end_time" />
                             </Group>
@@ -71,15 +86,15 @@ const VIEW = {
                             </Group>
                             <Group label="Métricas">
                                 <Group>
-                                    <Field name="has_valid_events" />
-                                    <Field name="is_complete" />
+                                    <Field name="has_valid_events" decoration={{ primary: true }} />
+                                    <Field name="is_complete" decoration={{ primary: true }} />
                                 </Group>
                                 <Field name="lunch_time" />
                                 <Field name="late_start" />
                                 <Field name="early_end" />
                             </Group>
                             <Group label="Eventos">
-                                <Field name="event_ids" />
+                                <Field name="event_ids" decoration={{ info: true }} />
                             </Group>
                         </Sheet>
                     </Page>
@@ -107,8 +122,8 @@ const VIEW = {
                             </Group>
                             <Group label="Detalles">
                                 <Group>
-                                    <Field name="from_api" readonly />
-                                    <Field name="has_corrections" />
+                                    <Field name="from_api" decoration={{ primary: true }} readonly />
+                                    <Field name="has_corrections" decoration={{ primary: true }} />
                                 </Group>
                                 <Field name="day_id" readonly />
                             </Group>
@@ -121,7 +136,7 @@ const VIEW = {
                                 <Field name="original_registry_time" readonly />
                             </Group>
                             <Group label="Correcciones" invisible={[['correction_history_ids', '=', null]]}>
-                                <Field name="correction_history_ids" />
+                                <Field name="correction_history_ids" decoration={{ info: true }} />
                             </Group>
                         </Sheet>
                     </Page>
@@ -176,12 +191,30 @@ const VIEW = {
         type: 'tree',
         View: (Tree) => (
             <Tree open="base.users.form">
-                {({ Page, Field }) => (
+                {({ Page, Field, List }) => (
                     <Page>
                         <Field name="profile_picture" widget="avatar" />
                         <Field name="name" />
-                        <Field name="login" widget="badge" />
+                        <Field name="login" widget="badge" decoration={{ info: true }} />
                         <Field name="role_ids" />
+
+                        <List>
+                            {({ Item, Leading, Title, Field, Trailing }) => (
+                                <Item>
+                                    <Leading>
+                                        <Field name="profile_picture" widget="avatar" />
+                                    </Leading>
+                                    <Title>
+                                        <Field name="name" />
+                                    </Title>
+                                    <Field name="login" decoration={{ success: [['active', '=', true]], danger: [['active', '=', false]] }} />
+                                    <Trailing>
+                                        <Field name="role_ids" decoration={{ primary: true }} />
+                                        <Field name="active" decoration={{ primary: true }} />
+                                    </Trailing>
+                                </Item>
+                            )}
+                        </List>
                     </Page>
                 )}
             </Tree>
@@ -198,14 +231,14 @@ const VIEW = {
                         <Sheet>
                             <Group label="Personalizar">
                                 <Field name="id" invisible={[['id', '=', null]]} />
-                                <Field name="profile_picture" widget="picture" readonly />
+                                <Field name="profile_picture" widget="picture" readonly={[['id', '!=', null]]} />
                             </Group>
                             <Group label="General">
+                                <Field name="login" />
                                 <Field name="name" />
-                                <Field name="login" readonly />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" readonly />
+                                <Field name="active" widget="switch" />
                                 <Field name="role_ids" readonly />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />

@@ -60,18 +60,94 @@ const format = {
 
 } as const;
 
+interface TextLabelParams extends IACele.Common.SupportsChildren {
+    decoration: IACele.UI.Variant;
+};
+
+const TextLabel = ({
+    children,
+    decoration,
+}: TextLabelParams) => {
+
+    return (
+        <span className={`text-${decoration} h-8 flex flex-row items-center text-sm`}>
+            {children}
+        </span>
+    );
+};
+
+const BadgeLabel = ({
+    children,
+    decoration,
+}: TextLabelParams) => {
+
+    return (
+        <div className="flex flex-row items-center h-8">
+            <Badge className={`bg-${decoration} text-sm`}>
+                {children}
+            </Badge>
+        </div>
+    );
+};
+
+interface EditableSelectionParams <M extends IACele.Data.ModelName>{
+    value: string;
+    setValue: (inputValue: string | null) => void;
+    deleteValue: () => void;
+    fieldMetadata: IACele.Data.FieldsMetadata<M>[IACele.Data.FieldName<M>];
+    decorationColor: IACele.UI.Variant;
+}
+
+const EditableSelection = <M extends IACele.Data.ModelName>({
+    value,
+    setValue,
+    deleteValue,
+    fieldMetadata,
+    decorationColor,
+}: EditableSelectionParams<M>) => {
+
+    return (
+        <div className="flex flex-row gap-2">
+            <Select onValueChange={setValue} value={value}>
+                <SelectTrigger className={`w-full text-${decorationColor}`}>
+                    <SelectValue className="bg-green-500" placeholder="Selecciona un valor" />
+                </SelectTrigger>
+                <SelectContent>
+                    {
+                        fieldMetadata['selection_ids'].map(
+                            ( selection ) => (
+                                <SelectItem
+                                    key={selection.id}
+                                    value={selection.name}
+                                >
+                                    {selection.label}
+                                </SelectItem>
+                            )
+                        )
+                    }
+                </SelectContent>
+            </Select>
+            <Button size='icon' variant='secondary' onClick={deleteValue}>
+                <X className="stroke-foreground" />
+            </Button>
+        </div>
+    );
+};
+
 const FieldWidget = {
 
     'integer': {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useInteger<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useInteger<M>();
 
             return (
                 isReadonly
                     ? (
-                        value
+                        <TextLabel decoration={decorationColor}>
+                            {value}
+                        </TextLabel>
                     )
                     : (
                         <Input
@@ -79,6 +155,7 @@ const FieldWidget = {
                             inputMode="numeric"
                             value={value}
                             onChange={setValue}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -90,17 +167,20 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useChar<M>();
 
             return (
                 isReadonly
                     ? (
-                        value
+                        <TextLabel decoration={decorationColor}>
+                            {value}
+                        </TextLabel>
                     )
                     : (
                         <Input
                             value={value}
                             onChange={setValue}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -108,21 +188,26 @@ const FieldWidget = {
 
         Password: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useChar<M>();
 
             // Inicialización de estado de contraseña oculta
             const [ hidden, setHidden ] = useState<boolean>(true);
 
             return (
                 isReadonly
-                    ? READONLY_PASSWORD_LABEL
+                    ? (
+                        <TextLabel decoration={decorationColor}>
+                            {READONLY_PASSWORD_LABEL}
+                        </TextLabel>
+                    )
                     : (
                         <InputGroup>
                             <InputGroupInput
                                 spellCheck={false}
                                 onChange={setValue}
                                 value={value}
-                                // disabled={isReadonly}
+                                className={`text-${decorationColor}`}
+                                disabled={isReadonly}
                                 type={
                                     hidden
                                         ? "password"
@@ -155,19 +240,20 @@ const FieldWidget = {
 
         Badge: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useChar<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useChar<M>();
 
             return (
                 isReadonly
                     ? (
-                        <Badge className="text-sm">
+                        <BadgeLabel decoration={decorationColor}>
                             {value}
-                        </Badge>
+                        </BadgeLabel>
                     )
                     : (
                         <Input
                             value={value}
                             onChange={setValue}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -179,26 +265,28 @@ const FieldWidget = {
 
         Checkbox: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useBoolean<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useBoolean<M>();
 
             return (
                 <Checkbox
                     checked={value}
                     onCheckedChange={setValue}
                     disabled={isReadonly}
+                    className={`data-checked:bg-${decorationColor} dark:data-checked:bg-${decorationColor} data-checked:border-${decorationColor}`}
                 />
             );
         },
 
         Switch: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useBoolean<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useBoolean<M>();
 
             return (
                 <Switch
                     checked={value}
                     onCheckedChange={setValue}
                     disabled={isReadonly}
+                    className={`data-checked:bg-${decorationColor} dark:data-checked:bg-${decorationColor} data-checked:border-${decorationColor}`}
                 />
             );
         },
@@ -209,12 +297,14 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useFloat<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useFloat<M>();
 
             return (
                 isReadonly
                     ? (
-                        value
+                        <TextLabel decoration={decorationColor}>
+                            {value}
+                        </TextLabel>
                     )
                     : (
                         <Input
@@ -222,6 +312,7 @@ const FieldWidget = {
                             inputMode="numeric"
                             value={value}
                             onChange={setValue}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -233,16 +324,20 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useDate<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useDate<M>();
 
             return (
                 isReadonly
                     ? (
-                        value !== ''
-                            ? (
-                                format.date(value)
-                            )
-                            : EMPTY_STRING
+                        <TextLabel decoration={decorationColor}>
+                            {
+                                value !== ''
+                                    ? (
+                                        format.date(value)
+                                    )
+                                    : EMPTY_STRING
+                            }
+                        </TextLabel>
                     )
                     : (
                         <Input
@@ -250,6 +345,7 @@ const FieldWidget = {
                             value={value}
                             onChange={setValue}
                             step={1}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -261,7 +357,7 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useDatetime<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useDatetime<M>();
 
             // Cómputo de valor de fecha y hora
             const computedReadonlyValue = useMemo(
@@ -284,7 +380,9 @@ const FieldWidget = {
             return (
                 isReadonly
                     ? (
-                        computedReadonlyValue
+                        <TextLabel decoration={decorationColor}>
+                            {computedReadonlyValue}
+                        </TextLabel>
                     )
                     : (
                         <Input
@@ -292,6 +390,7 @@ const FieldWidget = {
                             value={value}
                             onChange={setValue}
                             step={1}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -303,14 +402,18 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useTime<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useTime<M>();
 
             return (
                 isReadonly
                     ? (
-                        value !== ''
-                            ? format.time(value)
-                            : ''
+                        <TextLabel decoration={decorationColor}>
+                            {
+                                value !== ''
+                                    ? format.time(value)
+                                    : ''
+                            }
+                        </TextLabel>
                     )
                     : (
                         <Input
@@ -318,6 +421,7 @@ const FieldWidget = {
                             value={value}
                             onChange={setValue}
                             step={1}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -329,14 +433,18 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, INDEX, setHours, setMinutes, setSeconds, deleteValue, isReadonly } = TTypeInterface.useDuration<M>();
+            const { value, INDEX, setHours, setMinutes, setSeconds, deleteValue, isReadonly, decorationColor } = TTypeInterface.useDuration<M>();
 
             return (
                 isReadonly
                     ? (
-                        value[0] !== null
-                            ? format.duration(value)
-                            : ''
+                        <TextLabel decoration={decorationColor}>
+                            {
+                                value[0] !== null
+                                    ? format.duration(value)
+                                    : ''
+                            }
+                        </TextLabel>
                     )
                     : (
                         <div className="flex flex-row gap-2">
@@ -344,16 +452,19 @@ const FieldWidget = {
                                 type="number"
                                 value={value[INDEX.HOURS] ?? ''}
                                 onChange={(event) => (setHours(Number(event.target.value)))}
+                                className={`text-${decorationColor}`}
                             />
                             <Input
                                 type="number"
                                 value={value[INDEX.MINUTES] ?? ''}
                                 onChange={(event) => (setMinutes(Number(event.target.value)))}
+                                className={`text-${decorationColor}`}
                             />
                             <Input
                                 type="number"
                                 value={value[INDEX.SECONDS] ?? ''}
                                 onChange={(event) => (setSeconds(Number(event.target.value)))}
+                                className={`text-${decorationColor}`}
                             />
                             <Button size='icon' variant='secondary' onClick={deleteValue}>
                                 <X className="stroke-foreground" />
@@ -369,81 +480,49 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, deleteValue, fieldMetadata, isReadonly } = TTypeInterface.useSelection<M>();
+            const { value, setValue, deleteValue, fieldMetadata, isReadonly, decorationColor } = TTypeInterface.useSelection<M>();
 
             return (
                 isReadonly
                     ? (
-                        value
+                        <TextLabel decoration={decorationColor}>
+                            {value}
+                        </TextLabel>
                     )
                     : (
-                        <div className="flex flex-row gap-2">
-                            <Select onValueChange={setValue} value={value}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue className="bg-green-500" placeholder="Selecciona un valor" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {
-                                        fieldMetadata['selection_ids'].map(
-                                            ( selection ) => (
-                                                <SelectItem
-                                                    key={selection.id}
-                                                    value={selection.name}
-                                                >
-                                                    {selection.label}
-                                                </SelectItem>
-                                            )
-                                        )
-                                    }
-                                </SelectContent>
-                            </Select>
-                            <Button size='icon' variant='secondary' onClick={deleteValue}>
-                                <X className="stroke-foreground" />
-                            </Button>
-                        </div>
+                        <EditableSelection
+                            value={value}
+                            setValue={setValue}
+                            deleteValue={deleteValue}
+                            fieldMetadata={fieldMetadata}
+                            decorationColor={decorationColor}
+                        />
                     )
             );
         },
 
         Badge: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados para edición
-            const { value, setValue, deleteValue, fieldMetadata, isReadonly } = TTypeInterface.useSelection<M>();
+            const { value, setValue, deleteValue, fieldMetadata, isReadonly, decorationColor } = TTypeInterface.useSelection<M>();
 
             return (
                 isReadonly
                     ? (
-                        <Badge className="text-sm">
+                        <BadgeLabel decoration={decorationColor}>
                             {value}
-                        </Badge>
+                        </BadgeLabel>
                     )
                     : (
-                        <div className="flex flex-row gap-2">
-                            <Select onValueChange={setValue} value={value}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue className="bg-green-500" placeholder="Selecciona un valor" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {
-                                        fieldMetadata['selection_ids'].map(
-                                            ( selection ) => (
-                                                <SelectItem
-                                                    key={selection.id}
-                                                    value={selection.name}
-                                                >
-                                                    {selection.label}
-                                                </SelectItem>
-                                            )
-                                        )
-                                    }
-                                </SelectContent>
-                            </Select>
-                            <Button size='icon' variant='secondary' onClick={deleteValue}>
-                                <X className="stroke-foreground" />
-                            </Button>
-                        </div>
+                        <EditableSelection
+                            value={value}
+                            setValue={setValue}
+                            deleteValue={deleteValue}
+                            fieldMetadata={fieldMetadata}
+                            decorationColor={decorationColor}
+                        />
                     )
             );
-        }
+        },
 
     },
 
@@ -511,17 +590,20 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
-            const { value, setValue, isReadonly } = TTypeInterface.useText<M>();
+            const { value, setValue, isReadonly, decorationColor } = TTypeInterface.useText<M>();
 
             return (
                 isReadonly
                     ? (
-                        value
+                        <TextLabel decoration={decorationColor}>
+                            {value}
+                        </TextLabel>
                     )
                     : (
                         <Textarea
                             onChange={setValue}
                             value={value}
+                            className={`text-${decorationColor}`}
                         />
                     )
             );
@@ -533,14 +615,15 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estados y funciones para edición
-            const { value, displayName, setValue, isOpen, load, loading, options, deleteValue, isReadonly } = TTypeInterface.useMany2One<M>();
+            const { value, displayName, setValue, isOpen, load, loading, options, deleteValue, isReadonly, decorationColor } = TTypeInterface.useMany2One<M>();
 
             return (
                 isReadonly
                     ? (
-                        <div className="justify-between w-full">
+                        <TextLabel decoration={decorationColor}>
                             {displayName}
-                        </div>
+                        </TextLabel>
+                        
                     )
                     : (
                         <div className="flex flex-row gap-2">
@@ -581,25 +664,29 @@ const FieldWidget = {
 
         O2MTags: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
-            const { values } = TTypeInterface.useOne2Many<M>();
+            const { values, isReadonly, decorationColor } = TTypeInterface.useOne2Many<M>();
 
             return (
-                <div className="flex flex-wrap gap-2 w-full">
+                <div className="flex flex-wrap gap-2 w-full min-h-8">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
-                                <Badge key={record['id']}>
+                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm`}>
                                     {record['display_name']}
-                                    <Button size='icon' className="size-4 cursor-pointer">
-                                        <X className="size-3" />
-                                    </Button>
+                                    {!isReadonly &&
+                                        <Button size='icon' className="size-4 cursor-pointer">
+                                            <X className="size-3" />
+                                        </Button>
+                                    }
                                 </Badge>
                             )
                         )
                     }
-                    <Button className="size-5 cursor-pointer" size='icon'>
-                        <Plus />
-                    </Button>
+                    {!isReadonly &&
+                        <Button className="size-5 cursor-pointer" size='icon'>
+                            <Plus />
+                        </Button>
+                    }
                 </div>
             );
         },
@@ -610,25 +697,29 @@ const FieldWidget = {
 
         M2MTags: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
-            const { values } = TTypeInterface.useMany2Many<M>();
+            const { values, isReadonly, decorationColor } = TTypeInterface.useMany2Many<M>();
 
             return (
-                <div className="flex flex-wrap gap-2 w-full">
+                <div className="flex flex-wrap items-center gap-2 w-full min-h-8">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
-                                <Badge key={record['id']}>
+                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm`}>
                                     {record['display_name']}
-                                    <Button size='icon' className="size-4 cursor-pointer">
-                                        <X className="size-3" />
-                                    </Button>
+                                    {!isReadonly &&
+                                        <Button size='icon' className="size-4 cursor-pointer">
+                                            <X className="size-3" />
+                                        </Button>
+                                    }
                                 </Badge>
                             )
                         )
                     }
-                    <Button className="size-5 cursor-pointer" size='icon'>
-                        <Plus />
-                    </Button>
+                    {!isReadonly &&
+                        <Button className="size-5 cursor-pointer" size='icon'>
+                            <Plus />
+                        </Button>
+                    }
                 </div>
             );
         },
@@ -639,17 +730,17 @@ const FieldWidget = {
 
         Default: <M extends IACele.Data.ModelName>() => {
             // Inicialización de estado
-            const { value, setValue, isValidValue, validateAndUpdateValue, isReadonly } = TTypeInterface.useJSON<M>();
+            const { value, setValue, isValidValue, validateAndUpdateValue, isReadonly, decorationColor } = TTypeInterface.useJSON<M>();
 
             return (
-                !isReadonly
+                isReadonly
                     ? (
-                        <div className="border w-full font-mono text-wrap">
+                        <div className={`text-${decorationColor} w-full font-mono text-wrap overflow-clip`}>
                             {value}
                         </div>
                     )
                     : (
-                        <Textarea className={`${!isValidValue ? 'text-danger' : ''} font-mono`}
+                        <Textarea className={`${!isValidValue ? 'border-danger' : ''} text-${decorationColor} font-mono`}
                             spellCheck={false}
                             value={value}
                             onChange={(e) => {setValue(e.target.value)}}

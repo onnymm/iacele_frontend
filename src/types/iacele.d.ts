@@ -848,6 +848,14 @@ declare namespace IACele {
                 children: (components: ListComponents<M, O>) => (React.ReactNode);
             };
 
+            interface _Decoration <M extends Data.ModelName>{
+                info?: BooleanOrConditionalStatement<M>;
+                primary?: BooleanOrConditionalStatement<M>;
+                success?: BooleanOrConditionalStatement<M>;
+                warning?: BooleanOrConditionalStatement<M>;
+                danger?: BooleanOrConditionalStatement<M>;
+            };
+
             type _FormFieldWidget<
                 M extends Data.ModelName,
                 F extends Data.FieldName<M>,
@@ -858,11 +866,13 @@ declare namespace IACele {
                 invisible?: BooleanOrConditionalStatement<M>;
                 readonly?: BooleanOrConditionalStatement<M>;
                 domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
+                decoration?: _Decoration<M>;
             };
 
             interface _TreeFieldWidget <M extends Data.ModelName, F extends Data.FieldName<M>, O extends FieldComponent>{
                 name: F;
                 widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
+                decoration?: _Decoration<M>;
             };
 
             type _TreeWidgetDistribution<
@@ -896,6 +906,8 @@ declare namespace IACele {
         };
 
         type FieldComponent = Record<Data.TTypeName, Record<string, () => (React.ReactNode)>>;
+
+        type Decoration<M extends Data.ModelName> = _Definition._Decoration<M>;
 
         type FormFieldComponentProps<
             M extends Data.ModelName,

@@ -67,6 +67,7 @@ a:not(:has(*)) {
     --color-secondary-foreground: var(--secondary-foreground);
     --color-secondary: var(--secondary);
     --color-primary-foreground: var(--primary-foreground);
+    --color-default: var(--chart-2);
     --color-primary: var(--primary);
     --color-info: var(--info);
     --color-success: var(--success);
@@ -163,6 +164,10 @@ a:not(:has(*)) {
     --sidebar-ring: oklch(0.556 0 0);
     --button: oklch(1 0 0);
 }
+
+@source inline("{,dark:}data-checked:bg-{default,info,primary,success,warning,danger}");
+@source inline("data-checked:border-{default,info,primary,success,warning,danger}");
+@source inline("bg-{default,info,primary,success,warning,danger}");
 
 @layer base {
   * {

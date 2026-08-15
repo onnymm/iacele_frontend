@@ -46,6 +46,36 @@ const useFieldParams = <M extends IACele.Data.ModelName>() => {
         [createMode, evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly]
     );
 
+    // Evaluación de color de decoración
+    const decorationColor = useMemo(
+        () => {
+            // Inicialización de un color predeterminado
+            let color: IACele.UI.Variant = 'default';
+
+            // Si existen valor de decoración provisto...
+            if ( params.decoration ) {
+                // Validación de color por orden prioritario, se sobreescriben si más de uno es verdadero
+                if ( params.decoration.info && evaluator.evaluate(params.decoration.info) ) {
+                    color = 'info';
+                };
+                if ( params.decoration.primary && evaluator.evaluate(params.decoration.primary) ) {
+                    color = 'primary';
+                };
+                if ( params.decoration.success && evaluator.evaluate(params.decoration.success) ) {
+                    color = 'success';
+                };
+                if ( params.decoration.warning && evaluator.evaluate(params.decoration.warning) ) {
+                    color = 'warning';
+                };
+                if ( params.decoration.danger && evaluator.evaluate(params.decoration.danger) ) {
+                    color = 'danger';
+                };
+            };
+
+            return color;
+        }, [evaluator, params.decoration]
+    );
+
     return {
         params,
         fieldMetadata,
@@ -59,6 +89,7 @@ const useFieldParams = <M extends IACele.Data.ModelName>() => {
         reload,
         evaluator,
         isReadonly,
+        decorationColor,
     };
 };
 
