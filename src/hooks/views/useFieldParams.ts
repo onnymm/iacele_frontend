@@ -1,11 +1,14 @@
 import FieldContext from "@/contexts/views/fieldContext";
 import { useContext, useMemo } from "react";
 import useRecordEditionParams from "./useRecordEditionParams";
+import individualRecordViewContext from "@/contexts/views/individualRecordViewContext";
 
 const useFieldParams = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de los parámetros del campo
     const { params, fieldMetadata } = useContext<IACele.Context.ViewContext.Field<M, any>>(FieldContext);
+    // Obtención de parámetro desde el contexto
+    const { viewReadonly } = useContext(individualRecordViewContext);
 
     // Obtención de los parámetros del registro
     const {
@@ -25,25 +28,28 @@ const useFieldParams = <M extends IACele.Data.ModelName>() => {
     const isReadonly = useMemo(
         () => (
             (
-                // Si se especificó un parámetro de modo lectura...
-                params.readonly !== undefined
-                    ? (
-                        // Validación del argumento de solo lectura del campo
-                        evaluator.evaluate(params.readonly)
-                        // O si el campo ya es de solo lectura
-                        || fieldMetadata.readonly
-                    )
-                    : (
-                        // Si el registro no está en modo de creación
-                        !createMode
-                        // Y si el campo ya es de solo lectura
-                        && fieldMetadata.readonly
-                    )
-            )
-            // O si el campo es computado (por defecto se hace solo lectura)
-            || fieldMetadata.is_computed
+                (
+                    // Si se especificó un parámetro de modo lectura...
+                    params.readonly !== undefined
+                        ? (
+                            // Validación del argumento de solo lectura del campo
+                            evaluator.evaluate(params.readonly)
+                            // O si el campo ya es de solo lectura
+                            || fieldMetadata.readonly
+                        )
+                        : (
+                            // Si el registro no está en modo de creación
+                            !createMode
+                            // Y si el campo ya es de solo lectura
+                            && fieldMetadata.readonly
+                        )
+                )
+                // O si el campo es computado (por defecto se hace solo lectura)
+                || fieldMetadata.is_computed
+            // Si la vista no está en modo creación y fue establecida como solo lectura
+            ) || ( !createMode && viewReadonly )
         ),
-        [createMode, evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly]
+        [createMode, evaluator, fieldMetadata.is_computed, fieldMetadata.readonly, params.readonly, viewReadonly]
     );
 
     // Evaluación de color de decoración

@@ -963,6 +963,8 @@ declare namespace IACele {
 
         interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent, I extends string>{
             children: (comps: _FormChildren<M, O, I>) => (React.ReactNode);
+            create?: boolean;
+            readonly?: boolean;
         };
 
         interface CreateOrUpdateModeParams {

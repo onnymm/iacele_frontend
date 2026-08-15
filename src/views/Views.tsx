@@ -59,14 +59,14 @@ const VIEW = {
                     </Page>
                 )}
             </Form>
-        )
+        ),
     }),
 
     'assistance.registry.day.form': packedView({
         modelName: 'assistance.registry.day',
         type: 'form',
         View: (Form) => (
-            <Form>
+            <Form readonly>
                 {({ Page, Header, Wizard, Sheet, Group, Field }) => (
                     <Page>
                         <Header>
@@ -75,12 +75,12 @@ const VIEW = {
                         <Sheet>
                             <Field name="display_name" invisible />
                             <Group label="Resumen">
-                                <Field name="employee_id" decoration={{ info: true }} />
+                                <Field name="employee_id" />
                                 <Field name="start_time" />
                                 <Field name="end_time" />
                             </Group>
                             <Group label="Detalles">
-                                <Field name="date" readonly />
+                                <Field name="date" />
                                 <Field name="weekday" />
                                 <Field name="allowed_start" />
                                 <Field name="allowed_end" />
@@ -143,7 +143,7 @@ const VIEW = {
         modelName: 'assistance.registry.event',
         type: 'form',
         View: (Form) => (
-            <Form>
+            <Form readonly>
                 {({ Page, Sheet, Action, Group, Field, Header, Wizard, }) => (
                     <Page>
                         <Header>
@@ -152,24 +152,24 @@ const VIEW = {
                         </Header>
                         <Sheet>
                             <Group label="General">
-                                <Field name="employee_id" readonly />
+                                <Field name="employee_id" />
                                 <Field name="status" />
                                 <Field name="registry_time" />
                             </Group>
                             <Group label="Detalles">
                                 <Group>
-                                    <Field name="from_api" decoration={{ primary: true }} readonly />
+                                    <Field name="from_api" decoration={{ primary: true }} />
                                     <Field name="has_corrections" decoration={{ primary: true }} />
                                 </Group>
-                                <Field name="day_id" readonly />
+                                <Field name="day_id" />
                             </Group>
                             <Group label="Correciones" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} readonly />
+                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} />
                                 <Field name="registry_time_correction" invisible={[['registry_time_correction', '=', null]]} readonly />
                             </Group>
                             <Group label="Datos originales" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="original_status" readonly />
-                                <Field name="original_registry_time" readonly />
+                                <Field name="original_status" />
+                                <Field name="original_registry_time" />
                             </Group>
                             <Group label="Correcciones" invisible={[['correction_history_ids', '=', null]]}>
                                 <Field name="correction_history_ids" decoration={{ info: true }} />
@@ -199,7 +199,7 @@ const VIEW = {
                     </Page>
                 )}
             </Form>
-        )
+        ),
     }),
 
     'assistance.registry.event.credentials.form': packedView({
@@ -254,7 +254,7 @@ const VIEW = {
                     </Page>
                 )}
             </Tree>
-        )
+        ),
     }),
 
     'base.users.form': packedView({
@@ -262,21 +262,20 @@ const VIEW = {
         type: 'form',
         View: (Form) => (
             <Form>
-                {({ Page, Sheet, Group, Field, Icon }) => (
+                {({ Page, Sheet, Group, Field }) => (
                     <Page>
                         <Sheet>
                             <Group label="Personalizar">
                                 <Field name="id" invisible={[['id', '=', null]]} />
-                                <Field name="profile_picture" widget="picture" readonly={[['id', '!=', null]]} />
+                                <Field name="profile_picture" widget="picture" />
                             </Group>
                             <Group label="General">
                                 <Field name="login" />
                                 <Field name="name" />
-                                <Icon icon="x" invisible={[['active', '=', false]]} />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
                                 <Field name="active" widget="switch" decoration={{ success: [['active', '=', true]] }} />
-                                <Field name="role_ids" readonly decoration={{ success: [['active', '=', true]] }} />
+                                <Field name="role_ids" decoration={{ success: [['active', '=', true]] }} />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />
                             </Group>
@@ -291,7 +290,7 @@ const VIEW = {
         modelName: 'base.users',
         type: 'form',
         View: (Form) => (
-            <Form>
+            <Form create={false}>
                 {({ Page, Sheet, Header, Group, Field, Wizard }) => (
                     <Page>
                         <Header>
@@ -338,7 +337,7 @@ const VIEW = {
         modelName: 'base.model.data.process.step.record',
         type: 'form',
         View: (Form) => (
-            <Form>
+            <Form readonly>
                 {({ Page, Sheet, Group, Field }) => (
                     <Page>
                         <Sheet>
@@ -353,7 +352,7 @@ const VIEW = {
                     </Page>
                 )}
             </Form>
-        )
+        ),
     }),
 
 } as const;

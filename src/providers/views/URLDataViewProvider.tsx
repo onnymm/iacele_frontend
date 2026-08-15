@@ -7,6 +7,7 @@ import ViewMode from "@/views/ViewMode";
 import useUpdateQueryParams from "@/hooks/views/useUpdateQueryParams";
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
+import IndividualRecordViewContext from "@/contexts/views/individualRecordViewContext";
 
 interface ViewQueryParams {
     [QUERY_PARAMS.VIEW.ID]: number;
@@ -66,9 +67,11 @@ const URLDataViewProvider = () => {
             newRecord: newRecord,
             undoNewRecord,
         }}>
-            <ModelDataProvider>
-                <ViewMode />
-            </ModelDataProvider>
+            <IndividualRecordViewContext.Provider value={{ canCreate: true, viewReadonly: true }}>
+                <ModelDataProvider>
+                    <ViewMode />
+                </ModelDataProvider>
+            </IndividualRecordViewContext.Provider>
         </ViewDataContext.Provider>
     );
 };

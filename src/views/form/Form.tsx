@@ -19,15 +19,20 @@ import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsCont
 import VOID_CALLBACK from "@/constants/app/callbacks";
 import LABEL from "@/constants/app/label";
 import IconOption from "../IconOption";
+import IndividualRecordViewContext from "@/contexts/views/individualRecordViewContext";
 
 const Form = <M extends IACele.Data.ModelName>({
     children,
+    create = true,
+    readonly = false,
 }: IACele.View.FormStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     return (
-        <RecordEditionRender>
-            {children({ ...FormComponent })}
-        </RecordEditionRender>
+        <IndividualRecordViewContext.Provider value={{ canCreate: create, viewReadonly: readonly }}>
+            <RecordEditionRender>
+                {children({ ...FormComponent })}
+            </RecordEditionRender>
+        </IndividualRecordViewContext.Provider>
     );
 };
 
@@ -43,7 +48,7 @@ const FormComponent = {
         const { display } = useDataView();
 
         return (
-            <div className={`${display === 'screen' ? 'p-2' : ''} flex flex-col gap-2 w-full h-max min-h-full max-h-full`}>
+            <div className={`${display === 'screen' ? 'p-2' : ''} flex flex-col gap-2 w-full min-h-full`}>
                 {children}
             </div>
         );

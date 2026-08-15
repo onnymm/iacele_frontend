@@ -601,7 +601,6 @@ const CellRender = <M extends IACele.Data.ModelName>({
             fieldMetadata: modelMetadata[name],
             params: {
                 name: name as any,
-                readonly: true,
                 decoration,
             },
         }}>
