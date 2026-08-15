@@ -249,7 +249,7 @@ const ItemComponent = {
                 undoNewRecord,
             }}>
                 <LeadingAndTrailingContext.Provider value={{ setLeading, setTrailing }}>
-                    <div className="flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer iacele-item" onClick={() => {onRowClick(recordInView)}}>
+                    <div className="group flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer iacele-item" onClick={() => {onRowClick(recordInView)}}>
                         <div className="relative flex flex-row justify-between gap-2 w-full">
                             {/* Leading */}
                             <div className="flex justify-end items-center shrink">{leading}</div>

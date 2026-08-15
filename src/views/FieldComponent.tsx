@@ -70,7 +70,7 @@ const TextLabel = ({
 }: TextLabelParams) => {
 
     return (
-        <span className={`text-${decoration} h-8 flex flex-row items-center text-sm`}>
+        <span className={`text-${decoration} group-[.iacele-item]:h-6 h-8 flex flex-row items-center text-sm`}>
             {children}
         </span>
     );
@@ -82,7 +82,7 @@ const BadgeLabel = ({
 }: TextLabelParams) => {
 
     return (
-        <div className="flex flex-row items-center h-8">
+        <div className="flex flex-row items-center h-8 group-[.iacele-item]:h-6">
             <Badge className={`bg-${decoration} text-sm`}>
                 {children}
             </Badge>
@@ -96,7 +96,7 @@ interface EditableSelectionParams <M extends IACele.Data.ModelName>{
     deleteValue: () => void;
     fieldMetadata: IACele.Data.FieldsMetadata<M>[IACele.Data.FieldName<M>];
     decorationColor: IACele.UI.Variant;
-}
+};
 
 const EditableSelection = <M extends IACele.Data.ModelName>({
     value,
@@ -667,7 +667,7 @@ const FieldWidget = {
             const { values, isReadonly, decorationColor } = TTypeInterface.useOne2Many<M>();
 
             return (
-                <div className="flex flex-wrap gap-2 w-full min-h-8">
+                <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
@@ -700,7 +700,7 @@ const FieldWidget = {
             const { values, isReadonly, decorationColor } = TTypeInterface.useMany2Many<M>();
 
             return (
-                <div className="flex flex-wrap items-center gap-2 w-full min-h-8">
+                <div className="flex flex-wrap items-center gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
