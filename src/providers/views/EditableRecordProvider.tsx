@@ -39,7 +39,7 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
         (m2oValue: IACele.Data.TType.Many2One['database']) => {
 
             // Si el valor entrante es nulo...
-            if ( m2oValue === null ) {
+            if ( m2oValue === null || m2oValue === undefined ) {
                 return (null);
             };
             // Se retorna el valor de ID de éste
