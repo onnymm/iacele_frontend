@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef } from "react";
 const HeaderControlsBearer = () => {
 
     // Obtención de estado de controles de encabezasdo y función para establecer referencia
-    const { headerControls, setPortalRef } = useContext(HeaderControlsContext);
+    const { setPortalRef, portalRef } = useContext(HeaderControlsContext);
     // Inicialización de referencia de controles de encabezado
     const headerControlsRef = useRef<HTMLDivElement>(null);
 
@@ -15,12 +15,8 @@ const HeaderControlsBearer = () => {
         }, [setPortalRef]
     );
 
-    // Si no hay componentes para renderizar no se retorna nada
-    if ( !headerControls ) return (null);
     return (
-        <div className="flex flex-wrap gap-2 mx-2 mt-2 w-full" ref={headerControlsRef}>
-            {headerControls}
-        </div>
+        <div className={`${!portalRef ? 'hidden' : ''} flex flex-wrap gap-2 mx-2 w-fit`} ref={headerControlsRef} />
     );
 };
 

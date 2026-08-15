@@ -56,7 +56,11 @@ const FormComponent = {
         // Obtención de función para renderizar los controles en el encabezado de la app
         const { renderHeaderControls } = useAppHeaderControls();
 
-        return renderHeaderControls(children);
+        return renderHeaderControls(
+            <div className="mt-2">
+                {children}
+            </div>
+        );
     },
 
     Action: <M extends IACele.Data.ModelName>({
