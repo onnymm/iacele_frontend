@@ -24,11 +24,12 @@ import IndividualRecordViewContext from "@/contexts/views/individualRecordViewCo
 const Form = <M extends IACele.Data.ModelName>({
     children,
     create = true,
+    delete: canDelete = true,
     readonly = false,
 }: IACele.View.FormStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     return (
-        <IndividualRecordViewContext.Provider value={{ canCreate: create, viewReadonly: readonly }}>
+        <IndividualRecordViewContext.Provider value={{ canCreate: create, canDelete, viewReadonly: readonly }}>
             <RecordEditionRender>
                 {children({ ...FormComponent })}
             </RecordEditionRender>

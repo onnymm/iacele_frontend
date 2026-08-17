@@ -23,6 +23,16 @@ const LABEL = {
 
     ACTION: {
         ACCEPT: 'Aceptar',
+        CANCEL: 'Cancelar',
+        DELETE: 'Eliminar',
+    },
+
+    TITLE: {
+        DELETE_RECORD: 'Eliminar registro',
+    },
+
+    MESSAGE: {
+        DELETE_RECORD_CONFIRM: '¿Deseas eliminar este registro?',
     },
 
 } as const;

@@ -16,6 +16,7 @@ const ScreenModeControls = () => {
                 }
                 <MainButtons.Save />
                 <MainButtons.UndoChanges />
+                <MainButtons.Ellipsis />
             </div>
         </MainControls>
     );

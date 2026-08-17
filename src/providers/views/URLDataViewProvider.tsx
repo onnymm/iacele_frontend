@@ -67,7 +67,7 @@ const URLDataViewProvider = () => {
             newRecord: newRecord,
             undoNewRecord,
         }}>
-            <IndividualRecordViewContext.Provider value={{ canCreate: true, viewReadonly: true }}>
+            <IndividualRecordViewContext.Provider value={{ canCreate: true, canDelete: true, viewReadonly: true }}>
                 <ModelDataProvider>
                     <ViewMode />
                 </ModelDataProvider>

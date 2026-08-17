@@ -466,7 +466,7 @@ declare namespace IACele {
 
             'base.user.groups': {
                 label: TType.Char<'not_null'>;
-                access_id: TType.One2Many<'base.user.access'>;
+                access_ids: TType.One2Many<'base.user.access'>;
             };
 
             'base.user.access': {
@@ -767,6 +767,7 @@ declare namespace IACele {
                 'assistance.registry.event.form': 'assistance.registry.event';
                 'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
                 'base.users.form': 'base.users';
+                'base.user.groups.form': 'base.user.groups';
                 'base.users.update.password.form': 'base.users.update.password';
             };
 
@@ -964,6 +965,7 @@ declare namespace IACele {
         interface FormStructure <M extends Data.ModelName, O extends View.FieldComponent, I extends string>{
             children: (comps: _FormChildren<M, O, I>) => (React.ReactNode);
             create?: boolean;
+            delete?: boolean;
             readonly?: boolean;
         };
 

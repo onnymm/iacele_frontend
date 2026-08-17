@@ -106,7 +106,7 @@ class Client {
         // Función de eliminación de registro
         const apiCall = async (): Promise<IACele.API.Response.Delete> => {
             // Modificación de registro y obtención de respuesta
-            const response = await this.post<IACele.API.Request.Delete<M>, IACele.API.Response.Delete>(
+            const response = await this.delete_<IACele.API.Request.Delete<M>, IACele.API.Response.Delete>(
                 PATH.CRUD.DELETE,
                 data,
             );
@@ -275,6 +275,28 @@ class Client {
                 this.toPath(path),
                 data,
                 { authenticate: true },
+            );
+
+            // Retorno de los datos obtenidos del endpoint
+            return response.data;
+        };
+
+        return this.execute<R>(apiCall, onError);
+    };
+
+    private delete_ = async <S, R>(
+        path: string,
+        data: S,
+        onError: (e: IACele.API.APIError) => (void) = () => {},
+    ): Promise<R> => {
+
+        // Inicialización de función de solicitud de eliminacion a la API
+        const apiCall = async (): Promise<R> => {
+            // Solicitud de eliminación
+            const response = await iaCeleAxios.delete<string, AxiosResponse<R>, S>(
+                this.toPath(path),
+                // data,
+                { authenticate: true, data },
             );
 
             // Retorno de los datos obtenidos del endpoint
