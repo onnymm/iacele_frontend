@@ -223,7 +223,7 @@ const FormComponent = {
                     <p className="group-[.ui-group]:hidden opacity-50 pb-1 border-gray-500/50 border-b h-5 font-semibold text-xs uppercase select-none">
                         {label}
                     </p>
-                    <div className="group ui-group flex flex-col gap-x-4 group-[.ui-group]:grid group-[.ui-group]:grid-cols-2 py-1">
+                    <div className="group ui-group flex flex-col group-[.ui-group]:items-center gap-x-4 group-[.ui-group]:grid group-[.ui-group]:grid-cols-2 py-1">
                         {children}
                     </div>
                 </div>
