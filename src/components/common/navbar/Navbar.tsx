@@ -19,7 +19,7 @@ const Navbar = () => {
 
     return (
         <nav id="navbar" className="z-20 sticky flex flex-col gap-2 bg-white dark:bg-[#1f2f3f] shadow p-2 w-full transition select-none">
-            <div id="navbar-header" className="flex flex-row justify-between items-start gap-2 h-min min-h-12">
+            <div id="navbar-header" className="group flex flex-row justify-between items-start gap-2 h-min min-h-12 iacele-navbar">
                 <div className="flex justify-between items-center w-[50%] h-12">
                     <div />
                     <WebsocketConnection />

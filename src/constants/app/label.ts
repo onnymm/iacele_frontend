@@ -14,6 +14,7 @@ const LABEL = {
     },
 
     NAVBAR: {
+        PROFILE: 'Perfil',
         PREFERENCES: 'Preferencias',
         DARK_MODE: 'Modo oscuro',
         SETTINGS: 'Ajustes',

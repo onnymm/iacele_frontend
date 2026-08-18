@@ -17,7 +17,18 @@ const NavbarSettings = () => {
             <DropdownMenuTrigger className="outline-none">
                 <NavbarProfile />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="py-2">
+            <DropdownMenuContent className="py-2 w-72 md:w-56">
+
+                <div className="md:hidden">
+
+                    <DropdownMenuLabel>{LABEL.NAVBAR.PROFILE}</DropdownMenuLabel>
+
+                    <div className="px-2 w-full">
+                        <NavbarProfile />
+                    </div>
+
+                    <DropdownMenuSeparator />
+                </div>
 
                 <DropdownMenuLabel>{LABEL.NAVBAR.PREFERENCES}</DropdownMenuLabel>
                 <label htmlFor="dark-mode" className="flex flex-row items-center gap-2 hover:bg-accent px-2 rounded-lg h-8 text-sm transition-colors duration-300 cursor-pointer select-none">
