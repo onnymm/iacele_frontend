@@ -14,6 +14,7 @@ const Field = <M extends IACele.Data.ModelName>({
     domain = [],
     widget = 'default',
     decoration,
+    label,
 }: IACele.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Contexto tipado
@@ -37,7 +38,7 @@ const Field = <M extends IACele.Data.ModelName>({
     return (
         <InvisibleComponent invisible={invisible}>
             <ClosureFieldContext.Provider value={{
-                params: { name, domain, invisible, widget, readonly, decoration } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                params: { name, domain, invisible, widget, readonly, decoration, label } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 <Label />
@@ -55,11 +56,11 @@ export default Field;
 const Label = <M extends IACele.Data.ModelName>() => {
 
     // Obtención de los metadatos del campo
-    const { fieldMetadata } = useFieldParams<M>();
+    const { fieldMetadata, params } = useFieldParams<M>();
 
         return (
         <p className="flex flex-row items-center gap-1 my-1 text-primary text-sm select-none">
-            {fieldMetadata['label']}
+            {params.label ?? fieldMetadata['label']}
             {fieldMetadata['help_info'] &&
                 <Tooltip>
                     <TooltipTrigger tabIndex={-1}>

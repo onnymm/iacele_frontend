@@ -880,6 +880,7 @@ declare namespace IACele {
                 readonly?: BooleanOrConditionalStatement<M>;
                 domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
                 decoration?: _Decoration<M>;
+                label?: string;
             };
 
             interface _TreeFieldWidget <M extends Data.ModelName, F extends Data.FieldName<M>, O extends FieldComponent>{
@@ -887,6 +888,7 @@ declare namespace IACele {
                 widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
                 decoration?: _Decoration<M>;
                 invisible?: BooleanOrConditionalStatement<M>;
+                label?: string;
             };
 
             type _TreeWidgetDistribution<

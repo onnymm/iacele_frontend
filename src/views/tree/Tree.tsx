@@ -66,6 +66,7 @@ const TreeInspector = {
         name,
         widget,
         decoration,
+        label,
     }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
@@ -78,8 +79,9 @@ const TreeInspector = {
                     name: name,
                     widget: widget,
                     decoration: decoration,
+                    label: label,
                 } as any);
-            }, [decoration, name, suscribeFieldConfig, widget]
+            }, [decoration, label, name, suscribeFieldConfig, widget]
         );
 
         return null;
@@ -127,6 +129,7 @@ const ListInspector = {
     Field: <M extends IACele.Data.ModelName>({
         name,
         widget,
+        label,
     }: IACele.View.ListComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
@@ -138,8 +141,9 @@ const ListInspector = {
                 suscribeFieldConfig({
                     name: name,
                     widget: widget,
+                    label: label,
                 } as any);
-            }, [name, suscribeFieldConfig, widget]
+            }, [label, name, suscribeFieldConfig, widget]
         );
 
         return null;
@@ -462,7 +466,7 @@ const TreeComponent = {
                     fieldConfig.current.map(
                         (config, i) => (
                             <TableHead className="hover:bg-primary/30 transition-colors duration-300 select-none" key={i}>
-                                {modelMetadata[config.name].label}
+                                {config.label ?? modelMetadata[config.name].label}
                             </TableHead>
                         )
                     )
@@ -558,11 +562,11 @@ const TreeComponent = {
                 {
                     fieldConfig.current.map(
                         (config, indexJ) => {
-
                             return (
                                 <TableCell className="w-min" key={indexJ}>
                                     <CellRender
                                         name={config.name as any}
+                                        label={config.label}
                                         widget={config.widget as any}
                                         decoration={config.decoration as any}
                                     />
