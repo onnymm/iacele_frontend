@@ -663,29 +663,25 @@ const FieldWidget = {
     'one2many': {
 
         O2MTags: <M extends IACele.Data.ModelName>() => {
+
             // Inicialización de estado
-            const { values, isReadonly, decorationColor } = TTypeInterface.useOne2Many<M>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager } = TTypeInterface.useOne2Many<M>();
 
             return (
                 <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
-                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm`}>
+                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm h-8 rounded-full md:h-5`}>
                                     {record['display_name']}
                                     {!isReadonly &&
-                                        <Button size='icon' className="size-4 cursor-pointer">
+                                        <Button size='icon' className="size-4 cursor-pointer" onClick={() => relatedRecordsManager.remove(record['id'])}>
                                             <X className="size-3" />
                                         </Button>
                                     }
                                 </Badge>
                             )
                         )
-                    }
-                    {!isReadonly &&
-                        <Button className="size-5 cursor-pointer" size='icon'>
-                            <Plus />
-                        </Button>
                     }
                 </div>
             );

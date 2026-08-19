@@ -3,6 +3,7 @@ import useAPI from "@/hooks/app/useAPI";
 import useBase64 from "@/hooks/ui/useBase64";
 import useFieldParams from "@/hooks/views/useFieldParams";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
+import useRelatedCommands from "@/hooks/views/useRelatedCommands";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 const TTypeInterface = {
@@ -635,10 +636,12 @@ const TTypeInterface = {
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly, decorationColor } = useFieldParams<M>();
+        // Inicialización de administrador de registros referenciados
+        const { relatedRecordsManager } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
         // Obtención del valor actual del registro
-        const values = recordInView[params.name] as IACele.Data.TType.One2Many['view'];
+        const values = [ ...recordInView[params.name] as IACele.Data.TType.One2Many['view'] ] as IACele.Data.TType.One2Many['view'];
 
-        return { values, isReadonly, decorationColor };
+        return { values, isReadonly, decorationColor, relatedRecordsManager };
     },
 
     useMany2Many: <M extends IACele.Data.ModelName>() => {
