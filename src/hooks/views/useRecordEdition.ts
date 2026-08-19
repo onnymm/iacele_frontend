@@ -90,6 +90,8 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
         createMode,
         newRecord: newRecord ?? (VOID_CALLBACK.SYNC),
         undoNewRecord: undoNewRecord ?? (VOID_CALLBACK.SYNC),
+        updateRecordInViewField,
+        updateEditableRecordField,
     };
 };
 

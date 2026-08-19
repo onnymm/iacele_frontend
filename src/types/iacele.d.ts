@@ -59,7 +59,7 @@ declare namespace IACele {
                 };
 
                 interface _SupportsSearchCriteria <M extends Data.ModelName>{
-                    'criteria_structure'?: Data.CriteriaStructure<M>;
+                    'search_criteria'?: Data.CriteriaStructure<M>;
                 };
 
                 interface _RequiresRecordIDs {
@@ -1075,6 +1075,14 @@ declare namespace IACele {
                     fieldName: F,
                     inputValue: Data.RecordForView<M>[F],
                 ) => (void);
+                updateRecordInViewField: <F extends Data.FieldName<M>>(
+                            fieldName: F,
+                            inputValue: Data.RecordForView<M>[F],
+                        ) => (void);
+                updateEditableRecordField: <F extends Data.FieldName<M>>(
+                            fieldName: F,
+                            inputValue: Data.RecordForView<M>[F],
+                        ) => (void);
                 saveChanges: () => (Promise<number | true>);
                 deleteRecord: () => (Promise<void>);
                 executeAction: (actionName: string) => Promise<void>;

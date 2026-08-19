@@ -7,6 +7,8 @@ const RecordEditionContext = createContext<IACele.Context.ViewContext.RecordEdit
     existingChanges: false,
     undoChanges: VOID_CALLBACK.SYNC,
     updateRecordField: VOID_CALLBACK.SYNC,
+    updateRecordInViewField: VOID_CALLBACK.SYNC,
+    updateEditableRecordField: VOID_CALLBACK.SYNC,
     saveChanges: (VOID_CALLBACK.ASYNC) as (() => (Promise<any>)),
     deleteRecord: VOID_CALLBACK.ASYNC,
     executeAction: VOID_CALLBACK.ASYNC,

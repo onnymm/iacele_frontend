@@ -17,6 +17,8 @@ const useRecordEditionParams = <M extends IACele.Data.ModelName>() => {
         createMode,
         newRecord,
         undoNewRecord,
+        updateRecordInViewField,
+        updateEditableRecordField,
     } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
     return {
@@ -32,6 +34,8 @@ const useRecordEditionParams = <M extends IACele.Data.ModelName>() => {
         createMode,
         newRecord,
         undoNewRecord,
+        updateRecordInViewField,
+        updateEditableRecordField,
     };
 };
 
