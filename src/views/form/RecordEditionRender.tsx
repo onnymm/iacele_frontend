@@ -33,6 +33,7 @@ const RecordEditionRender = <M extends IACele.Data.ModelName> ({
         undoNewRecord,
         updateRecordInViewField,
         updateEditableRecordField,
+        undoChangesSignal,
     } = useRecordEdition<M>();
 
     useEffect(
@@ -59,6 +60,7 @@ const RecordEditionRender = <M extends IACele.Data.ModelName> ({
             undoNewRecord,
             updateRecordInViewField,
             updateEditableRecordField,
+            undoChangesSignal,
         }}>
             {children}
             {display === 'screen' &&

@@ -7,6 +7,7 @@ import useModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import useDataContext from "./useDataContext";
 import VOID_CALLBACK from "@/constants/app/callbacks";
+import useTrigger from "../app/useSignal";
 
 const useRecordEdition = <M extends IACele.Data.ModelName>() => {
 
@@ -37,6 +38,9 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
         }, [updateEditableRecordField, updateRecordInViewField]
     );
 
+    // Inicialización de señal para detectar cuando se deshacen cambios
+    const [ undoChangesSignal, undoChangesTrigger ] = useTrigger()
+
     // Función para deshacer cambios
     const undoChanges = useCallback(
         () => {
@@ -45,7 +49,9 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
             undoChangesInRecordInView();
             // Se deshacen cambios en el registro de edición
             undoChangesInEditableRecord();
-        }, [undoChangesInEditableRecord, undoChangesInRecordInView]
+            // Aviso de cambios deshechos
+            undoChangesTrigger();
+        }, [undoChangesInEditableRecord, undoChangesInRecordInView, undoChangesTrigger]
     );
 
     // Inicialización de instancia de evaluador
@@ -59,7 +65,9 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
         () => {
             undoChangesInEditableRecord();
             recomputeRecordInView();
-        }, [originalRecord, undoChangesInEditableRecord, recomputeRecordInView]
+            // Aviso de cambios deshechos
+            undoChangesTrigger();
+        }, [originalRecord, recomputeRecordInView, undoChangesInEditableRecord, undoChangesTrigger]
     );
 
     useEffect(
@@ -92,6 +100,7 @@ const useRecordEdition = <M extends IACele.Data.ModelName>() => {
         undoNewRecord: undoNewRecord ?? (VOID_CALLBACK.SYNC),
         updateRecordInViewField,
         updateEditableRecordField,
+        undoChangesSignal,
     };
 };
 

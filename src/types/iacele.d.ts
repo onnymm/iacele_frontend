@@ -1091,6 +1091,7 @@ declare namespace IACele {
                 createMode: boolean;
                 newRecord: () => (void);
                 undoNewRecord: () => (void);
+                undoChangesSignal: boolean;
             };
 
             interface Field <M extends Data.ModelName, O extends View.FieldComponent>{

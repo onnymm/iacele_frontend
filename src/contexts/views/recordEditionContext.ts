@@ -17,6 +17,7 @@ const RecordEditionContext = createContext<IACele.Context.ViewContext.RecordEdit
     createMode: true,
     newRecord: VOID_CALLBACK.SYNC,
     undoNewRecord: VOID_CALLBACK.SYNC,
+    undoChangesSignal: false,
 });
 
 export default RecordEditionContext;
