@@ -1,6 +1,7 @@
 import EMPTY_STRING from "@/constants/views/emptyString";
 import useAPI from "@/hooks/app/useAPI";
 import useBase64 from "@/hooks/ui/useBase64";
+import useSearchRecord from "@/hooks/ui/useSearchRecords";
 import useFieldParams from "@/hooks/views/useFieldParams";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import useRelatedCommands from "@/hooks/views/useRelatedCommands";
@@ -635,13 +636,15 @@ const TTypeInterface = {
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
-        const { params, isReadonly, decorationColor } = useFieldParams<M>();
+        const { params, isReadonly, decorationColor, fieldMetadata } = useFieldParams<M>();
         // Inicialización de administrador de registros referenciados
-        const { relatedRecordsManager } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
+        const { relatedRecordsManager, idsIndex } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
         // Obtención del valor actual del registro
         const values = [ ...recordInView[params.name] as IACele.Data.TType.One2Many['view'] ] as IACele.Data.TType.One2Many['view'];
+        // Inicialización de criterio y texto de búsqueda para búsqueda de registros
+        const { searchCriteria, searchText, updateSearchCriteria } = useSearchRecord<any>(params.domain ?? [], idsIndex);
 
-        return { values, isReadonly, decorationColor, relatedRecordsManager };
+        return { values, isReadonly, decorationColor, searchCriteria, searchText, updateSearchCriteria, relatedModelName: fieldMetadata['related_model'], relatedRecordsManager };
     },
 
     useMany2Many: <M extends IACele.Data.ModelName>() => {
@@ -649,11 +652,15 @@ const TTypeInterface = {
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
-        const { params, isReadonly, decorationColor } = useFieldParams<M>();
+        const { params, isReadonly, decorationColor, fieldMetadata } = useFieldParams<M>();
+        // Inicialización de administrador de registros referenciados
+        const { relatedRecordsManager, idsIndex } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
         // Obtención del valor actual del registro
-        const values = recordInView[params.name] as IACele.Data.TType.Many2Many['view'];
+        const values = [ ...recordInView[params.name] as IACele.Data.TType.Many2Many['view'] ] as IACele.Data.TType.Many2Many['view'];
+        // Inicialización de criterio y texto de búsqueda para búsqueda de registros
+        const { searchCriteria, searchText, updateSearchCriteria } = useSearchRecord<any>(params.domain ?? [], idsIndex);
 
-        return { values, isReadonly, decorationColor };
+        return { values, isReadonly, decorationColor, searchCriteria, searchText, updateSearchCriteria, relatedModelName: fieldMetadata['related_model'], relatedRecordsManager };
     },
 
     useJSON: <M extends IACele.Data.ModelName>() => {

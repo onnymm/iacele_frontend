@@ -5,6 +5,7 @@ const useSearchRecord = <M extends IACele.Data.ModelName>(
     idsIndex: number[],
 ) => {
 
+    // Función para unir dominio e índice de IDs
     const joinDomainAndIndex = useCallback(
         () => {
             // Construcción de criterio para descartar IDs existentes
@@ -22,6 +23,7 @@ const useSearchRecord = <M extends IACele.Data.ModelName>(
         }, [fieldDomain, idsIndex]
     );
 
+    // Función para construir criterio de búsqueda
     const buildSearchCriteria = useCallback(
         (inputText: string) => {
 
@@ -35,7 +37,7 @@ const useSearchRecord = <M extends IACele.Data.ModelName>(
             // Si existe texto de búsqueda...
             } else {
                 // Construcción de búsqueda por nombre a mostrar contiene...
-                const displayNameContains: IACele.Data.CriteriaStructure<M> = [['display_name', '=', inputText]];
+                const displayNameContains: IACele.Data.CriteriaStructure<M> = [['display_name', 'ilike', inputText]];
                 // Construcción de criterio de búsqueda con filtro de búsqueda de texto
                 const searchCriteria: IACele.Data.CriteriaStructure<M> = ['&', ...baseSearchCriteria, ...displayNameContains];
 

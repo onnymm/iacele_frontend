@@ -11,6 +11,8 @@ const useRelatedCommands = <M extends IACele.Data.ModelName, F extends IACele.Da
     const { originalRecord } = useOriginalRecord<M>();
     // Obtención del registro en vista y función para modificación de valor
     const { updateRecordInViewField, updateEditableRecordField, undoChangesSignal } = useRecordEditionParams<M>();
+    // Inicialización de índice de IDs existentes en el campo
+    const [ idsIndex, setIdsIndex ] = useState<number[]>([]);
 
     // Inicialización de manejador de registros referenciados
     const [ relatedRecordsManager ] = useState<RelatedRecords<M, F>>(
@@ -20,6 +22,7 @@ const useRelatedCommands = <M extends IACele.Data.ModelName, F extends IACele.Da
                 originalRecord[fieldName] as IACele.Data.RecordForView<M>[],
                 updateRecordInViewField as any,
                 updateEditableRecordField as any,
+                setIdsIndex,
             )
         )
     );
@@ -27,11 +30,11 @@ const useRelatedCommands = <M extends IACele.Data.ModelName, F extends IACele.Da
     // Efecto para restaurar propiedades si se detecta que se deshicieron cambios
     useEffect(
         () => {
-            relatedRecordsManager.restore();
-        }, [relatedRecordsManager, undoChangesSignal]
+            relatedRecordsManager.restore(originalRecord[fieldName] as IACele.Data.RecordForView<M>[]);
+        }, [fieldName, originalRecord, relatedRecordsManager, undoChangesSignal]
     );
 
-    return { relatedRecordsManager };
+    return { relatedRecordsManager, idsIndex };
 };
 
 export default useRelatedCommands;

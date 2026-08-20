@@ -229,6 +229,9 @@ const ItemComponent = {
             createMode,
             newRecord,
             undoNewRecord,
+            undoChangesSignal,
+            updateEditableRecordField,
+            updateRecordInViewField,
         } = useRecordEdition<M>();
 
         // Inicialización de estado de elemento JSX Leading
@@ -251,6 +254,9 @@ const ItemComponent = {
                 createMode,
                 newRecord,
                 undoNewRecord,
+                undoChangesSignal,
+                updateEditableRecordField,
+                updateRecordInViewField,
             }}>
                 <LeadingAndTrailingContext.Provider value={{ setLeading, setTrailing }}>
                     <div className="group flex flex-col bg-card shadow-sm hover:brightness-110 p-2 rounded-sm transition-all duration-300 cursor-pointer iacele-item" onClick={() => {onRowClick(recordInView)}}>
@@ -527,6 +533,9 @@ const TreeComponent = {
             createMode,
             newRecord,
             undoNewRecord,
+            undoChangesSignal,
+            updateEditableRecordField,
+            updateRecordInViewField,
         } = useRecordEdition<M>();
 
         return (
@@ -544,6 +553,9 @@ const TreeComponent = {
                 createMode,
                 newRecord,
                 undoNewRecord,
+                undoChangesSignal,
+                updateEditableRecordField,
+                updateRecordInViewField,
             }}>
                 {children}
             </ClosureRecordContext.Provider>

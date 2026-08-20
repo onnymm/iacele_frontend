@@ -4,7 +4,6 @@ type RemoveRecordIndex = RemoveRecordMap[];
 class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.FieldName<M>>{
 
     private fieldName: F;
-    private originalRelatedRecords: IACele.Data.RecordForView<M>[];
     private relatedRecords: IACele.Data.RecordForView<M>[];
     private updateRecordInViewField: <F extends IACele.Data.FieldName<M>>(
         fieldName: F,
@@ -14,9 +13,9 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
         fieldName: F,
         inputValue: IACele.Data.RelationCommand<M>,
     ) => (void);
+    private setIdsIndex: React.Dispatch<React.SetStateAction<number[]>>;
     commands: IACele.Data.RelationCommand<M>;
     private removeRecordIndex: RemoveRecordIndex;
-    idsIndex: number[];
 
     constructor (
         fieldName: F,
@@ -29,14 +28,15 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
             fieldName: F,
             inputValue: IACele.Data.RelationCommand<M>,
         ) => (void),
+        setIdsIndex: React.Dispatch<React.SetStateAction<number[]>>,
     ) {
 
         // Asignación de valores
         this.fieldName = fieldName;
-        this.originalRelatedRecords = [ ...relatedRecords ];
         this.relatedRecords = [ ...relatedRecords ];
         this.updateRecordInViewField = updateRecordInViewField;
         this.updateEditableRecordField = updateEditableRecordField;
+        this.setIdsIndex = setIdsIndex;
         this.commands = {};
 
         // Inicialización de índice de remoción de registros
@@ -55,13 +55,16 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
             }
         );
 
-        // Inicialización de índice de IDs
-        this.idsIndex = this.getIdsIndex();
+        // Actualización de índice de IDs
+        this.updateIdsIndex();
     };
 
-    restore = () => {
+    restore = (
+        relatedRecords: IACele.Data.RecordForView<M>[],
+    ) => {
 
-        this.relatedRecords = [ ...this.originalRelatedRecords ];
+        // Copia de los registros relacionados proporcionados
+        this.relatedRecords = [ ...relatedRecords ];
 
         // Inicialización de un nuevo objeto de comandos
         this.commands = {};
@@ -84,8 +87,8 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
             }
         );
 
-        // Inicialización de índice de IDs
-        this.idsIndex = this.getIdsIndex();
+        // Actualización de índice de IDs
+        this.updateIdsIndex();
     };
 
     remove = (recordId: number) => {
@@ -109,17 +112,61 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
         // Se añade la ID del registro a desvincular
         this.commands['unlink'].push(recordId);
 
-        // Actualización de estado con inclusión de registro
+        // Actualización de estado con exclusión de registro
         this.exclude(recordId);
     };
 
-    // private include = (record: IACele.Data.RecordForView<M>) => {
+    doAdd = (record: IACele.Data.RecordForView<M>) => {
 
-    //     // Actualización de array de registros relacionados
-    //     this.relatedRecords.push(record);
-    //     // Actualición de estados
-    //     this.update();
-    // };
+        // Si el comando no tiene llave...
+        if ( this.commands['add'] === undefined ) {
+            // Inicialización del objeto
+            this.commands['add'] = [];
+        };
+
+        // Obtención de la ID del registro a añadir
+        const recordId = record['id'] as number;
+
+        // Se añade la ID del registro a vincular
+        this.commands['add'].push(recordId);
+
+        // Se añade función para deshacer el cambio
+        const undoAdd = () => {
+            this.undoAdd(recordId);
+        };
+
+        // Se añade el comando para deshacer la adición
+        this.removeRecordIndex.push([recordId, undoAdd]);
+
+        // Actualización de estado con inclusión de registro
+        this.include(record);
+    };
+
+    private undoAdd = (recordId: number) => {
+
+        // Si el comando no tiene llave...
+        if ( this.commands['add'] === undefined ) throw TypeError;
+
+        // Exclusión del registro
+        this.commands['add'] = this.commands['add'].filter( (addedRecordId) => (addedRecordId !== recordId) );
+
+        // Si el comando ya no tiene más registros...
+        if ( this.commands['add'].length === 0 ) {
+            // Se elimina la llave
+            delete this.commands['add'];
+        };
+
+        // Actualización de estado con exclusión de registro
+        this.exclude(recordId);
+    };
+
+    private include = (record: IACele.Data.RecordForView<M>) => {
+
+        // Actualización de array de registros relacionados
+        this.relatedRecords.push(record);
+        // Actualición de estados
+        this.update();
+    };
 
     private exclude = (recordId: number) => {
 
@@ -134,10 +181,11 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
         // Actualición de estados
         this.updateEditableRecordField(this.fieldName, this.commands);
         this.updateRecordInViewField(this.fieldName, this.relatedRecords);
-        this.idsIndex = this.getIdsIndex();
+        // Actualización de índice de IDs
+        this.updateIdsIndex();
     };
 
-    private getIdsIndex = () => {
+    private updateIdsIndex = () => {
 
         // Inicialización del índice de IDs
         const idsIndex = this.relatedRecords.map(
@@ -149,7 +197,8 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
             }
         );
 
-        return idsIndex;
+        // Cambio de estado de índice de IDs
+        this.setIdsIndex(idsIndex);
     };
 };
 
