@@ -1,10 +1,12 @@
+import CreateOrUpdateRecordContext from "@/contexts/views/createOrUpdateRecordContext";
 import EditableRecordContext from "@/contexts/views/editableRecordContext";
 import useAPI from "@/hooks/app/useAPI";
 import useDataView from "@/hooks/routes/useDataView";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
 import useOriginalRecord from "@/hooks/views/useOriginalRecord";
-import { useCallback, useState } from "react";
+import useRecordInView from "@/hooks/views/useRecordInView";
+import { useCallback, useContext, useState } from "react";
 
 const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     children,
@@ -14,6 +16,10 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     const { api } = useAPI();
     // Obtención del nombre del modelo de la vista
     const { modelName } = useGetModelNameFromView<M>();
+    // Obtención de creación o actualización de registro desde el contexto
+    const { createOrUpdate } = useContext<IACele.Context.ViewContext.CreateOrUpdateRecordCallback<M>>(CreateOrUpdateRecordContext);
+    // Obtención del registro en vista
+    const { recordInView } = useRecordInView<M>();
     // Obtención de los datos del registro original desde el contexto
     const { recordId, originalRecord, updateOriginalRecord, reload } = useOriginalRecord<M>();
     // Inicialización de estado del objeto de registro en edición
@@ -162,20 +168,18 @@ const EditableRecordProvider = <M extends IACele.Data.ModelName>({
     const saveChanges = useCallback(
         async () => {
             // Uso de la función de actualización del registro original
-            const response = await updateOriginalRecord(editableRecord);
-
-            // Si el modo es creación...
-            if ( createMode ) {
-                // Ejecución de función tras creación
-                onCreate({ recordId: response as number });
-            // Si el modo es edición
-            } else {
-                // Ejecución de función tras modificación
-                onUpdate({ reload });
-            };
+            const response = await createOrUpdate({
+                createMode,
+                editableRecord,
+                onCreate,
+                onUpdate,
+                recordInView,
+                reload,
+                updateOriginalRecord,
+            });
 
             return response;
-        }, [createMode, editableRecord, onCreate, onUpdate, reload, updateOriginalRecord]
+        }, [createMode, createOrUpdate, editableRecord, onCreate, onUpdate, recordInView, reload, updateOriginalRecord]
     );
 
     // Función de ejecución de acción

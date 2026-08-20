@@ -911,6 +911,28 @@ declare namespace IACele {
 
         };
 
+        declare namespace Callback {
+
+            interface OnCreate {
+                recordId: number;
+            };
+
+            interface OnUpdate {
+                reload: () => (void);
+            };
+
+            interface CreateOrUpdateRecord <M extends IACele.Data.ModelName>{
+                createMode: boolean;
+                editableRecord: Data.EditableRecord<M>;
+                recordInView: Data.RecordForView<M>;
+                onCreate: (params: OnCreate) => (void);
+                onUpdate: (params: OnUpdate) => (void);
+                reload: () => (void);
+                updateOriginalRecord: (recordInEdition: Data.EditableRecord<M>) => (Promise<number | true>);
+            };
+
+        };
+
         type PackedParams<M extends Data.ModelName, O extends FieldComponent, I extends string> = _Definition.PackedParams.PackedParams<M, O, I>;
 
         type FormComponents <M extends Data.ModelName, I extends string> = _Definition.FormComponents<M, I>
@@ -1107,6 +1129,10 @@ declare namespace IACele {
                 fieldConfig: React.RefObject<View.TreeFieldComponentProps<M, O>[]>;
                 suscribeFieldConfig: (newConfig: View.TreeFieldComponentProps<M, O>) => (void);
                 onRowClick: (record: Data.RecordForView<M>) => (void);
+            };
+
+            interface CreateOrUpdateRecordCallback <M extends IACele.Data.ModelName>{
+                createOrUpdate: (params: View.Callback.CreateOrUpdateRecord<M>) => (Promise<number | true>);
             };
 
         };

@@ -5,7 +5,9 @@ import EditableRecordProvider from "../../providers/views/EditableRecordProvider
 import Form from "@/views/form/Form";
 import RecordFromDatabaseProvider from "../../providers/views/RecordFromDatabaseProvider";
 import useDataView from "@/hooks/routes/useDataView";
-import { useMemo } from "react";
+import { useMemo, type Context } from "react";
+import useCreateOrUpdateRecord from "@/hooks/views/useCreateOrUpdateRecord";
+import CreateOrUpdateRecordContext from "@/contexts/views/createOrUpdateRecordContext";
 
 const FormView = () => {
 
@@ -43,9 +45,12 @@ const FormView = () => {
 
 export default FormView;
 
-const CreateOrUpdateMode = ({
+const CreateOrUpdateMode = <M extends IACele.Data.ModelName>({
     children,
 }: IACele.View.CreateOrUpdateModeParams) => {
+
+    // Tipado de contexto con genérico
+    const ClosureCreateOrUpdateRecordContext: Context<IACele.Context.ViewContext.CreateOrUpdateRecordCallback<M>> = CreateOrUpdateRecordContext
 
     // Obtención la ID del registro
     const { recordId } = useDataView();
@@ -55,5 +60,12 @@ const CreateOrUpdateMode = ({
         () => (recordId === 0), [recordId]
     );
 
-    return (children({ createMode }));
+    // Inicialización de función para crear y modificar registro
+    const { createOrUpdateRecord } = useCreateOrUpdateRecord<M>();
+
+    return (
+        <ClosureCreateOrUpdateRecordContext.Provider value={{ createOrUpdate: createOrUpdateRecord }}>
+            {children({ createMode })}
+        </ClosureCreateOrUpdateRecordContext.Provider>
+    );
 };
