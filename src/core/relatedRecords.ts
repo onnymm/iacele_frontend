@@ -16,6 +16,7 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
     private setIdsIndex: React.Dispatch<React.SetStateAction<number[]>>;
     commands: IACele.Data.RelationCommand<M>;
     private removeRecordIndex: RemoveRecordIndex;
+    nextDummyId: number = 0
 
     constructor (
         fieldName: F,
@@ -140,6 +141,62 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
 
         // Actualización de estado con inclusión de registro
         this.include(record);
+    };
+
+    doCreate = (recordForView: IACele.Data.RecordForView<M>, editableRecord: IACele.Data.EditableRecord<M>) => {
+
+        // Creación de ID dummy
+        const recordId = this.nextId();
+
+        // Si el comando no tiene llave...
+        if ( this.commands['create'] === undefined ) {
+            // Inicialización del objeto
+            this.commands['create'] = [];
+        };
+
+        // Se les asigna la ID dummy a los registros entrantes para poder ser administrados
+        recordForView['id'] = recordId as any;
+        editableRecord['id'] = recordId as any;
+
+        // Se añade el registro a crear
+        this.commands['create'].push(editableRecord);
+
+        // Se crea función para deshacer la creación
+        const undoCreate = () => {
+            this.undoCreate(recordId);
+        };
+
+        // Se añade el comando para deshacer la creación
+        this.removeRecordIndex.push([recordId, undoCreate]);
+
+        // Actualización de estado con inclusión de registro
+        this.include(recordForView);
+    };
+
+    private nextId = () => {
+
+        // Decremento del valor de ID dummy
+        this.nextDummyId--;
+
+        return this.nextDummyId;
+    };
+
+    private undoCreate = (recordId: number) => {
+
+        // Si el comando no tiene llave...
+        if ( this.commands['create'] === undefined ) throw TypeError;
+
+        // Exclusión del registro
+        this.commands['create'] = this.commands['create'].filter( (recordToCreate) => (recordToCreate['id'] !== recordId) );
+
+        // Si el comando ya no tiene más registros...
+        if ( this.commands['create'].length === 0 ) {
+            // Se elimina la llave
+            delete this.commands['create'];
+        };
+
+        // Actualización de estado con exclusión de registro
+        this.exclude(recordId);
     };
 
     private undoAdd = (recordId: number) => {

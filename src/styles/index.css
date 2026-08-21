@@ -28,16 +28,11 @@ a:not(:has(*)) {
 }
 
 .dark * {
-	scrollbar-color: #354657 #142434; /* Thumb color and track color */
+  scrollbar-color: #354657 #142434; /* Thumb color and track color */
 }
-@layer utilities {
-	.scrollbar-hide::-webkit-scrollbar {
-		display: none;
-	}
 
-	.scrollbar-hide {
-		scrollbar-width: none;
-	}
+.scrollbar-hide {
+  scrollbar-width: none;
 }
 
 @theme inline {

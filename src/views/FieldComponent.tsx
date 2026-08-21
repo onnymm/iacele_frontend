@@ -7,11 +7,28 @@ import { Camera, Eye, EyeClosed, Pencil, Plus, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import READONLY_PASSWORD_LABEL from "@/constants/views/readonlyPasswordLabel";
 import { Switch } from "@/components/ui/switch";
 import EMPTY_STRING from "@/constants/views/emptyString";
+import useAPI from "@/hooks/app/useAPI";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type RelatedRecords from "@/core/relatedRecords";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import ViewDataContext from "@/contexts/routes/viewDataContext";
+import VOID_CALLBACK from "@/constants/app/callbacks";
+import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
+import ModelDataProvider from "@/providers/views/ModelDataProvider";
+import EmptyRelatedRecordProvider from "@/providers/views/EmptyRelatedRecordProvider";
+import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
+import CreateOrUpdateRecordContext from "@/contexts/views/createOrUpdateRecordContext";
+import useViewData from "@/hooks/views/useViewData";
+import Form from "./form/Form";
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
+import LABEL from "@/constants/app/label";
+import BUTTON from "@/constants/ui/button";
 
 const twoDigits = (value: number): string => (
     value < 10
@@ -89,6 +106,262 @@ const BadgeLabel = ({
         </div>
     );
 };
+
+interface BadgeTagParams <M extends IACele.Data.ModelName>{
+    decorationColor: IACele.UI.Variant;
+    isReadonly: boolean;
+    record: IACele.Data.RecordForView<M>;
+    removeItem: () => (void);
+};
+
+const BadgeTag = <M extends IACele.Data.ModelName>({
+    decorationColor,
+    isReadonly,
+    record,
+    removeItem,
+}: BadgeTagParams<M>) => {
+
+    // Obtención de la ID del registro
+    const recordId = useMemo(
+        () =>(record['id'] as number), [record]
+    );
+    // Obtención del nombre a mostrar
+    const displayName = useMemo(
+        () =>((
+            record['display_name']
+                ?? record['name']
+                    ?? `nuevo (${recordId})`
+        ) as string), [record, recordId]
+    );
+
+    return (
+        <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild>
+                <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} text-sm h-8 rounded-full max-w-40 md:h-5`}>
+                    <span className="overflow-hidden text-ellipsis text-nowrap">
+                        {displayName}
+                    </span>
+                    {!isReadonly &&
+                        <Button size='icon' className="size-4 cursor-pointer" onClick={removeItem}>
+                            <X className="size-3" />
+                        </Button>
+                    }
+                </Badge>
+            </TooltipTrigger>
+            <TooltipContent  className="bg-background/10 backdrop-blur-xs">{displayName}</TooltipContent>
+        </Tooltip>
+    );
+};
+
+interface BadgeAddParams <M extends IACele.Data.ModelName>{
+    searchText: string;
+    searchCriteria: IACele.Data.CriteriaStructure<any>;
+    updateSearchCriteria: (inputText: string) => (void);
+    relatedModelName: IACele.Data.ModelName;
+    relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
+};
+
+const BadgeAdd = <M extends IACele.Data.ModelName>({
+    searchText,
+    searchCriteria,
+    updateSearchCriteria,
+    relatedModelName,
+    relatedRecordsManager,
+}: BadgeAddParams<M>) => {
+
+    // Inicialización de estado de popover abierto
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
+    // Obtención de instancia de conexión a la API y estado de carga de la aplicación
+    const { api, appLoading } = useAPI();
+    // Inicialización de estado de registros
+    const [ records, setRecords ] = useState<IACele.Data.RecordForView<'__'>[]>([]);
+    // Inicialización de función de búsqueda y lectura de registros desde la API
+    const searchRead = useCallback(
+        async () => {
+            // Si el popover está abierto...
+            if ( isOpen ) {
+                // Obtención de los registros desde la API
+                const recordsFromAPI = await api.searchRead({
+                    'model_name': relatedModelName,
+                    'search_criteria': searchCriteria as any,
+                    'fields': ['display_name'],
+                    'limit': 10,
+                });
+                // Se establece el valor en el estado de registros
+                setRecords(recordsFromAPI);
+            };
+        }, [api, isOpen, relatedModelName, searchCriteria]
+    );
+
+    // Ejecución de búsqueda y lectura de registros cada vez que el criterio de búsqueda se actualiza
+    useEffect(
+        () => {
+            searchRead();
+        }, [searchRead, searchCriteria]
+    );
+
+    // Reseteo de valor de búsqueda y valor de registros cuando el popover se cierra
+    useEffect(
+        () => {
+            if ( !isOpen ) {
+                setRecords([]);
+                updateSearchCriteria('');
+            };
+        }, [isOpen, updateSearchCriteria]
+    );
+
+
+    // Inicialización de función para añadir registro de la búsqueda
+    const add = useCallback(
+        (record: IACele.Data.RecordForView<any>) => {
+            // Se añade el registro
+            relatedRecordsManager.doAdd(record);
+            // Se cierra el selector
+            setIsOpen(false);
+        }, [relatedRecordsManager]
+    )
+
+    return (
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+                <Button className="rounded-full size-8 md:size-5 cursor-pointer" size='icon'>
+                    <Plus />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="gap-2 p-2 max-h-64">
+                <Input value={searchText} onChange={(e) => updateSearchCriteria(e.target.value)} />
+                {
+                    !appLoading
+                        ? (
+                            <div className="flex flex-col bg-input/50 shadow-sm rounded-xl size-full overflow-y-scroll scrollbar-hide">
+                                {
+                                    records.map(
+                                        (record) => (
+                                            <div
+                                                key={record['id']}
+                                                className="flex flex-row items-center hover:bg-primary/50 p-2 rounded-xl w-full min-w-0 h-8 transition-colors duration-300 cursor-pointer shrink-0"
+                                                onClick={() => {add(record)}}
+                                            >
+                                                <div className="min-w-0 overflow-hidden text-ellipsis">{record['display_name']}</div>
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </div>
+                        )
+                        : (
+                            <div className="flex flex-row justify-center items-center p-4">
+                                <Spinner className="opacity-75 size-6" />
+                            </div>
+                        )
+                }
+                <NewRelatedRecord relatedRecordsManager={relatedRecordsManager} view={'base.user.access.form' as any} />
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+interface NewRelatedRecordParams <M extends IACele.Data.ModelName>{
+    view: IACele.View._Definition.OpenView<M>;
+    relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
+};
+
+const NewRelatedRecord = <M extends IACele.Data.ModelName>({
+    view,
+    relatedRecordsManager,
+}: NewRelatedRecordParams<M>) => {
+
+    // Obtención del estado de carga de la aplicación
+    const { appLoading } = useAPI();
+    // Inicialización de estado de modal abierto
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
+
+    // Función de ekecución tras creación del registro
+    const onCreate = useCallback(
+        () => {
+            // Se cierra el modal
+            setIsOpen(false);
+        }, []
+    );
+
+    // Inicialización de función para poner en cola de registros referenciados al registro que se crea
+    const prepareRecordToCreate = useCallback(
+        async ({ editableRecord, recordInView }: IACele.View.Callback.CreateOrUpdateRecord<M>) => {
+            // Se envían los registros en vista y en edición al administrador de registros relacionados
+            relatedRecordsManager.doCreate(recordInView, editableRecord);
+            // Se cierra el modal de creación de registro
+            setIsOpen(false);
+
+            return (true as const);
+        }, [relatedRecordsManager]
+    );
+
+    // Inicialización de estado de función para ejecutar en el botón de aceptar
+    const [ executeAccept, setExecuteAccept ] = useState<(() => (Promise<number | true>)) | null>(null);
+
+    return (
+        <ViewDataContext.Provider value={{
+            viewDataName: view,
+            recordId: 0,
+            display: 'window',
+            onCreate,
+            onUpdate: VOID_CALLBACK.SYNC,
+        }}>
+            <ModelDataProvider>
+                <CreateOrUpdateRecordContext.Provider value={{
+                    createOrUpdate: prepareRecordToCreate ,
+                }}>
+
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant='primary' className="cursor-pointer">{BUTTON.NEW_RECORD}</Button>
+                        </DialogTrigger>
+                        <DialogContent className="w-[calc(85%)]" aria-describedby={undefined}>
+
+                            <DialogTitle>{LABEL.TITLE.NEW_RECORD}</DialogTitle>
+
+                            <FormExternalButtonsContext.Provider value={{ setSaveChanges: setExecuteAccept }}>
+                                <CreateRecordView />
+                            </FormExternalButtonsContext.Provider>
+
+                            <DialogFooter>
+                                {executeAccept !== null &&
+                                    <Button variant='success' onClick={executeAccept} className="w-48 cursor-pointer">
+                                        {
+                                            appLoading
+                                                ? <Spinner />
+                                                : LABEL.ACTION.ACCEPT
+                                        }
+                                    </Button>
+                                }
+                            </DialogFooter>
+
+                        </DialogContent>
+
+                    </Dialog>
+
+                </CreateOrUpdateRecordContext.Provider>
+            </ModelDataProvider>
+        </ViewDataContext.Provider>
+    );
+};
+
+const CreateRecordView = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de la declaración de la vista
+    const { View } = useViewData<M, 'form'>();
+
+    return (
+        <EmptyRelatedRecordProvider>
+            <RecordInViewProvider>
+            <EditableRecordProvider>
+                {View(Form)}
+            </EditableRecordProvider>
+            </RecordInViewProvider>
+        </EmptyRelatedRecordProvider>
+    );
+};
+
 
 interface EditableSelectionParams <M extends IACele.Data.ModelName>{
     value: string;
@@ -665,23 +938,31 @@ const FieldWidget = {
         O2MTags: <M extends IACele.Data.ModelName>() => {
 
             // Inicialización de estado
-            const { values, isReadonly, decorationColor, relatedRecordsManager } = TTypeInterface.useOne2Many<M>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText } = TTypeInterface.useOne2Many<M>();
 
             return (
                 <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
-                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm h-8 rounded-full md:h-5`}>
-                                    {record['display_name']}
-                                    {!isReadonly &&
-                                        <Button size='icon' className="size-4 cursor-pointer" onClick={() => relatedRecordsManager.remove(record['id'])}>
-                                            <X className="size-3" />
-                                        </Button>
-                                    }
-                                </Badge>
+                                <BadgeTag
+                                    key={record['id']}
+                                    decorationColor={decorationColor}
+                                    isReadonly={isReadonly}
+                                    record={record}
+                                    removeItem={() => relatedRecordsManager.remove(record['id'])}
+                                />
                             )
                         )
+                    }
+                    {!isReadonly &&
+                        <BadgeAdd
+                            searchText={searchText}
+                            searchCriteria={searchCriteria}
+                            updateSearchCriteria={updateSearchCriteria}
+                            relatedModelName={relatedModelName}
+                            relatedRecordsManager={relatedRecordsManager}
+                        />
                     }
                 </div>
             );
@@ -692,29 +973,33 @@ const FieldWidget = {
     'many2many': {
 
         M2MTags: <M extends IACele.Data.ModelName>() => {
+
             // Inicialización de estado
-            const { values, isReadonly, decorationColor } = TTypeInterface.useMany2Many<M>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText } = TTypeInterface.useMany2Many<M>();
 
             return (
-                <div className="flex flex-wrap items-center gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
+                <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
-                                <Badge key={record['id']} className={`bg-${decorationColor} text-sm`}>
-                                    {record['display_name']}
-                                    {!isReadonly &&
-                                        <Button size='icon' className="size-4 cursor-pointer">
-                                            <X className="size-3" />
-                                        </Button>
-                                    }
-                                </Badge>
+                                <BadgeTag
+                                    key={record['id']}
+                                    decorationColor={decorationColor}
+                                    isReadonly={isReadonly}
+                                    record={record}
+                                    removeItem={() => relatedRecordsManager.remove(record['id'])}
+                                />
                             )
                         )
                     }
                     {!isReadonly &&
-                        <Button className="size-5 cursor-pointer" size='icon'>
-                            <Plus />
-                        </Button>
+                        <BadgeAdd
+                            searchText={searchText}
+                            searchCriteria={searchCriteria}
+                            updateSearchCriteria={updateSearchCriteria}
+                            relatedModelName={relatedModelName}
+                            relatedRecordsManager={relatedRecordsManager}
+                        />
                     }
                 </div>
             );
