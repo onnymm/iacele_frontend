@@ -1,7 +1,4 @@
-import type FieldComponent from "./FieldComponent";
-import type IconOption from "./IconOption";
-
-const packedView = <M extends IACele.Data.ModelName>(params: IACele.View.PackedParams<M, typeof FieldComponent, keyof typeof IconOption>) => (params);
+import packedView from "./packedView";
 
 const VIEW = {
 
@@ -222,6 +219,33 @@ const VIEW = {
         ),
     }),
 
+    'base.user.access.form': packedView({
+        modelName: 'base.user.access',
+        type: 'form',
+        View: (Form) => (
+            <Form>
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="Información">
+                                <Field name="name" />
+                                <Field name="model_id" />
+                            </Group>
+                            <Group label="Operaciones">
+                                <Group>
+                                    <Field name="perm_create" decoration={{ success: true }} />
+                                    <Field name="perm_read" decoration={{ success: true }} />
+                                    <Field name="perm_update" decoration={{ success: true }} />
+                                    <Field name="perm_delete" decoration={{ success: true }} />
+                                </Group>
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        ),
+    }),
+
     'base.users.tree': packedView({
         modelName: 'base.users',
         type: 'tree',
@@ -229,7 +253,7 @@ const VIEW = {
             <Tree open="base.users.form">
                 {({ Page, Field, List }) => (
                     <Page>
-                        <Field name="profile_picture" widget="avatar" />
+                        <Field name="profile_picture" widget="avatar" label="Fotito" />
                         <Field name="name" />
                         <Field name="login" widget="badge" decoration={{ info: true }} />
                         <Field name="role_ids" />
@@ -272,10 +296,12 @@ const VIEW = {
                             <Group label="General">
                                 <Field name="login" />
                                 <Field name="name" />
+                                <Field name="active" readonly widget="switch" decoration={{ success: [['active', '=', true]] }} />
+                            </Group>
+                            <Group label="Permisos">
+                                <Field name="role_ids" decoration={{ success: [['active', '=', true]] }} view="base.users.role.form" />
                             </Group>
                             <Group label="Detalles" invisible={[['id', '=', null]]}>
-                                <Field name="active" widget="switch" decoration={{ success: [['active', '=', true]] }} />
-                                <Field name="role_ids" decoration={{ success: [['active', '=', true]] }} />
                                 <Field name="create_uid" />
                                 <Field name="create_date" />
                             </Group>
@@ -290,7 +316,7 @@ const VIEW = {
         modelName: 'base.users',
         type: 'form',
         View: (Form) => (
-            <Form create={false}>
+            <Form create={false} delete={false}>
                 {({ Page, Sheet, Header, Group, Field, Wizard }) => (
                     <Page>
                         <Header>
@@ -325,6 +351,73 @@ const VIEW = {
                             <Group label="Nueva contraseña">
                                 <Field name="new_password" widget="password" />
                                 <Field name="confirm_password" widget="password" />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        ),
+    }),
+
+    'base.user.groups.tree': packedView({
+        modelName: 'base.user.groups',
+        type: 'tree',
+        View: (Tree) => (
+            <Tree open='base.user.groups.form'>
+                {({ Page, Field, List }) => (
+                    <Page>
+                        <Field name="name" widget="badge" decoration={{ info: true }} />
+                        <Field name="label" />
+
+                        <List>
+                            {({ Item, Title, Field }) => (
+                                <Item>
+                                    <Title>
+                                        <Field name="label" />
+                                    </Title>
+                                    <Field name="name" />
+                                </Item>
+                            )}
+                        </List>
+                    </Page>
+                )}
+            </Tree>
+        ),
+    }),
+
+    'base.user.groups.form': packedView({
+        modelName: 'base.user.groups',
+        type: 'form',
+        View: (Form) => (
+            <Form>
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group>
+                                <Field name="label" label="Nombre" />
+                                <Field name="access_ids" decoration={{ info: true }} label="Permisos de acceso" view='base.user.access.form' />
+                            </Group>
+                        </Sheet>
+                    </Page>
+                )}
+            </Form>
+        ),
+    }),
+
+    'base.users.role.form': packedView({
+        modelName: 'base.users.role',
+        type: 'form',
+        View: (Form) => (
+            <Form>
+                {({ Page, Sheet, Group, Field }) => (
+                    <Page>
+                        <Sheet>
+                            <Group label="General">
+                                <Field name="name" />
+                                <Field name="label" />
+                            </Group>
+                            <Group label="Detalles">
+                                <Field name="group_ids" />
                             </Group>
                         </Sheet>
                     </Page>

@@ -793,7 +793,9 @@ declare namespace IACele {
                 'assistance.registry.event.form': 'assistance.registry.event';
                 'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
                 'base.users.form': 'base.users';
+                'base.user.access.form': 'base.user.access';
                 'base.user.groups.form': 'base.user.groups';
+                'base.users.role.form': 'base.users.role';
                 'base.users.update.password.form': 'base.users.update.password';
             };
 
