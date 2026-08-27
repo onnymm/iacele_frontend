@@ -4,7 +4,7 @@ import useFieldParams from "@/hooks/views/useFieldParams";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
 import FieldComponent from "@/views/FieldComponent";
 import { CircleQuestionMark } from "lucide-react";
-import { useMemo, type Context } from "react";
+import React, { useMemo, type Context } from "react";
 import InvisibleComponent from "../ui/InvisibleComponent";
 
 const Field = <M extends IACele.Data.ModelName>({
@@ -15,6 +15,7 @@ const Field = <M extends IACele.Data.ModelName>({
     widget = 'default',
     decoration,
     label,
+    view,
 }: IACele.View.FormFieldComponentProps<M, typeof FieldComponent>) => {
 
     // Contexto tipado
@@ -30,7 +31,7 @@ const Field = <M extends IACele.Data.ModelName>({
     );
 
     // Definición del componente a usar para renderizar el valor del campo
-    const Component = useMemo(
+    const Component: React.FC = useMemo(
         () => (FieldComponent[ttype][widget as 'default']),
         [ttype, widget]
     );
@@ -38,7 +39,7 @@ const Field = <M extends IACele.Data.ModelName>({
     return (
         <InvisibleComponent invisible={invisible}>
             <ClosureFieldContext.Provider value={{
-                params: { name, domain, invisible, widget, readonly, decoration, label } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
+                params: { name, domain, invisible, widget, readonly, decoration, label, view } as IACele.View.FormFieldComponentProps<M, typeof FieldComponent>,
                 fieldMetadata: modelMetadata[name],
             }}>
                 <Label />

@@ -568,14 +568,14 @@ declare namespace IACele {
             'assistance.registry.event': {
                 employee_id: TType.Many2One<'not_null'>;
                 original_registry_time: TType.Datetime<'not_null'>;
-                original_status: TType.Selection<'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                original_status: TType.Selection<'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
                 device_id: TType.Many2One;
                 from_api: TType.Boolean<'not_null'>;
                 registry_time_correction: TType.Datetime;
-                status_correction: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                status_correction: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
                 day_id: TType.Many2One;
                 registry_time: TType.Datetime;
-                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
                 has_corrections: TType.Boolean<'not_null'>;
                 correction_history_ids: TType.One2Many<'assistance.registry.event.correction.historial'>;
             };
@@ -583,13 +583,13 @@ declare namespace IACele {
             'assistance.registry.event.correction.historial': {
                 event_id: TType.Many2One<'not_null'>;
                 move_type: TType.Selection<'correction' | 'undo', 'not_null'>;
-                new_status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                new_status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
                 new_registry_time: TType.Datetime;
             };
 
             'assistance.registry.event.correction': {
                 event_id: TType.Many2One<'not_null'>;
-                status: TType.Selection<'null', 'undefined', 'check_in', 'break_out', 'break_in', 'check_out'>;
+                status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
                 registry_time: TType.Datetime;
             };
 
@@ -677,6 +677,32 @@ declare namespace IACele {
         type LogicOperator = _Definition._CriteriaStructure.LogicOperator;
 
         type Triplet<M extends ModelName> = _Definition._CriteriaStructure.Triplet<M>;
+
+        type ModelRelatedField<M extends ModelName> = {
+            [K in keyof Model]-?: (
+                _ArrayyFieldName<K> extends string
+                    ? _ArrayyFieldName<K>
+                    : undefined
+            )
+        }[M];
+
+        type ModelWithRelatedFields = {
+            [M in ModelName]-?: (
+                ModelRelatedField<M> extends never
+                    ? never
+                    : M
+            );
+        }[ModelName];
+
+        type ArrayFieldName<M extends ModelWithRelatedFields> = {
+            [K in keyof Model[M]]: (
+                Model[M][K]['ttype'] extends _Definition.ArrayTTypeName
+                    ? K
+                    : never
+            );
+        }[keyof Model[M]];
+
+        type RelatedModel<M extends ModelWithRelatedFields, F extends ArrayFieldName<M>> = Extract<IACele.Data.ModelDefinition<M>[F]['modelName'], ModelName>;
 
     };
 
@@ -878,9 +904,10 @@ declare namespace IACele {
                 widget?: keyof O[Data.ModelDefinition<M>[F]['ttype']];
                 invisible?: BooleanOrConditionalStatement<M>;
                 readonly?: BooleanOrConditionalStatement<M>;
-                domain?: Data.CriteriaStructure<Data.ModelDefinition<M>[F]['modelName']>;
+                domain?: Data.CriteriaStructure<Data.RelatedModel<M, F>>;
                 decoration?: _Decoration<M>;
                 label?: string;
+                view?: View._Definition.OpenView<Data.RelatedModel<M, F>>;
             };
 
             interface _TreeFieldWidget <M extends Data.ModelName, F extends Data.FieldName<M>, O extends FieldComponent>{
@@ -907,6 +934,39 @@ declare namespace IACele {
 
             interface CreateMode {
                 createMode: boolean;
+            };
+
+        };
+
+        declare namespace UI {
+
+            declare namespace X2MTags {
+
+                declare namespace _Definition {
+
+                    interface BadgeAddParams <
+                        M extends IACele.Data.ModelWithRelatedFields,
+                        F extends IACele.Data.ArrayFieldName<M>,
+                    >{
+                        searchText: string;
+                        searchCriteria: IACele.Data.CriteriaStructure<Data.RelatedModel<M, F>>;
+                        updateSearchCriteria: (inputText: string) => (void);
+                        relatedModelName: IACele.Data.ModelName;
+                        relatedRecordsManager: RelatedRecords<M, F>;
+                        view: View._Definition.OpenView<Data.RelatedModel<M, F>>;
+                    };
+
+                };
+
+                declare namespace Badge {
+
+                    type Add<
+                        M extends IACele.Data.ModelName,
+                        F extends IACele.Data.FieldName<M>,
+                    > = _Definition.BadgeAddParams<Many2OneOption, F>
+
+                };
+
             };
 
         };

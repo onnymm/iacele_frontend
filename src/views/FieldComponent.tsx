@@ -130,7 +130,7 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
         () =>((
             record['display_name']
                 ?? record['name']
-                    ?? `nuevo (${recordId})`
+                        ?? `nuevo (${recordId})`
         ) as string), [record, recordId]
     );
 
@@ -153,21 +153,16 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
     );
 };
 
-interface BadgeAddParams <M extends IACele.Data.ModelName>{
-    searchText: string;
-    searchCriteria: IACele.Data.CriteriaStructure<any>;
-    updateSearchCriteria: (inputText: string) => (void);
-    relatedModelName: IACele.Data.ModelName;
-    relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
-};
 
-const BadgeAdd = <M extends IACele.Data.ModelName>({
+
+const BadgeAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>({
     searchText,
     searchCriteria,
     updateSearchCriteria,
     relatedModelName,
     relatedRecordsManager,
-}: BadgeAddParams<M>) => {
+    view,
+}: IACele.View.UI.X2MTags.Badge.Add<M, F>) => {
 
     // Inicialización de estado de popover abierto
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
@@ -219,7 +214,7 @@ const BadgeAdd = <M extends IACele.Data.ModelName>({
             // Se cierra el selector
             setIsOpen(false);
         }, [relatedRecordsManager]
-    )
+    );
 
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -255,14 +250,14 @@ const BadgeAdd = <M extends IACele.Data.ModelName>({
                             </div>
                         )
                 }
-                <NewRelatedRecord relatedRecordsManager={relatedRecordsManager} view={'base.user.access.form' as any} />
+                <NewRelatedRecord relatedRecordsManager={relatedRecordsManager} view={view} />
             </PopoverContent>
         </Popover>
     );
 };
 
 interface NewRelatedRecordParams <M extends IACele.Data.ModelName>{
-    view: IACele.View._Definition.OpenView<M>;
+    view: keyof IACele.View._Definition.ViewToModelName;
     relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
 };
 
@@ -935,10 +930,10 @@ const FieldWidget = {
 
     'one2many': {
 
-        O2MTags: <M extends IACele.Data.ModelName>() => {
+        O2MTags: <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>() => {
 
             // Inicialización de estado
-            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText } = TTypeInterface.useOne2Many<M>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText, view } = TTypeInterface.useOne2Many<M, F>();
 
             return (
                 <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
@@ -962,6 +957,7 @@ const FieldWidget = {
                             updateSearchCriteria={updateSearchCriteria}
                             relatedModelName={relatedModelName}
                             relatedRecordsManager={relatedRecordsManager}
+                            view={view as never}
                         />
                     }
                 </div>
@@ -972,10 +968,10 @@ const FieldWidget = {
 
     'many2many': {
 
-        M2MTags: <M extends IACele.Data.ModelName>() => {
+        M2MTags: <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>() => {
 
             // Inicialización de estado
-            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText } = TTypeInterface.useMany2Many<M>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText, view } = TTypeInterface.useMany2Many<M, F>();
 
             return (
                 <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
@@ -999,6 +995,7 @@ const FieldWidget = {
                             updateSearchCriteria={updateSearchCriteria}
                             relatedModelName={relatedModelName}
                             relatedRecordsManager={relatedRecordsManager}
+                            view={view as never}
                         />
                     }
                 </div>

@@ -345,7 +345,7 @@ const ItemComponent = {
         );
 
         // Definición del componente a usar para renderizar el valor del campo
-        const Component = useMemo(
+        const Component: React.FC = useMemo(
             () => (FieldComponent[ttype][widget as 'default']),
             [ttype, widget]
         );
@@ -607,7 +607,7 @@ const CellRender = <M extends IACele.Data.ModelName>({
         [modelMetadata, name]
     );
     // Definición del componente a usar para renderizar el valor del campo
-    const Component = useMemo(
+    const Component: React.FC = useMemo(
         () => (FieldComponent[ttype][widget as 'default']),
         [ttype, widget]
     );
