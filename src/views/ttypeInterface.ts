@@ -631,20 +631,18 @@ const TTypeInterface = {
         return { value, displayName, setValue, isOpen, load, loading, options, deleteValue, isReadonly, decorationColor };
     },
 
-    useOne2Many: <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>() => {
+    useOne2Many: <M extends IACele.Data.ModelWithRelatedFields>() => {
 
         // Obtención del registro en vista y función para modificación de valor
         const { recordInView } = useRecordEditionParams<M>();
         // Obtención de parámetros del campo
         const { params, isReadonly, decorationColor, fieldMetadata } = useFieldParams<M>();
         // Inicialización de administrador de registros referenciados
-        const { relatedRecordsManager, idsIndex } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
+        const { relatedRecordsManager } = useRelatedCommands(params.name as IACele.Data.FieldName<'__'>);
         // Obtención del valor actual del registro
         const values = [ ...recordInView[params.name] as IACele.Data.TType.One2Many['view'] ] as IACele.Data.TType.One2Many['view'];
-        // Inicialización de criterio y texto de búsqueda para búsqueda de registros
-        const { searchCriteria, searchText, updateSearchCriteria } = useSearchRecord<IACele.Data.RelatedModel<M, F>>(params.domain as any ?? [], idsIndex);
 
-        return { values, isReadonly, decorationColor, searchCriteria, searchText, updateSearchCriteria, relatedModelName: fieldMetadata['related_model'], relatedRecordsManager, view: params.view };
+        return { values, isReadonly, decorationColor, relatedModelName: fieldMetadata['related_model'], relatedRecordsManager, view: params.view };
     },
 
     useMany2Many: <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>() => {

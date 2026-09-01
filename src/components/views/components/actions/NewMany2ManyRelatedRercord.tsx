@@ -18,7 +18,7 @@ interface NewRelatedRecordParams <M extends IACele.Data.ModelName>{
     relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
 };
 
-const NewRelatedRecord = <M extends IACele.Data.ModelName>({
+const NewMany2ManyRelatedRecord = <M extends IACele.Data.ModelName>({
     view,
     relatedRecordsManager,
 }: NewRelatedRecordParams<M>) => {
@@ -98,4 +98,4 @@ const NewRelatedRecord = <M extends IACele.Data.ModelName>({
     );
 };
 
-export default NewRelatedRecord;
+export default NewMany2ManyRelatedRecord;

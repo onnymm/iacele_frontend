@@ -15,8 +15,9 @@ import format from "@/utils/format";
 import TextLabel from "./components/TextLabel";
 import BadgeLabel from "./components/BadgeLabel";
 import BadgeTag from "./components/BadgeTag";
-import BadgeAdd from "./components/BadgeAdd";
+import BadgeMany2ManyAdd from "./components/BadgeMany2ManyAdd";
 import EditableSelection from "./components/EditableSelection";
+import BadgeOne2manyAdd from "./components/BadgeOne2ManyAdd";
 
 const FieldWidget = {
 
@@ -546,10 +547,10 @@ const FieldWidget = {
 
     'one2many': {
 
-        O2MTags: <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>() => {
+        O2MTags: <M extends IACele.Data.ModelWithRelatedFields>() => {
 
             // Inicialización de estado
-            const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText, view } = TTypeInterface.useOne2Many<M, F>();
+            const { values, isReadonly, decorationColor, relatedRecordsManager, view } = TTypeInterface.useOne2Many<M>();
 
             return (
                 <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
@@ -569,11 +570,7 @@ const FieldWidget = {
                         )
                     }
                     {!isReadonly &&
-                        <BadgeAdd
-                            searchText={searchText}
-                            searchCriteria={searchCriteria}
-                            updateSearchCriteria={updateSearchCriteria}
-                            relatedModelName={relatedModelName}
+                        <BadgeOne2manyAdd
                             relatedRecordsManager={relatedRecordsManager}
                             view={view as never}
                         />
@@ -609,7 +606,7 @@ const FieldWidget = {
                         )
                     }
                     {!isReadonly &&
-                        <BadgeAdd
+                        <BadgeMany2ManyAdd
                             searchText={searchText}
                             searchCriteria={searchCriteria}
                             updateSearchCriteria={updateSearchCriteria}

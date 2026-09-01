@@ -946,7 +946,15 @@ declare namespace IACele {
 
                 declare namespace _Definition {
 
-                    interface BadgeAddParams <
+                    interface BadgeOne2ManyAddParams <
+                        M extends IACele.Data.ModelWithRelatedFields,
+                        F extends IACele.Data.ArrayFieldName<M>,
+                    >{
+                        relatedRecordsManager: RelatedRecords<M, F>;
+                        view: View._Definition.OpenView<Data.RelatedModel<M, F>>;
+                    };
+
+                    interface BadgeMany2ManyAddParams <
                         M extends IACele.Data.ModelWithRelatedFields,
                         F extends IACele.Data.ArrayFieldName<M>,
                     >{
@@ -962,10 +970,15 @@ declare namespace IACele {
 
                 declare namespace Badge {
 
-                    type Add<
+                    type One2ManyAdd<
                         M extends IACele.Data.ModelName,
                         F extends IACele.Data.FieldName<M>,
-                    > = _Definition.BadgeAddParams<Many2OneOption, F>
+                    > = _Definition.BadgeOne2ManyAddParams<Many2OneOption, F>;
+
+                    type Many2ManyAdd<
+                        M extends IACele.Data.ModelName,
+                        F extends IACele.Data.FieldName<M>,
+                    > = _Definition.BadgeMany2ManyAddParams<Many2OneOption, F>
 
                 };
 

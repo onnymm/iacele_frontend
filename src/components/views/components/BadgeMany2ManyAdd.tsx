@@ -5,16 +5,16 @@ import { Spinner } from "@/components/ui/spinner";
 import useAPI from "@/hooks/app/useAPI";
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import NewRelatedRecord from "./actions/NewRelatedRercord";
+import NewMany2ManyRelatedRecord from "./actions/NewMany2ManyRelatedRercord";
 
-const BadgeAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>({
+const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>({
     searchText,
     searchCriteria,
     updateSearchCriteria,
     relatedModelName,
     relatedRecordsManager,
     view,
-}: IACele.View.UI.X2MTags.Badge.Add<M, F>) => {
+}: IACele.View.UI.X2MTags.Badge.Many2ManyAdd<M, F>) => {
 
     // Inicialización de estado de popover abierto
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
@@ -102,10 +102,10 @@ const BadgeAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele
                             </div>
                         )
                 }
-                <NewRelatedRecord relatedRecordsManager={relatedRecordsManager} view={view} />
+                <NewMany2ManyRelatedRecord relatedRecordsManager={relatedRecordsManager} view={view} />
             </PopoverContent>
         </Popover>
     );
 };
 
-export default BadgeAdd;
+export default BadgeMany2ManyAdd;
