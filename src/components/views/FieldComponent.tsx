@@ -417,7 +417,7 @@ const FieldWidget = {
             const { value, setValue, isReadonly } = TTypeInterface.useFile<M>();
 
             return (
-                <div className="flex justify-center md:justify-end w-full">
+                <div className="flex justify-center md:group-even/iacele-group-wrapper:justify-end md:justify-start w-full">
                     <div className="relative size-72 md:size-36">
                         {value === 'null' &&
                             <div className="absolute flex justify-center items-center bg-background rounded-full size-full">

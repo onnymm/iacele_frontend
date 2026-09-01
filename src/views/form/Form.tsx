@@ -219,11 +219,11 @@ const FormComponent = {
 
         return (
             <InvisibleComponent invisible={invisible}>
-                <div className="flex flex-col px-4 group-[.ui-group]:px-0 py-2 group-[.ui-group]:pb-0">
-                    <p className="group-[.ui-group]:hidden opacity-50 pb-1 border-gray-500/50 border-b h-5 font-semibold text-xs uppercase select-none">
+                <div className="group/iacele-group-wrapper flex flex-col px-4 group-[.iacele-group-inner]:px-0 py-2 group-[.iacele-group-inner]:pb-0">
+                    <p className="group-[.iacele-group-inner]:hidden opacity-50 pb-1 border-gray-500/50 border-b h-5 font-semibold text-xs uppercase select-none">
                         {label}
                     </p>
-                    <div className="group ui-group flex flex-col group-[.ui-group]:items-center gap-x-4 group-[.ui-group]:grid group-[.ui-group]:grid-cols-2 py-1">
+                    <div className="group iacele-group-inner flex flex-col group-[.iacele-group-inner]:items-center gap-x-4 group-[.iacele-group-inner]:grid group-[.iacele-group-inner]:grid-cols-2 py-1">
                         {children}
                     </div>
                 </div>
