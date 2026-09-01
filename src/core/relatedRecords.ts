@@ -173,6 +173,43 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
         this.include(recordForView);
     };
 
+    doUpdate = (recordForView: IACele.Data.RecordForView<M>, editableRecord: IACele.Data.EditableRecord<M>) => {
+
+        // Si el registro editable está vacío...
+        if ( Object.keys(editableRecord).length === 0 ) {
+            // Se termina la ejecución
+            return;
+        };
+
+        // Obtención de la ID del registro
+        const recordId = recordForView['id'] as number;
+
+        // Si el comando no tiene llave...
+        if ( this.commands['update'] === undefined ) {
+            // Inicialización del objeto
+            this.commands['update'] = [];
+        };
+
+        // Búsqueda de un objeto de edición con la misma ID
+        const alreadyAdded = this.commands['update'].find( ( recordToEdit ) => (recordToEdit[0] === editableRecord['id']) );
+
+        // Si existen datos de edición de este registro...
+        if ( alreadyAdded ) {
+            // Obtención del índice del objeto
+            const index = this.commands['update'].indexOf(alreadyAdded);
+            // Reescritura del objeto
+            this.commands['update'][index] = [recordId, editableRecord];
+            // Actualización de estado con actualización de registro
+            this.replace(recordForView);
+        // Si no existen datos de edición de este registro...
+        } else {
+            // Se añaden los datos
+            this.commands['update'].push([recordId, editableRecord]);
+            // Actualización de estado con inclusión de registro
+            this.replace(recordForView);
+        };
+    };
+
     private nextId = () => {
 
         // Decremento del valor de ID dummy
@@ -221,7 +258,7 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
 
         // Actualización de array de registros relacionados
         this.relatedRecords.push(record);
-        // Actualición de estados
+        // Actualización de estados
         this.update();
     };
 
@@ -229,13 +266,25 @@ class RelatedRecords <M extends IACele.Data.ModelName, F extends IACele.Data.Fie
 
         // Actualización de array de registros relacionados
         this.relatedRecords = this.relatedRecords.filter( (existingRecord) => (existingRecord['id'] !== recordId) );
-        // Actualición de estados
+        // Actualización de estados
+        this.update();
+    };
+
+    private replace = (record: IACele.Data.RecordForView<M>) => {
+
+        // Búsqueda del registro
+        const found = this.relatedRecords.find( (includedRecord) => (includedRecord['id'] === record['id']) ) as IACele.Data.RecordForView<M>;
+        // Obtención del índice del registro
+        const index = this.relatedRecords.indexOf(found);
+        // Reescritura del registro
+        this.relatedRecords[index] = record;
+        // Actualización de estados
         this.update();
     };
 
     private update = () => {
 
-        // Actualición de estados
+        // Actualización de estados
         this.updateEditableRecordField(this.fieldName, this.commands);
         this.updateRecordInViewField(this.fieldName, this.relatedRecords);
         // Actualización de índice de IDs

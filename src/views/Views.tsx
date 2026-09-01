@@ -417,7 +417,7 @@ const VIEW = {
                                 <Field name="label" />
                             </Group>
                             <Group label="Detalles">
-                                <Field name="group_ids" />
+                                <Field name="group_ids" view="base.user.groups.form" />
                             </Group>
                         </Sheet>
                     </Page>

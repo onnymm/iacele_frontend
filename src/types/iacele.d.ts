@@ -246,7 +246,7 @@ declare namespace IACele {
             declare namespace _RelationCommand {
 
                 type Create<M extends ModelName> = EditableRecord<M>[];
-                type Update<M extends ModelName> = [number[], EditableRecord<M>];
+                type Update<M extends ModelName> = [Typing.ScalarOrArray<number>, EditableRecord<M>][];
                 type Add = number[];
                 type Unlink = number[];
                 type Delete = number[];

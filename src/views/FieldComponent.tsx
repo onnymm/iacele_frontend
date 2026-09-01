@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Camera, Eye, EyeClosed, Pencil, Plus, X } from "lucide-react";
+import { Camera, Eye, EyeClosed, Pencil, Plus, SquarePen, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
@@ -29,6 +29,7 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from 
 import FormExternalButtonsContext from "@/contexts/views/formExternalButtonsContext";
 import LABEL from "@/constants/app/label";
 import BUTTON from "@/constants/ui/button";
+import RecordFromDatabaseProvider from "@/providers/views/RecordFromDatabaseProvider";
 
 const twoDigits = (value: number): string => (
     value < 10
@@ -112,6 +113,8 @@ interface BadgeTagParams <M extends IACele.Data.ModelName>{
     isReadonly: boolean;
     record: IACele.Data.RecordForView<M>;
     removeItem: () => (void);
+    view: keyof IACele.View._Definition.ViewToModelName;
+    relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
 };
 
 const BadgeTag = <M extends IACele.Data.ModelName>({
@@ -119,6 +122,8 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
     isReadonly,
     record,
     removeItem,
+    view,
+    relatedRecordsManager,
 }: BadgeTagParams<M>) => {
 
     // Obtención de la ID del registro
@@ -137,23 +142,127 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
     return (
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
-                <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} text-sm h-8 rounded-full max-w-40 md:h-5`}>
-                    <span className="overflow-hidden text-ellipsis text-nowrap">
-                        {displayName}
-                    </span>
-                    {!isReadonly &&
-                        <Button size='icon' className="size-4 cursor-pointer" onClick={removeItem}>
-                            <X className="size-3" />
-                        </Button>
-                    }
-                </Badge>
+
+                    <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} group/iacele-badge text-sm h-8 rounded-full max-w-40 md:h-5`}>
+                        <span className="overflow-hidden text-ellipsis text-nowrap">
+                            {displayName}
+                        </span>
+                        {!isReadonly &&
+                            <>
+                                <EditRelatedRecord recordId={recordId} relatedRecordsManager={relatedRecordsManager} view={view} />
+                                <Button size='icon' className="hidden group-hover/iacele-badge:block size-4 cursor-pointer" onClick={removeItem}>
+                                    <X className="size-3" />
+                                </Button>
+                            </>
+                        }
+                    </Badge>
+
             </TooltipTrigger>
-            <TooltipContent  className="bg-background/10 backdrop-blur-xs">{displayName}</TooltipContent>
+            <TooltipContent className="flex flex-row justify-between bg-background/10 backdrop-blur-xs">
+                {displayName}
+            </TooltipContent>
         </Tooltip>
     );
 };
 
+interface EditRelatedRecordParams <M extends IACele.Data.ModelName> {
+    view: keyof IACele.View._Definition.ViewToModelName;
+    relatedRecordsManager: RelatedRecords<M, IACele.Data.FieldName<M>>;
+    recordId: number;
+};
 
+const EditRelatedRecord = <M extends IACele.Data.ModelName>({
+    view,
+    relatedRecordsManager,
+    recordId,
+}: EditRelatedRecordParams<M>) => {
+
+    // Obtención del estado de carga de la aplicación
+    const { appLoading } = useAPI();
+
+    // Inicialización de estado de modal abierto
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
+
+    // Inicialización de función para poner en cola de registros referenciados al registro que se crea
+    const prepareRecordToCreate = useCallback(
+        async ({ editableRecord, recordInView }: IACele.View.Callback.CreateOrUpdateRecord<M>) => {
+            // Se envían los registros en vista y en edición al administrador de registros relacionados
+            relatedRecordsManager.doUpdate(recordInView, editableRecord);
+            // Se cierra el modal de creación de registro
+            setIsOpen(false);
+
+            return (true as const);
+        }, [relatedRecordsManager]
+    );
+
+    // Inicialización de estado de función para ejecutar en el botón de aceptar
+    const [ executeAccept, setExecuteAccept ] = useState<(() => (Promise<number | true>)) | null>(null);
+
+    return (
+        <ViewDataContext.Provider value={{
+            viewDataName: view,
+            recordId: recordId,
+            display: 'window',
+            onCreate: VOID_CALLBACK.SYNC,
+            onUpdate: VOID_CALLBACK.SYNC,
+        }}>
+            <ModelDataProvider>
+                <CreateOrUpdateRecordContext.Provider value={{
+                    createOrUpdate: prepareRecordToCreate ,
+                }}>
+
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                        <DialogTrigger asChild>
+                            <Button size='icon' className="hidden group-hover/iacele-badge:block size-4 cursor-pointer">
+                                <SquarePen className="size-3" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="w-[calc(85%)] max-h-[calc(85%)]" aria-describedby={undefined}>
+
+                            <DialogTitle>{LABEL.TITLE.EDIT_RECORD}</DialogTitle>
+
+                            <div className="w-full max-h-[calc(50svh)] overflow-y-scroll">
+                                <FormExternalButtonsContext.Provider value={{ setSaveChanges: setExecuteAccept }}>
+                                    <EditRecordView />
+                                </FormExternalButtonsContext.Provider>
+                            </div>
+
+                            <DialogFooter>
+                                {executeAccept !== null &&
+                                    <Button variant='success' onClick={executeAccept} className="w-48 cursor-pointer">
+                                        {
+                                            appLoading
+                                                ? <Spinner />
+                                                : LABEL.ACTION.ACCEPT
+                                        }
+                                    </Button>
+                                }
+                            </DialogFooter>
+
+                        </DialogContent>
+                    </Dialog>
+
+                </CreateOrUpdateRecordContext.Provider>
+            </ModelDataProvider>
+        </ViewDataContext.Provider>
+    );
+};
+
+const EditRecordView = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de la declaración de la vista
+    const { View } = useViewData<M, 'form'>();
+
+    return (
+        <RecordFromDatabaseProvider>
+            <RecordInViewProvider>
+            <EditableRecordProvider>
+                {View(Form)}
+            </EditableRecordProvider>
+            </RecordInViewProvider>
+        </RecordFromDatabaseProvider>
+    );
+};
 
 const BadgeAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>({
     searchText,
@@ -946,6 +1055,8 @@ const FieldWidget = {
                                     isReadonly={isReadonly}
                                     record={record}
                                     removeItem={() => relatedRecordsManager.remove(record['id'])}
+                                    relatedRecordsManager={relatedRecordsManager}
+                                    view={view as never}
                                 />
                             )
                         )
@@ -984,6 +1095,8 @@ const FieldWidget = {
                                     isReadonly={isReadonly}
                                     record={record}
                                     removeItem={() => relatedRecordsManager.remove(record['id'])}
+                                    relatedRecordsManager={relatedRecordsManager}
+                                    view={view as never}
                                 />
                             )
                         )

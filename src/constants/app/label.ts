@@ -31,6 +31,7 @@ const LABEL = {
     TITLE: {
         DELETE_RECORD: 'Eliminar registro',
         NEW_RECORD: 'Nuevo registro',
+        EDIT_RECORD: 'Editar registro',
     },
 
     MESSAGE: {
