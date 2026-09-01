@@ -41,18 +41,23 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
 
-                    <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} group/iacele-badge text-sm h-8 rounded-full max-w-40 md:h-5`}>
-                        <span className="overflow-hidden text-ellipsis text-nowrap">
-                            {displayName}
-                        </span>
-                        {!isReadonly &&
-                            <>
-                                <EditRelatedRecord recordId={recordId} relatedRecordsManager={relatedRecordsManager} view={view} />
-                                <Button size='icon' className="hidden group-hover/iacele-badge:block size-4 cursor-pointer" onClick={removeItem}>
-                                    <X className="size-3" />
-                                </Button>
-                            </>
-                        }
+                    <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} group/iacele-badge flex justify-start flex-row text-sm h-8 w-min max-w-64 rounded-full md:h-5`}>
+                        <div className="relative flex flex-row justify-start items-center h-full max-h-full">
+
+                            <span className="group-hover/iacele-badge:w-[calc(100%-2.5rem)] overflow-hidden text-ellipsis text-nowrap">
+                                {displayName}
+                            </span>
+                            <div className="right-0 absolute flex flex-row gap-1">
+                                {!isReadonly &&
+                                    <>
+                                        <EditRelatedRecord recordId={recordId} relatedRecordsManager={relatedRecordsManager} view={view} />
+                                        <Button size='icon' className="hidden group-hover/iacele-badge:block size-4 cursor-pointer" onClick={removeItem}>
+                                            <X className="size-3" />
+                                        </Button>
+                                    </>
+                                }
+                            </div>
+                        </div>
                     </Badge>
 
             </TooltipTrigger>
