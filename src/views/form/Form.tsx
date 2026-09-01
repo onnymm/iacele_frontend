@@ -5,7 +5,7 @@ import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import { useCallback, useMemo, useState } from "react";
-import FieldComponent from "../FieldComponent";
+import FieldComponent from "../../components/views/FieldComponent";
 import InvisibleComponent from "./ui/InvisibleComponent";
 import Field from "./field/Field";
 import RecordEditionRender from "./RecordEditionRender";

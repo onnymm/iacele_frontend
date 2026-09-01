@@ -1,5 +1,5 @@
 import ViewConfigContext from "@/contexts/views/viewConfigContext";
-import type FieldComponent from "@/views/FieldComponent";
+import type FieldComponent from "@/components/views/FieldComponent";
 import { useContext } from "react";
 
 const useViewData = <M extends IACele.Data.ModelName, T extends 'form' | 'tree'>(): IACele.Context.ViewContext.SegmentedConfig<M, typeof FieldComponent, T> => {

@@ -1,4 +1,4 @@
-import type FieldComponent from "@/views/FieldComponent";
+import type FieldComponent from "@/components/views/FieldComponent";
 import { useCallback, useRef } from "react";
 
 const useFieldConfig = <M extends IACele.Data.ModelName>() => {

@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import FieldContext from "@/contexts/views/fieldContext";
 import useFieldParams from "@/hooks/views/useFieldParams";
 import useModelMetadata from "@/hooks/views/useModelMetadata";
-import FieldComponent from "@/views/FieldComponent";
+import FieldComponent from "@/components/views/FieldComponent";
 import { CircleQuestionMark } from "lucide-react";
 import React, { useMemo, type Context } from "react";
 import InvisibleComponent from "../ui/InvisibleComponent";

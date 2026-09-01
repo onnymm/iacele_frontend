@@ -1,6 +1,6 @@
 import useRequiresField from "@/hooks/views/useRequiresField";
 import { useEffect } from "react";
-import type FieldComponent from "../FieldComponent";
+import type FieldComponent from "../../components/views/FieldComponent";
 import type IconOption from "../IconOption";
 
 const FormViewInspector = <M extends IACele.Data.ModelName>({

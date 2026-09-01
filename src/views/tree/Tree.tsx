@@ -11,7 +11,7 @@ import useOriginalRecords from "@/hooks/views/useOriginalRecords";
 import useRecordEdition from "@/hooks/views/useRecordEdition";
 import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
-import FieldComponent from "@/views/FieldComponent";
+import FieldComponent from "@/components/views/FieldComponent";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import IconOption from "../IconOption";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";

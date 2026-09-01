@@ -1,5 +1,5 @@
 import VOID_CALLBACK from "@/constants/app/callbacks";
-import type FieldComponent from "@/views/FieldComponent";
+import type FieldComponent from "@/components/views/FieldComponent";
 import { createContext } from "react";
 
 const FieldConfigContext = createContext<IACele.Context.ViewContext.FieldConfig<any, typeof FieldComponent>>({

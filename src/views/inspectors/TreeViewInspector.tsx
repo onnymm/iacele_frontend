@@ -1,5 +1,5 @@
 import useRequiresField from "@/hooks/views/useRequiresField";
-import type FieldComponent from "../FieldComponent";
+import type FieldComponent from "../../components/views/FieldComponent";
 import { useContext, useEffect } from "react";
 import RequiresFieldContext from "@/contexts/views/requiresFieldContext";
 import type IconOption from "../IconOption";
