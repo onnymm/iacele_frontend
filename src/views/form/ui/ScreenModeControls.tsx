@@ -14,9 +14,9 @@ const ScreenModeControls = () => {
                 {canCreate &&
                     <MainButtons.NewRecord />
                 }
+                <MainButtons.Ellipsis />
                 <MainButtons.Save />
                 <MainButtons.UndoChanges />
-                <MainButtons.Ellipsis />
             </div>
         </MainControls>
     );
