@@ -51,7 +51,7 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
                                 {!isReadonly &&
                                     <>
                                         <EditRelatedRecord recordId={recordId} relatedRecordsManager={relatedRecordsManager} view={view} />
-                                        <Button size='icon' className="hidden group-hover/iacele-badge:block size-4 cursor-pointer" onClick={removeItem}>
+                                        <Button size='icon' className="hidden group-hover/iacele-badge:flex justify-center items-center size-4 cursor-pointer" onClick={removeItem}>
                                             <X className="size-3" />
                                         </Button>
                                     </>
