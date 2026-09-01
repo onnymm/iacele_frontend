@@ -41,18 +41,18 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
 
-                    <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} group/iacele-badge flex justify-start flex-row text-sm h-8 w-min max-w-64 rounded-full md:h-5`}>
-                        <div className="relative flex flex-row justify-start items-center h-full max-h-full">
+                    <Badge key={recordId} className={`${recordId > 0 ? `bg-${decorationColor}` : 'bg-default'} group/iacele-badge flex justify-start flex-row text-sm h-8 w-max max-w-80 md:max-w-64 rounded-full md:h-5`}>
+                        <div className="relative flex flex-row justify-start items-center gap-1 h-full max-h-full">
 
-                            <span className="group-hover/iacele-badge:w-[calc(100%-2.5rem)] overflow-hidden text-ellipsis text-nowrap">
+                            <span className="w-max md:group-hover/iacele-badge:w-[calc(100%-2.5rem)] md:w-full max-w-55 overflow-hidden text-ellipsis text-nowrap">
                                 {displayName}
                             </span>
-                            <div className="right-0 absolute flex flex-row gap-1">
+                            <div className="md:hidden right-0 md:absolute flex group-hover/iacele-badge:flex flex-row gap-1">
                                 {!isReadonly &&
                                     <>
                                         <EditRelatedRecord recordId={recordId} relatedRecordsManager={relatedRecordsManager} view={view} />
-                                        <Button size='icon' className="hidden group-hover/iacele-badge:flex justify-center items-center size-4 cursor-pointer" onClick={removeItem}>
-                                            <X className="size-3" />
+                                        <Button size='icon' className="flex justify-center items-center size-6 md:size-4 cursor-pointer" onClick={removeItem}>
+                                            <X className="size-[75%]" />
                                         </Button>
                                     </>
                                 }
@@ -61,7 +61,7 @@ const BadgeTag = <M extends IACele.Data.ModelName>({
                     </Badge>
 
             </TooltipTrigger>
-            <TooltipContent className="flex flex-row justify-between bg-background/10 backdrop-blur-xs">
+            <TooltipContent className="hidden md:flex flex-row justify-between bg-background/10 backdrop-blur-xs">
                 {displayName}
             </TooltipContent>
         </Tooltip>

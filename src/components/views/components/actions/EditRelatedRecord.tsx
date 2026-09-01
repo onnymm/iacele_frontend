@@ -61,8 +61,8 @@ const EditRelatedRecord = <M extends IACele.Data.ModelName>({
 
                     <Dialog open={isOpen} onOpenChange={setIsOpen}>
                         <DialogTrigger asChild>
-                            <Button size='icon' className="hidden group-hover/iacele-badge:flex justify-center items-center size-4 cursor-pointer">
-                                <SquarePen className="size-3" />
+                            <Button size='icon' className="justify-center items-center size-6 md:size-4 cursor-pointer">
+                                <SquarePen className="size-[75%]" />
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="w-[calc(85%)] max-h-[calc(85%)]" aria-describedby={undefined}>
