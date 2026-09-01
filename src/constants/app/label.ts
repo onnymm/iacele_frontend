@@ -11,6 +11,7 @@ const LABEL = {
 
     BUTTON: {
         LOGIN: 'Iniciar sesión',
+        SEARCH: 'Buscar',
     },
 
     NAVBAR: {

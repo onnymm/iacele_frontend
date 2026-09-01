@@ -3,9 +3,10 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
 import useAPI from "@/hooks/app/useAPI";
-import { Plus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { Plus, Search } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import NewMany2ManyRelatedRecord from "./actions/NewMany2ManyRelatedRercord";
+import LABEL from "@/constants/app/label";
 
 const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F extends IACele.Data.ArrayFieldName<M>>({
     searchText,
@@ -18,6 +19,10 @@ const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F exten
 
     // Inicialización de estado de popover abierto
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
+    // Inicialización de input de vista móvil abierto
+    const [ isMobileInputVisible, setIsMobileInputVisible ] = useState<boolean>(false);
+    // Inicialización de referencia de input de móvil
+    const inputRef = useRef<HTMLInputElement>(null)
     // Obtención de instancia de conexión a la API y estado de carga de la aplicación
     const { api, appLoading } = useAPI();
     // Inicialización de estado de registros
@@ -57,7 +62,6 @@ const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F exten
         }, [isOpen, updateSearchCriteria]
     );
 
-
     // Inicialización de función para añadir registro de la búsqueda
     const add = useCallback(
         (record: IACele.Data.RecordForView<any>) => {
@@ -68,6 +72,15 @@ const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F exten
         }, [relatedRecordsManager]
     );
 
+    // Cuando se visibiliza el input, se enfoca éste
+    useEffect(
+        () => {
+            if ( isMobileInputVisible ) {
+                inputRef.current?.focus();
+            };
+        }, [isMobileInputVisible]
+    );
+
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
@@ -76,7 +89,18 @@ const BadgeMany2ManyAdd = <M extends IACele.Data.ModelWithRelatedFields, F exten
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="gap-2 p-2 max-h-64">
-                <Input value={searchText} onChange={(e) => updateSearchCriteria(e.target.value)} />
+                <div className="md:hidden w-full">
+                    {!isMobileInputVisible &&
+                        <Button variant='primary' className="flex gap-2 w-full" onClick={() => {setIsMobileInputVisible(true)}}>
+                            <Search className="size-4" />
+                            {LABEL.BUTTON.SEARCH}
+                        </Button>
+                    }
+                    {isMobileInputVisible &&
+                        <Input ref={inputRef} value={searchText} onChange={(e) => updateSearchCriteria(e.target.value)} />
+                    }
+                </div>
+                <Input className="hidden md:block" value={searchText} onChange={(e) => updateSearchCriteria(e.target.value)} />
                 {
                     !appLoading
                         ? (
