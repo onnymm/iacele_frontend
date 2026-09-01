@@ -79,7 +79,7 @@ const MainButtons = {
         // Obtención de estado de carga de la app
         const { appLoading } = useAPI();
         // Obtención de función para crear registro y modo de visualización
-        const { deleteRecord } = useRecordEditionParams<M>();
+        const { deleteRecord, createMode } = useRecordEditionParams<M>();
         // Obtención de parámetro desde el contexto
         const { canDelete } = useContext(IndividualRecordViewContext);
         // Inicialización de estado de modal abierto
@@ -98,7 +98,7 @@ const MainButtons = {
         );
 
         // Si no hay nada para mostrar en el botón...
-        if ( !canDelete ) return (null);
+        if ( !(canDelete && !createMode) ) return (null);
 
         return (
             <>
@@ -111,7 +111,7 @@ const MainButtons = {
                     <DropdownMenuContent className="py-2 min-w-48">
 
                         {/* Botón para eliminar registro */}
-                        {canDelete &&
+                        {canDelete && !createMode &&
                             <DropdownMenuItem variant="danger" onClick={() => setIsOpen(true)}>
                                 <Trash />
                                 {LABEL.ACTION.DELETE}
