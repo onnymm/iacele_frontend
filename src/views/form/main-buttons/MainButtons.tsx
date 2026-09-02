@@ -7,7 +7,7 @@ import BUTTON from "@/constants/ui/button";
 import IndividualRecordViewContext from "@/contexts/views/individualRecordViewContext";
 import useAPI from "@/hooks/app/useAPI";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
-import { EllipsisVertical, Save, Trash, Undo2 } from "lucide-react";
+import { EllipsisVertical, Plus, Save, Trash, Undo2 } from "lucide-react";
 import { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -21,8 +21,9 @@ const MainButtons = {
         // Si el modo no es creación...
         if ( !createMode ) {
             return (
-                <Button onClick={newRecord} variant='primary' className="cursor-pointer">
+                <Button onClick={newRecord} variant='primary' className="px-4 h-10 md:h-8 cursor-pointer">
                     {BUTTON.NEW_RECORD}
+                    <Plus className="size-5" />
                 </Button>
             );
         };
@@ -36,7 +37,7 @@ const MainButtons = {
         // Si hay cambios existentes...
         if ( existingChanges ) {
             return (
-                <Button onClick={saveChanges} variant='success' size='icon' className="cursor-pointer">
+                <Button onClick={saveChanges} variant='success' size='icon' className="size-10 md:size-8 cursor-pointer">
                     <Save className="stroke-white" />
                 </Button>
             );
@@ -65,7 +66,7 @@ const MainButtons = {
         // Si hay cambios existentes...
         if ( existingChanges || createMode ) {
             return (
-                <Button onClick={undo} variant='default' size='icon' className="cursor-pointer">
+                <Button onClick={undo} variant='default' size='icon' className="size-10 md:size-8 cursor-pointer">
                     <Undo2 className="stroke-white" />
                 </Button>
             );
@@ -104,15 +105,15 @@ const MainButtons = {
             <>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild className="outline-none">
-                        <Button size='icon' className="outline-none focus-visible:ring-0 cursor-pointer">
-                            <EllipsisVertical className="stroke-foreground" />
+                        <Button size='icon' className="outline-none focus-visible:ring-0 size-10 md:size-8 cursor-pointer">
+                            <EllipsisVertical className="stroke-foreground size-5 md:size-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="py-2 min-w-48">
 
                         {/* Botón para eliminar registro */}
                         {canDelete && !createMode &&
-                            <DropdownMenuItem variant="danger" onClick={() => setIsOpen(true)}>
+                            <DropdownMenuItem variant="danger" className="h-10 md:h-8" onClick={() => setIsOpen(true)}>
                                 <Trash />
                                 {LABEL.ACTION.DELETE}
                             </DropdownMenuItem>
