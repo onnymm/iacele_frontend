@@ -11,6 +11,7 @@ class EventClient {
     private hub: Record<string, Record<number, () => (void)>>;
     private config: IACele.API.Websocket.EventClientConfig;
     private mustReconnect: boolean = true;
+    private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
     private DEFAULT_CONFIG: IACele.API.Websocket.EventClientConfig = {
         onopen: VOID_CALLBACK.SYNC,
         onclose: VOID_CALLBACK.SYNC,
@@ -38,10 +39,51 @@ class EventClient {
     };
 
     close = () => {
+
         // Se indica que el websocket no debe intentar reconectarse
         this.mustReconnect = false;
+        // Se detiene temporizador de reconexión si es que existe
+        this.stopReconnectionSchedule();
         // Se cierra la conexión con el websocket
         this.ws.close();
+    };
+
+    pause = () => {
+
+        // Se establece que el websocket no debe reconectarse
+        this.mustReconnect = false;
+        // Se detiene temporizador de reconexión si es que existe
+        this.stopReconnectionSchedule();
+
+        // Inicialización de indicador de websocket
+        const websocketIsOpenOrConnecting = (
+            this.ws.readyState === WebSocket.OPEN
+            || this.ws.readyState === WebSocket.CONNECTING
+        );
+
+        // Si el websocket no está activo ni conectándose...
+        if ( websocketIsOpenOrConnecting ) {
+            // Se cierra el websocket
+            this.ws.close();
+        };
+    };
+
+    resume = () => {
+
+        // Se establece que el websocket debe reconectarse
+        this.mustReconnect = true;
+
+        // Inicialización de indicador de websocket
+        const webSocketIsClosingOrClosing = (
+            this.ws.readyState === WebSocket.CLOSED
+            || this.ws.readyState === WebSocket.CLOSING
+        );
+
+        // Si el websocket está cerrado o cerrándose...
+        if ( webSocketIsClosingOrClosing ) {
+            // Inicialización del websocket
+            this.ws = this.initializeWebsocket();
+        };
     };
 
     on = (
@@ -79,14 +121,43 @@ class EventClient {
     };
 
     private scheduleReconnect = () => {
-        // Si el websocket debería seguir activo
-        if ( this.mustReconnect ) {
-            // Función para crear una nueva conexión
-            const createConnection = () => {
+
+        // Si el websocket no debería seguir activo...
+        if ( !this.mustReconnect ) {
+            // Se termina la ejecución
+            return;
+        };
+
+        // Si existe un temporizador de reconexión activo...
+        if ( this.reconnectTimeout !== null ) {
+            // Se termina la ejecución
+            return;
+        };
+
+        // Función para crear una nueva conexión
+        const createConnection = () => {
+            // Se restablece el temporizador de reconexión
+            this.reconnectTimeout = null;
+
+            // Si el websocket debería seguir activo
+            if ( this.mustReconnect ) {
+                // Inicialización del websocket
                 this.ws = this.initializeWebsocket();
             };
-            // Se reprograma conexión
-            setTimeout(createConnection, CONFIG.NETWORK.WEBSOCKET.RECONNECTION_ATTEMPT_MS);
+        };
+
+        // Se reprograma conexión
+        this.reconnectTimeout = setTimeout(createConnection, CONFIG.NETWORK.WEBSOCKET.RECONNECTION_ATTEMPT_MS);
+    };
+
+    private stopReconnectionSchedule = () => {
+
+        // Si existe un temporizador de reconexión activo...
+        if ( this.reconnectTimeout !== null ) {
+            // Se detiene éste
+            clearTimeout(this.reconnectTimeout);
+            // Se borra éste
+            this.reconnectTimeout = null;
         };
     };
 
