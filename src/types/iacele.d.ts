@@ -1043,8 +1043,9 @@ declare namespace IACele {
         type OpenView<M extends Data.ModelName> = _Definition.OpenView<M>
 
         interface TreeStructure <M extends Data.ModelName, O extends FieldComponent, I extends string>{
-            children: (components: _TreeChildren<M, O, I>) => (React.ReactNode);
             open?: OpenView<M>;
+            canCreate?: boolean;
+            children: (components: _TreeChildren<M, O, I>) => (React.ReactNode);
         };
 
         type ListComponents<M extends Data.ModelName, O extends FieldComponent, I extends string> = _Definition._ListComponents<M, O, I>;

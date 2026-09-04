@@ -12,19 +12,29 @@ import useRecordEdition from "@/hooks/views/useRecordEdition";
 import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/components/views/FieldComponent";
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import IconOption from "../IconOption";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
+import { Button } from "@/components/ui/button";
+import BUTTON from "@/constants/ui/button";
+import { Plus } from "lucide-react";
+import MainControls from "@/components/common/navbar/MainControls";
+import usePathNavigation from "@/hooks/routes/usePathNavigation";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
     setTrailing: React.Dispatch<React.SetStateAction<React.ReactNode>>;
 };
 
+interface NewRecordButtonParams <M extends IACele.Data.ModelName>{
+    open: IACele.View.OpenView<M>;
+};
+
 const Tree = <M extends IACele.Data.ModelName>({
-    children,
+    canCreate,
     open,
+    children,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     // Obtención de configuración de vista y función para suscribir configuración de campos
@@ -44,7 +54,7 @@ const Tree = <M extends IACele.Data.ModelName>({
             {/* Aquí se obtienen los metadatos de la vista */}
             {children({ ...TreeInspector })}
             {/* Aquí se renderiza la vista */}
-            <TreeRender open={open}>
+            <TreeRender open={open} canCreate={canCreate}>
                 {children}
             </TreeRender>
         </ClosureFieldConfigContext.Provider>
@@ -417,7 +427,31 @@ const ItemComponent = {
     },
 };
 
+const NewRecordButton = <M extends IACele.Data.ModelName>({
+    open,
+}: NewRecordButtonParams<M>) => {
+
+    // Obtención de función de navegación
+    const { toPath } = usePathNavigation();
+
+    // Función para crear nuevo registro
+    const newRecord = useCallback(
+        () => {
+            toPath('view', {name: open});
+        }, [toPath, open]
+    );
+
+    return (
+        <Button onClick={newRecord} variant='primary' className="px-4 h-10 md:h-8 cursor-pointer">
+            {BUTTON.NEW_RECORD}
+            <Plus className="size-5" />
+        </Button>
+    );
+};
+
 const TreeRender = <M extends IACele.Data.ModelName>({
+    open,
+    canCreate = true,
     children,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
@@ -436,6 +470,11 @@ const TreeRender = <M extends IACele.Data.ModelName>({
 
     return (
         <>
+            {open && canCreate &&
+                <MainControls>
+                    <NewRecordButton open={open} />
+                </MainControls>
+            }
             <div className="hidden lg:block size-full">
                 <Table className="relative">
                     <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
@@ -570,7 +609,7 @@ const TreeComponent = {
         const { recordInView } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
         return (
-            <TableRow onClick={() => {onRowClick(recordInView)}} className="cursor-pointer">
+            <TableRow onClick={() => {onRowClick(recordInView)}} className="hover:bg-primary/20 cursor-pointer">
                 {
                     fieldConfig.current.map(
                         (config, indexJ) => {
@@ -588,7 +627,7 @@ const TreeComponent = {
                     )
                 }
             </TableRow>
-        )
+        );
     },
 
 } as const;
