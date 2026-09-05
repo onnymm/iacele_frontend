@@ -3,6 +3,7 @@ import useAPI from "../app/useAPI";
 import useReload from "../app/useReload";
 import useGetModelNameFromView from "./useGetModelNameFromView";
 import useSuscribeFieldsToRead from "./useSuscribeFieldsToRead";
+import useModelMetadata from "./useModelMetadata";
 
 const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
 
@@ -56,6 +57,9 @@ export default useReadRecordsFromAPI;
 
 const useSortby = <M extends IACele.Data.ModelName>() => {
 
+    // Obtención de los metadatos del modelo
+    const { modelMetadata } = useModelMetadata<M>();
+
     // Inicialización de valor de ordenamiento por columna
     const [ sortby, setSortby ] = useState<IACele.View.Sortby<M>>({
         sortby: null,
@@ -66,14 +70,23 @@ const useSortby = <M extends IACele.Data.ModelName>() => {
     const toggleSortby = useCallback(
         (fieldName: IACele.Data.FieldName<M>) => {
 
+            // Obtención del tipo de dato del campo
+            const ttype = modelMetadata[fieldName]['ttype']
+            // Inicialización de valor de nombre de campo para reordenar los datos
+            const sortingFieldName: IACele.Data.FieldName<M> = (
+                ttype === 'many2one'
+                    ? `${String(fieldName)}.display_name` as IACele.Data.FieldName<M>
+                    : fieldName
+            );
+
             // Cambio de estado
             setSortby(
                 (prev) => {
                     // Si no hay campo ordenando o el campo actual es distinto al ingresado...
-                    if ( prev['sortby'] === null || prev['sortby'] !== fieldName ) {
+                    if ( prev['sortby'] === null || prev['sortby'] !== sortingFieldName ) {
                         // Se establece el ordenamiento ascendente por el campo entrante
                         return ({
-                            sortby: fieldName,
+                            sortby: sortingFieldName,
                             ascending: true,
                         });
                     // Si el campo actual es igual al campo entrante...
@@ -82,7 +95,7 @@ const useSortby = <M extends IACele.Data.ModelName>() => {
                         if ( prev['ascending'] === true ) {
                             // Se establece ordenamiento descendente por el campo entrante
                             return ({
-                                sortby: fieldName,
+                                sortby: sortingFieldName,
                                 ascending: false,
                             });
                         // Si el ordenamiento es descendente
@@ -96,7 +109,7 @@ const useSortby = <M extends IACele.Data.ModelName>() => {
                     };
                 }
             );
-        }, []
+        }, [modelMetadata]
     );
 
     return { sortby, toggleSortby };
