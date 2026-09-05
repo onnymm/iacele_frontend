@@ -18,7 +18,7 @@ import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
 import { Button } from "@/components/ui/button";
 import BUTTON from "@/constants/ui/button";
-import { Plus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, ChevronUp, Plus } from "lucide-react";
 import MainControls from "@/components/common/navbar/MainControls";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
 
@@ -29,6 +29,14 @@ interface LeadingAndTrailingContextParams {
 
 interface NewRecordButtonParams <M extends IACele.Data.ModelName>{
     open: IACele.View.OpenView<M>;
+};
+
+interface SortColumnParams <M extends IACele.Data.ModelName>{
+    fieldName: IACele.Data.FieldName<M>;
+};
+
+interface TableColumnParams <M extends IACele.Data.ModelName>{
+    config: IACele.View.TreeFieldComponentProps<M, typeof FieldComponent>;
 };
 
 const Tree = <M extends IACele.Data.ModelName>({
@@ -496,12 +504,84 @@ const TreeRender = <M extends IACele.Data.ModelName>({
     );
 };
 
+const SortColumn = <M extends IACele.Data.ModelName>({
+    fieldName,
+}: SortColumnParams<M>) => {
+
+    // Obtención de función de ordenamiento
+    const { sortby } = useOriginalRecords<M>();
+    // El campo actual está ordenando los datos
+    const isFieldSorting = (
+        sortby.sortby === fieldName
+    );
+    // El ordenamiento es ascendente
+    const isSortAscending = (
+        isFieldSorting
+        && sortby.ascending
+    );
+
+    return (
+        <div>
+            {
+                isFieldSorting
+                    ? (
+                        isSortAscending
+                            ? <ChevronUp className="stroke-foreground size-4" />
+                            : <ChevronDown className="stroke-foreground size-4" />
+                    )
+                    : <ChevronsUpDown className="stroke-transparent group-hover/iacele-tree-head:stroke-foreground size-4" />
+            }
+        </div>
+    );
+};
+
+const TableColumn = <M extends IACele.Data.ModelName>({
+    config,
+}: TableColumnParams<M>) => {
+
+    // Obtención de los metadatos del modelo
+    const { modelMetadata } = useModelMetadata<M>();
+    // Obtención de función de ordenamiento
+    const { toggleSortby } = useOriginalRecords<M>();
+    // El campo de la columna es ordenable
+    const isFieldSorteable = !(
+        ['file', 'one2many', 'many2many']
+        .find(
+            (ttypeName) => (ttypeName === modelMetadata[config.name]['ttype'])
+        )
+    );
+
+    // Función para ordenar
+    const sort = useCallback(
+        () => {
+            // Si el campo puede ser ordenado...
+            if ( isFieldSorteable ) {
+                // Se desencadena el ordenamiento por el campo de la columna
+                toggleSortby(config.name);
+            };
+        }, [config.name, toggleSortby, isFieldSorteable]
+    );
+
+    return (
+        <TableHead className="hover:bg-primary/30 p-0 transition-colors duration-300 select-none">
+            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} group/iacele-tree-head flex justify-between items-center px-2 h-full`}>
+                {/* Título de la columna */}
+                {config.label ?? modelMetadata[config.name].label}
+                {/* Indicador de ordenamiento */}
+                {
+                    isFieldSorteable
+                        ? <SortColumn fieldName={config.name} />
+                        : <div className="size-4"/>
+                }
+            </div>
+        </TableHead>
+    );
+};
+
 const TreeComponent = {
 
     Columns: <M extends IACele.Data.ModelName>() => {
 
-        // Obtención de los metadatos del modelo
-        const { modelMetadata } = useModelMetadata<M>();
         // Obtención de la configuración de campos desde el contexto
         const { fieldConfig } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
 
@@ -510,9 +590,7 @@ const TreeComponent = {
                 {
                     fieldConfig.current.map(
                         (config, i) => (
-                            <TableHead className="hover:bg-primary/30 transition-colors duration-300 select-none" key={i}>
-                                {config.label ?? modelMetadata[config.name].label}
-                            </TableHead>
+                            <TableColumn key={i} config={config} />
                         )
                     )
                 }

@@ -5,6 +5,11 @@ const OriginalRecordsContext = createContext<IACele.Context.ViewContext.Original
     originalRecords: [],
     reload: VOID_CALLBACK.SYNC,
     fieldsToRead: { current: [] },
+    toggleSortby: () => {},
+    sortby: {
+        sortby: null,
+        ascending: null,
+    },
 });
 
 export default OriginalRecordsContext;

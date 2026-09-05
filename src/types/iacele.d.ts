@@ -83,8 +83,8 @@ declare namespace IACele {
                 };
 
                 interface _SupportsSorting <M extends Data.ModelName>{
-                    'sortby'?: Typing.ScalarOrArray<Data.FieldName<M>>;
-                    'ascending'?: Typing.ScalarOrArray<boolean>;
+                    'sortby'?: Typing.ScalarOrArray<Data.FieldName<M>> | null;
+                    'ascending'?: Typing.ScalarOrArray<boolean> | null;
                 };
 
                 interface _SupportsSlicing {
@@ -787,6 +787,25 @@ declare namespace IACele {
 
             };
 
+            declare namespace _Sortby {
+
+                interface _SortbyField <M extends IACele.Data.ModelName>{
+                    sortby: IACele.Data.FieldName<M>;
+                    ascending: boolean;
+                };
+
+                interface _SortbyNull {
+                    sortby: null;
+                    ascending: null;
+                };
+
+                type Sortby<M extends IACele.Data.ModelName> = (
+                    | _SortbyField<M>
+                    | _SortbyNull
+                );
+
+            };
+
             type ViewToModelName = {
                 'assistance.registry.day.form': 'assistance.registry.day';
                 'assistance.registry.event.add.form': 'assistance.registry.event';
@@ -1080,6 +1099,8 @@ declare namespace IACele {
 
         type DurationType = [number, number, number] | [null, null, null];
 
+        type Sortby<M extends IACele.Data.ModelName> = _Definition._Sortby.Sortby<M>;
+
     };
 
     declare namespace Context {
@@ -1115,7 +1136,9 @@ declare namespace IACele {
             interface OriginalRecords <M extends Data.ModelName>{
                 originalRecords: Data.RecordFromDatabase<M>[];
                 reload: () => (void);
-                fieldsToRead: RefObject<IACele.Data.ReadField<M>[]>;
+                fieldsToRead: RefObject<Data.ReadField<M>[]>;
+                toggleSortby: (fieldName: Data.FieldName<M>) => (void);
+                sortby: View.Sortby<M>;
             };
 
             interface RecordInView <M extends Data.ModelName>{

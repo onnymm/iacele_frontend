@@ -16,6 +16,8 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
     const [ dataFromAPI, setDataFromAPI ] = useState<IACele.Data.RecordFromDatabase<M>[] | null>(null);
     // Inicialización de lista de campos a leer
     const { fieldsToRead, suscribeFieldToRead } = useSuscribeFieldsToRead<M>();
+    // Inicialización de función y valores para establecer el ordenamiento
+    const { sortby, toggleSortby } = useSortby<M>();
 
     // Función para leer el registro
     const read = useCallback(
@@ -25,10 +27,12 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
                 'model_name': modelName,
                 'fields': fieldsToRead.current,
                 'limit': 40,
+                'sortby': sortby['sortby'],
+                'ascending': sortby['ascending'],
             });
             // Se establece el estado de los datos
             setDataFromAPI(data['data']);
-        }, [api, modelName]
+        }, [api, modelName, sortby]
     );
 
     // Efecto para ejecutar la función de lectura
@@ -43,7 +47,57 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         fieldsToRead,
         suscribeFieldToRead,
         reload,
+        toggleSortby,
+        sortby,
     };
 };
 
 export default useReadRecordsFromAPI;
+
+const useSortby = <M extends IACele.Data.ModelName>() => {
+
+    // Inicialización de valor de ordenamiento por columna
+    const [ sortby, setSortby ] = useState<IACele.View.Sortby<M>>({
+        sortby: null,
+        ascending: null,
+    });
+
+    // Función para cambiar el ordenamiento
+    const toggleSortby = useCallback(
+        (fieldName: IACele.Data.FieldName<M>) => {
+
+            // Cambio de estado
+            setSortby(
+                (prev) => {
+                    // Si no hay campo ordenando o el campo actual es distinto al ingresado...
+                    if ( prev['sortby'] === null || prev['sortby'] !== fieldName ) {
+                        // Se establece el ordenamiento ascendente por el campo entrante
+                        return ({
+                            sortby: fieldName,
+                            ascending: true,
+                        });
+                    // Si el campo actual es igual al campo entrante...
+                    } else {
+                        // Si el ordenamiento es ascendente...
+                        if ( prev['ascending'] === true ) {
+                            // Se establece ordenamiento descendente por el campo entrante
+                            return ({
+                                sortby: fieldName,
+                                ascending: false,
+                            });
+                        // Si el ordenamiento es descendente
+                        } else {
+                            // Se restablece el ordenamiento a nulo
+                            return ({
+                                sortby: null,
+                                ascending: null,
+                            });
+                        };
+                    };
+                }
+            );
+        }, []
+    );
+
+    return { sortby, toggleSortby };
+};
