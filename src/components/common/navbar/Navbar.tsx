@@ -2,19 +2,31 @@ import MainControlsContext from "@/contexts/ui/mainControlsContext";
 import { useContext, useEffect, useRef } from "react";
 import NavbarSettings from "./NavbarSettings";
 import WebsocketConnection from "./WebsocketConnection";
+import DynamicControlsContext from "@/contexts/ui/dynamicControlsContext";
 
 const Navbar = () => {
 
-    // Obtención de función de cambio de estado para establecer elemento HTML
-    const { setElement } = useContext(MainControlsContext);
+    // Obtención de función de cambio de estado para establecer elemento HTML en controles principales
+    const { setElement: setMainControlsElement } = useContext(MainControlsContext);
+    // Obtención de función de cambio de estado para establecer elemento HTML en controles dinámicos
+    const { setElement: setDynamicControlsElement } = useContext(DynamicControlsContext);
     // Inicialización de referencia de controles principales
     const mainControlsRef = useRef<HTMLDivElement>(null);
+    // Inicialización de referencia de controles dinámicos
+    const dynamicControlsRef = useRef<HTMLDivElement>(null);
 
     // Efecto para establecer la referencia de controles principales como elemento HTML
     useEffect(
         () => {
-            setElement(mainControlsRef.current);
-        }, [setElement]
+            setMainControlsElement(mainControlsRef.current);
+        }, [setMainControlsElement]
+    );
+
+    // Efecto para establecer la referencia de controles dinámicos como elemento HTML
+    useEffect(
+        () => {
+            setDynamicControlsElement(dynamicControlsRef.current);
+        }, [setDynamicControlsElement]
     );
 
     return (
@@ -28,6 +40,7 @@ const Navbar = () => {
             </div>
             <div className="flex flex-row justify-between items-center h-min min-h-12">
                 <div id="navbar-main-controls" ref={mainControlsRef}/>
+                <div id="navbar-dynamic-controls" ref={dynamicControlsRef}/>
             </div>
         </nav>
     );

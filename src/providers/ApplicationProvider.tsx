@@ -4,6 +4,7 @@ import MainControlsProvider from "./MainControlsProvider";
 import PageNameProvider from "./PageNameProvider"
 import HeaderControlsProvider from "./HeaderControlsProvider";
 import ModelsMetadataProvider from "./ModelsMetadataProvider";
+import DynamicControlsProvider from "./DynamicControlsProvider";
 
 const ApplicationProvider = ({
     children,
@@ -18,9 +19,11 @@ const ApplicationProvider = ({
         <TooltipProvider>
 
         <MainControlsProvider>
+        <DynamicControlsProvider>
         <HeaderControlsProvider>
             {children}
         </HeaderControlsProvider>
+        </DynamicControlsProvider>
         </MainControlsProvider>
 
         </TooltipProvider>
