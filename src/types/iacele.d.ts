@@ -937,6 +937,7 @@ declare namespace IACele {
                 decoration?: _Decoration<M>;
                 invisible?: BooleanOrConditionalStatement<M>;
                 label?: string;
+                noLabel?: boolean;
             };
 
             type _TreeWidgetDistribution<

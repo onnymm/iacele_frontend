@@ -85,6 +85,7 @@ const TreeInspector = {
         widget,
         decoration,
         label,
+        noLabel = false,
     }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Field']) => {
 
         // Obtención de función para suscribir configuración de campo
@@ -98,8 +99,9 @@ const TreeInspector = {
                     widget: widget,
                     decoration: decoration,
                     label: label,
+                    noLabel: noLabel,
                 } as any);
-            }, [decoration, label, name, suscribeFieldConfig, widget]
+            }, [decoration, label, name, noLabel, suscribeFieldConfig, widget]
         );
 
         return null;
@@ -566,7 +568,9 @@ const TableColumn = <M extends IACele.Data.ModelName>({
         <TableHead className="hover:bg-primary/30 p-0 transition-colors duration-300 select-none">
             <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} group/iacele-tree-head flex justify-between items-center px-2 h-full`}>
                 {/* Título de la columna */}
-                {config.label ?? modelMetadata[config.name].label}
+                {!config.noLabel &&
+                    (config.label ?? modelMetadata[config.name].label)
+                }
                 {/* Indicador de ordenamiento */}
                 {
                     isFieldSorteable
