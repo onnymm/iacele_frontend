@@ -1140,6 +1140,10 @@ declare namespace IACele {
                 fieldsToRead: RefObject<Data.ReadField<M>[]>;
                 toggleSortby: (fieldName: Data.FieldName<M>) => (void);
                 sortby: View.Sortby<M>;
+                page: number;
+                setPage: React.Dispatch<React.SetStateAction<number>>;
+                limit: number;
+                totalPages: number;
             };
 
             interface RecordInView <M extends Data.ModelName>{

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useAPI from "../app/useAPI";
 import useReload from "../app/useReload";
 import useGetModelNameFromView from "./useGetModelNameFromView";
@@ -19,6 +19,8 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
     const { fieldsToRead, suscribeFieldToRead } = useSuscribeFieldsToRead<M>();
     // Inicialización de función y valores para establecer el ordenamiento
     const { sortby, toggleSortby } = useSortby<M>();
+    // Inicialización de valores de paginación
+    const { page, setPage, limit, totalPages, initializeTotalItems, offset } = usePagination();
 
     // Función para leer el registro
     const read = useCallback(
@@ -27,13 +29,16 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
             const data = await api.tree({
                 'model_name': modelName,
                 'fields': fieldsToRead.current,
-                'limit': 40,
+                'offset': offset,
+                'limit': limit,
                 'sortby': sortby['sortby'],
                 'ascending': sortby['ascending'],
             });
             // Se establece el estado de los datos
             setDataFromAPI(data['data']);
-        }, [api, modelName, sortby]
+            // Se establece el número total de elementos
+            initializeTotalItems(data['count']);
+        }, [api, initializeTotalItems, limit, modelName, offset, sortby]
     );
 
     // Efecto para ejecutar la función de lectura
@@ -50,10 +55,49 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         reload,
         toggleSortby,
         sortby,
+        page,
+        setPage,
+        limit,
+        totalPages,
     };
 };
 
 export default useReadRecordsFromAPI;
+
+const usePagination = () => {
+
+    // Inicialización de valor de página
+    const [ page, setPage ] = useState<number>(0);
+    // Inicialización de valor de elementos por página
+    const [ limit ] = useState<number>(40);
+
+    // Inicialización de elementos totales
+    const [ totalItems, setTotalItems ] = useState<number | null>(0);
+
+    const totalPages = useMemo(
+        () => (
+            totalItems !== null
+                ? (
+                    Math.ceil(totalItems / limit)
+                )
+                : 1
+        ), [limit, totalItems]
+    );
+
+    // Función para inicializar el número total de elementos
+    const initializeTotalItems = useCallback(
+        (n: number) => {
+            setTotalItems(n);
+        }, []
+    );
+
+    const offset = useMemo(
+        () => (page * limit),
+        [page, limit]
+    );
+
+    return { page, setPage, limit, totalPages, initializeTotalItems, offset };
+};
 
 const useSortby = <M extends IACele.Data.ModelName>() => {
 

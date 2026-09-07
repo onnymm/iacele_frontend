@@ -10,6 +10,10 @@ const OriginalRecordsContext = createContext<IACele.Context.ViewContext.Original
         sortby: null,
         ascending: null,
     },
+    page: 0,
+    setPage: VOID_CALLBACK.SYNC,
+    limit: 40,
+    totalPages: 1,
 });
 
 export default OriginalRecordsContext;

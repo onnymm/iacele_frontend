@@ -18,9 +18,11 @@ import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
 import { Button } from "@/components/ui/button";
 import BUTTON from "@/constants/ui/button";
-import { ChevronDown, ChevronsUpDown, ChevronUp, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus } from "lucide-react";
 import MainControls from "@/components/common/navbar/MainControls";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
+import DynamicControls from "@/components/common/navbar/DynamicControls";
+import useAPI from "@/hooks/app/useAPI";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -459,6 +461,52 @@ const NewRecordButton = <M extends IACele.Data.ModelName>({
     );
 };
 
+const usePaginator = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención de valores y funciones 
+    const { page, setPage, totalPages } = useOriginalRecords<M>();
+
+    // Función para retroceder una página
+    const prevPage = useCallback(
+        () => {
+            setPage( (prev) => (prev - 1) );
+        }, [setPage]
+    );
+
+    // Función para avanzar una página
+    const nextPage = useCallback(
+        () => {
+            setPage( (prev) => (prev + 1) );
+        }, [setPage]
+    );
+
+    return { page, prevPage, nextPage, totalPages };
+};
+
+const Pagination = <M extends IACele.Data.ModelName>() => {
+
+    // Obtención del estado de carga 
+    const { appLoading } = useAPI();
+    // Obtención de valores y funciones para manejo de paginación
+    const { page, prevPage, nextPage, totalPages } = usePaginator<M>();
+
+    return (
+        <DynamicControls>
+            <div className="flex items-center gap-2">
+                {page + 1} / {totalPages}
+                <div className="flex">
+                    <Button onClick={prevPage} variant='primary' size='icon' disabled={page === 0 || appLoading} className="size-10 md:size-8 cursor-pointer">
+                        <ChevronLeft className="stroke-foreground size-4" />
+                    </Button>
+                    <Button onClick={nextPage} variant='primary' size='icon' disabled={page + 1 === totalPages || appLoading} className="size-10 md:size-8 cursor-pointer">
+                        <ChevronRight className="stroke-foreground size-4" />
+                    </Button>
+                </div>
+            </div>
+        </DynamicControls>
+    );
+};
+
 const TreeRender = <M extends IACele.Data.ModelName>({
     open,
     canCreate = true,
@@ -485,6 +533,7 @@ const TreeRender = <M extends IACele.Data.ModelName>({
                     <NewRecordButton open={open} />
                 </MainControls>
             }
+            <Pagination />
             <div className="hidden lg:block size-full">
                 <Table className="relative">
                     <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
