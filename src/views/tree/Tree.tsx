@@ -615,16 +615,18 @@ const TableColumn = <M extends IACele.Data.ModelName>({
 
     return (
         <TableHead className="hover:bg-primary/30 p-0 transition-colors duration-300 select-none">
-            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} group/iacele-tree-head flex justify-between items-center px-2 h-full`}>
+            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} group/iacele-tree-head flex gap-2 justify-between items-center px-2 h-full`}>
                 {/* Título de la columna */}
                 {!config.noLabel &&
                     (config.label ?? modelMetadata[config.name].label)
                 }
                 {/* Indicador de ordenamiento */}
                 {
-                    isFieldSorteable
-                        ? <SortColumn fieldName={config.name} />
-                        : <div className="size-4"/>
+                    <div className="size-4">
+                        {isFieldSorteable &&
+                            <SortColumn fieldName={config.name} />
+                        }
+                    </div>
                 }
             </div>
         </TableHead>
