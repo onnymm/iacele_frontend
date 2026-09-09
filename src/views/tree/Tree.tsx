@@ -630,9 +630,9 @@ const TableColumn = <M extends IACele.Data.ModelName>({
 
     return (
         <TableHead ref={resizeableRef} className="group/iacele-tree-head relative hover:bg-primary/30 p-0 overflow-x-scroll transition-colors duration-300 select-none scrollbar-hide">
-            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} mr-0.5 relative flex gap-2 justify-between items-center px-2 h-full`}>
+            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} mr-0.5 relative flex gap-2 justify-between items-center pr-2 h-full`}>
                 {/* Título de la columna */}
-                <span ref={initialWidthRef}>
+                <span ref={initialWidthRef} className="pl-2 overflow-x-auto text-ellipsis whitespace-nowrap scrollbar-hide">
                     {!config.noLabel &&
                         (config.label ?? modelMetadata[config.name].label)
                     }

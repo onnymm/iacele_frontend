@@ -29,7 +29,7 @@ const useResizeTreeColumn = () => {
                 (prev) => (
                     prev === null
                         ? prev
-                        : newWidth
+                        : Math.max(newWidth, 60)
                 )
             );
             // Detención del efecto bubbling
