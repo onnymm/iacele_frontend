@@ -12,17 +12,18 @@ import useRecordEdition from "@/hooks/views/useRecordEdition";
 import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/components/views/FieldComponent";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import IconOption from "../IconOption";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
 import { Button } from "@/components/ui/button";
 import BUTTON from "@/constants/ui/button";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus, Settings2 } from "lucide-react";
 import MainControls from "@/components/common/navbar/MainControls";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
 import DynamicControls from "@/components/common/navbar/DynamicControls";
 import useAPI from "@/hooks/app/useAPI";
+import useResizeTreeColumn from "@/hooks/ui/useResizeTreeColumn";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -513,6 +514,8 @@ const TreeRender = <M extends IACele.Data.ModelName>({
     children,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
+    // Inicialización de referencia de tabla
+    const tableRef = useRef<HTMLTableElement>(null);
     // Inicialización de estado de carga en falso
     const [ loaded, setLoaded ] = useState<boolean>(false);
 
@@ -521,6 +524,14 @@ const TreeRender = <M extends IACele.Data.ModelName>({
         () => {
             setLoaded(true);
         }, []
+    );
+
+    // Se cambia el tipo de layout de la tabla para poder redimensionar las columnas
+    useEffect(
+        () => {
+            if ( tableRef.current === null ) return;
+            tableRef.current.classList.add('table-fixed');
+        }, [loaded]
     );
 
     // Si el estado de carga es falso no se renderiza nada
@@ -534,19 +545,21 @@ const TreeRender = <M extends IACele.Data.ModelName>({
                 </MainControls>
             }
             <Pagination />
-            <div className="hidden lg:block size-full">
-                <Table className="relative">
-                    <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
-                        <TreeComponent.Columns />
-                    </TableHeader>
-                    <TableBody>
-                        <TreeComponent.Rows>
-                            <TreeComponent.RecordRowProvider>
-                                <TreeComponent.Row />
-                            </TreeComponent.RecordRowProvider>
-                        </TreeComponent.Rows>
-                    </TableBody>
-                </Table>
+            <div className="relative size-full">
+                <div className="hidden lg:block relative w-full h-full overflow-scroll">
+                    <Table ref={tableRef} className="relative">
+                        <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
+                            <TreeComponent.Columns />
+                        </TableHeader>
+                        <TableBody>
+                            <TreeComponent.Rows>
+                                <TreeComponent.RecordRowProvider>
+                                    <TreeComponent.Row />
+                                </TreeComponent.RecordRowProvider>
+                            </TreeComponent.Rows>
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
             <div className="lg:hidden flex flex-col gap-2 md:grid md:grid-cols-2 p-2">
                 {children({ ...ListComponent })}
@@ -594,6 +607,8 @@ const TableColumn = <M extends IACele.Data.ModelName>({
     const { modelMetadata } = useModelMetadata<M>();
     // Obtención de función de ordenamiento
     const { toggleSortby } = useOriginalRecords<M>();
+    // Inicialización de referencias para redimensionar columna
+    const { resizeableRef, resizerRef, initialWidthRef } = useResizeTreeColumn();
     // El campo de la columna es ordenable
     const isFieldSorteable = !(
         ['file', 'one2many', 'many2many']
@@ -614,12 +629,14 @@ const TableColumn = <M extends IACele.Data.ModelName>({
     );
 
     return (
-        <TableHead className="hover:bg-primary/30 p-0 transition-colors duration-300 select-none">
-            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} group/iacele-tree-head flex gap-2 justify-between items-center px-2 h-full`}>
+        <TableHead ref={resizeableRef} className="group/iacele-tree-head relative hover:bg-primary/30 p-0 overflow-x-scroll transition-colors duration-300 select-none scrollbar-hide">
+            <div onClick={sort} className={`${isFieldSorteable ? 'cursor-pointer' : ''} mr-0.5 relative flex gap-2 justify-between items-center px-2 h-full`}>
                 {/* Título de la columna */}
-                {!config.noLabel &&
-                    (config.label ?? modelMetadata[config.name].label)
-                }
+                <span ref={initialWidthRef}>
+                    {!config.noLabel &&
+                        (config.label ?? modelMetadata[config.name].label)
+                    }
+                </span>
                 {/* Indicador de ordenamiento */}
                 {
                     <div className="size-4">
@@ -629,6 +646,8 @@ const TableColumn = <M extends IACele.Data.ModelName>({
                     </div>
                 }
             </div>
+            {/* Elemento para redimensionar columna */}
+            <div ref={resizerRef} className="top-0 right-0 absolute border-2 border-transparent group-hover/iacele-tree-head:border-gray-500/50 w-0 h-full transition-colors cursor-col-resize"/>
         </TableHead>
     );
 };
@@ -649,6 +668,14 @@ const TreeComponent = {
                         )
                     )
                 }
+                <TableHead className="group/iacele-tree-head relative p-0 w-12 overflow-x-scroll transition-colors duration-300 select-none scrollbar-hide">
+                    <div className={`hover:bg-primary/30 cursor-pointer group/iacele-tree-head w-12 flex justify-center items-center px-2 h-full`}>
+                        <Settings2 className="stroke-foreground size-5" />
+                    </div>
+                </TableHead>
+                <TableHead className="relative p-0 min-w-0 overflow-x-scroll transition-colors duration-300 select-none scrollbar-hide">
+                    <div className="flex justify-center items-center px-2 h-full"/>
+                </TableHead>
             </TableRow>
         )
     },
@@ -747,7 +774,7 @@ const TreeComponent = {
                     fieldConfig.current.map(
                         (config, indexJ) => {
                             return (
-                                <TableCell className="w-min" key={indexJ}>
+                                <TableCell className="overflow-x-scroll scrollbar-hide" key={indexJ}>
                                     <CellRender
                                         name={config.name as any}
                                         label={config.label}
@@ -759,6 +786,8 @@ const TreeComponent = {
                         }
                     )
                 }
+                <TableCell className="min-w-12 overflow-x-scroll scrollbar-hide" />
+                <TableCell />
             </TableRow>
         );
     },

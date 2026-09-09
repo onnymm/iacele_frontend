@@ -14,7 +14,7 @@ const App = () => {
     return (
         <div className="flex flex-col h-svh">
             <Navbar />
-            <main className="h-full overflow-scroll">
+            <main className="h-full overflow-scroll scrollbar-hide">
                 <HeaderControlsBearer />
                 <Outlet />
             </main>
