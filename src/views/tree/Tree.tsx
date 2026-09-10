@@ -545,8 +545,8 @@ const TreeRender = <M extends IACele.Data.ModelName>({
                 </MainControls>
             }
             <Pagination />
-            <div className="relative size-full">
-                <div className="hidden lg:block relative w-full h-full overflow-scroll">
+            <div className="hidden lg:block relative size-full">
+                <div className="relative w-full h-full overflow-scroll">
                     <Table ref={tableRef} className="relative">
                         <TableHeader className="top-0 z-1 sticky bg-white/30 dark:bg-[#1f2f3f]/70 shadow backdrop-blur-sm">
                             <TreeComponent.Columns />
