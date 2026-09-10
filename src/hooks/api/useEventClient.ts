@@ -1,9 +1,8 @@
 import EventClient from "@/api/eventClient";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import useUserToken from "../app/useUserToken";
 import showToast from "@/components/ui/toast/toast";
 import { Unplug } from "lucide-react";
-import useEventListener from "../ui/useEventListener";
 
 const clientConfig: IACele.API.Websocket.EventClientConfig = {
     onopen: () => {showToast({title: 'Websocket', content: 'La conexión ha sido establecida.', type: 'success', icon: Unplug})},
@@ -20,42 +19,27 @@ const useEventClient = () => {
     // Obtención de la función de establecer valor de token
     const { userToken } = useUserToken();
 
-    // Función para conectar el websocket
-    const handlePageShow = useCallback(
+    useEffect(
         () => {
             // Si no existe token de usuario...
-            if (!userToken) {
+            if ( !userToken ) {
                 // Se establece el estado en nulo
-                setEventClient(null);
+                setEventClient(
+                    (prev) => {
+                        // Se cierra la conexión del websocket
+                        prev?.close();
+                        return (null);
+                    }
+                );
                 // Se termina la ejecución
                 return;
             };
+
             // Inicialización de conexión a websocket
-            const client = new EventClient(userToken, setWebsocketConnected, clientConfig,);
+            const client = new EventClient(userToken, setWebsocketConnected, clientConfig);
             // Se establece el estado
             setEventClient(client);
         }, [userToken]
-    );
-
-    // Función para desconectar el websocket
-    const handlePageHide = useCallback(
-        () => {
-            if ( eventClient === null ) return;
-                // Se cierra la conexión del websocket
-                eventClient.close();
-        }, [eventClient]
-    );
-
-    // Se añaden las funciones en escuchadores de eventos
-    useEventListener<'window'>(
-        window,
-        'pageshow',
-        handlePageShow,
-    );
-    useEventListener<'window'>(
-        window,
-        'pagehide',
-        handlePageHide,
     );
 
     return { eventClient, websocketConnected };

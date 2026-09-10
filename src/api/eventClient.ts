@@ -61,7 +61,7 @@ class EventClient {
             || this.ws.readyState === WebSocket.CONNECTING
         );
 
-        // Si el websocket no está activo ni conectándose...
+       // Si el websocket está activo o conectándose...
         if ( websocketIsOpenOrConnecting ) {
             // Se cierra el websocket
             this.ws.close();
@@ -69,6 +69,18 @@ class EventClient {
     };
 
     resume = () => {
+
+        // Inicialización de indicador de websocket
+        const websocketIsOpenOrConnecting = (
+            this.ws.readyState === WebSocket.OPEN
+            || this.ws.readyState === WebSocket.CONNECTING
+        );
+
+        // Si el websocket ya está activo o conectándose...
+        if ( websocketIsOpenOrConnecting ) {
+            // Se termina la ejecución
+            return;
+        };
 
         // Se establece que el websocket debe reconectarse
         this.mustReconnect = true;
@@ -164,7 +176,7 @@ class EventClient {
     private initializeWebsocket = () => {
 
         // Construcción de la URL para conexión del websocket
-        const URL = `${BACKEND_URL}${PATH.WEBSOCKET}/?${QUERY_PARAMS.WEBSOCKET.TOKEN}=${this.userToken}`
+        const URL = `${BACKEND_URL}${PATH.WEBSOCKET}/?${QUERY_PARAMS.WEBSOCKET.TOKEN}=${this.userToken}`;
         // Inicialización del websocket
         const ws = new WebSocket(URL);
 
