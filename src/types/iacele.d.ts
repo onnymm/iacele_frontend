@@ -507,96 +507,32 @@ declare namespace IACele {
 
             'location.warehouse': {
                 short_name: TType.Char<'not_null'>;
-                location_number: TType.Integer<'not_null'>;
+                number: TType.Integer<'not_null'>;
             };
 
-            'resource.device.type': {};
-
-            'schedule.week': {
-                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
-                start_time: TType.Time<'not_null'>;
-                end_time: TType.Time<'not_null'>;
-            };
+            // 'resource.device.type': {};
 
             'model.sync': {
                 last_sync: TType.Datetime<'not_null'>;
                 model_id: TType.Many2One<'not_null'>;
+                update_to: TType.Datetime<'not_null'>;
             };
 
-            'resource.device': {
-                model: TType.Char;
-                brand: TType.Char;
-                serial_number: TType.Char;
-                firmware_version: TType.Char;
-                type_id: TType.Many2One<'not_null'>;
-                location_id: TType.Many2One;
-            };
+            // 'resource.device': {
+            //     model: TType.Char;
+            //     brand: TType.Char;
+            //     serial_number: TType.Char;
+            //     firmware_version: TType.Char;
+            //     type_id: TType.Many2One<'not_null'>;
+            //     location_id: TType.Many2One;
+            // };
 
             'hr.employee': {
                 active: TType.Boolean<'not_null'>;
                 odoo_id: TType.Integer;
                 hire_date: TType.Date;
                 location_id: TType.Many2One;
-                user_id: TType.Many2One;
-            };
-
-            'schedule.week.offset': {
-                employee_id: TType.Many2One<'not_null'>;
-                start_offset: TType.Duration<'not_null'>;
-                end_offset: TType.Duration<'not_null'>;
-                weekday: TType.Selection<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday', 'not_null'>;
-            };
-
-            'assistance.registry.day': {
-                date: TType.Date<'not_null'>;
-                employee_id: TType.Many2One<'not_null'>;
-                schedule_id: TType.Many2One;
-                offset_id: TType.Many2One;
-                event_ids: TType.One2Many<'assistance.registry.event'>;
-                start_time: TType.Time;
-                end_time: TType.Time;
-                lunch_time: TType.Duration;
-                weekday: TType.Char;
-                allowed_start: TType.Time;
-                allowed_end: TType.Time;
-                late_start: TType.Duration;
-                early_end: TType.Duration;
-                is_complete: TType.Boolean;
-                has_valid_events: TType.Boolean;
-            };
-
-            'assistance.registry.event': {
-                employee_id: TType.Many2One<'not_null'>;
-                original_registry_time: TType.Datetime<'not_null'>;
-                original_status: TType.Selection<'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
-                device_id: TType.Many2One;
-                from_api: TType.Boolean<'not_null'>;
-                registry_time_correction: TType.Datetime;
-                status_correction: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
-                day_id: TType.Many2One;
-                registry_time: TType.Datetime;
-                status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
-                has_corrections: TType.Boolean<'not_null'>;
-                correction_history_ids: TType.One2Many<'assistance.registry.event.correction.historial'>;
-            };
-
-            'assistance.registry.event.correction.historial': {
-                event_id: TType.Many2One<'not_null'>;
-                move_type: TType.Selection<'correction' | 'undo', 'not_null'>;
-                new_status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
-                new_registry_time: TType.Datetime;
-            };
-
-            'assistance.registry.event.correction': {
-                event_id: TType.Many2One<'not_null'>;
-                status: TType.Selection<'null' | 'undefined' | 'check_in' | 'break_out' | 'break_in' | 'check_out'>;
-                registry_time: TType.Datetime;
-            };
-
-            'assistance.registry.event.credentials': {
-                token: TType.Char<'not_null'>;
-                cookie_uuid: TType.Char<'not_null'>;
-                site_id: TType.Char<'not_null'>;
+                // user_id: TType.Many2One;
             };
 
         };
@@ -807,15 +743,12 @@ declare namespace IACele {
             };
 
             type ViewToModelName = {
-                'assistance.registry.day.form': 'assistance.registry.day';
-                'assistance.registry.event.add.form': 'assistance.registry.event';
-                'assistance.registry.event.form': 'assistance.registry.event';
-                'assistance.registry.event.correction.form': 'assistance.registry.event.correction';
                 'base.users.form': 'base.users';
                 'base.user.access.form': 'base.user.access';
                 'base.user.groups.form': 'base.user.groups';
                 'base.users.role.form': 'base.users.role';
                 'base.users.update.password.form': 'base.users.update.password';
+                'hr.employee.form': 'hr.employee'
             };
 
             type OpenView<M extends Data.ModelName> = {

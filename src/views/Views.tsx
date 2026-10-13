@@ -2,30 +2,29 @@ import packedView from "./packedView";
 
 const VIEW = {
 
-    'assistance.registry.day.tree': packedView({
-        modelName: 'assistance.registry.day',
-        type: 'tree',
-        View: (Tree) => (
-            <Tree open='assistance.registry.day.form'>
+    'hr.employee.tree': packedView({
+        'type': 'tree',
+        'modelName': 'hr.employee',
+        'View': (Tree) => (
+            <Tree open='hr.employee.form' canCreate={false}>
                 {({ Page, Field, List }) => (
                     <Page>
-                        <Field name="date" />
-                        <Field name="employee_id" />
-                        <Field name="has_valid_events" decoration={{ primary: true }} />
-                        <Field name="is_complete" decoration={{ primary: true }} />
-                        <Field name="allowed_start" />
-                        <Field name="allowed_end" />
+                        <Field name="name" />
+                        <Field name="active" decoration={{ primary: true }} />
+                        <Field name="location_id" />
+                        <Field name="odoo_id" />
+                        <Field name="hire_date" />
 
                         <List>
                             {({ Item, Title, Field, Trailing }) => (
                                 <Item>
                                     <Title>
-                                        <Field name="employee_id" />
+                                        <Field name="name" />
                                     </Title>
-                                    <Field name="date" />
+                                    <Field name="location_id" decoration={{ primary: true }} />
+                                    <Field name="hire_date" />
                                     <Trailing>
-                                        <Field name="has_valid_events" />
-                                        <Field name="is_complete" />
+                                        <Field name="odoo_id" />
                                     </Trailing>
                                 </Item>
                             )}
@@ -36,181 +35,22 @@ const VIEW = {
         ),
     }),
 
-    'assistance.registry.event.add.form': packedView({
-        modelName: 'assistance.registry.event',
-        type: 'form',
-        View: (Form) => (
-            <Form>
+    'hr.employee.form': packedView({
+        'type': 'form',
+        'modelName': 'hr.employee',
+        'View': (Form) => (
+            <Form readonly create={false} delete={false}>
                 {({ Page, Sheet, Group, Field }) => (
                     <Page>
-                        <Sheet>
-                            <Group label="Empleado">
-                                <Field name="employee_id" readonly />
-                                <Field name="day_id" readonly />
-                            </Group>
-                            <Group label="Información">
-                                <Field name="original_registry_time" />
-                                <Field name="original_status" />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        ),
-    }),
-
-    'assistance.registry.day.form': packedView({
-        modelName: 'assistance.registry.day',
-        type: 'form',
-        View: (Form) => (
-            <Form readonly>
-                {({ Page, Header, Wizard, Sheet, Group, Field }) => (
-                    <Page>
-                        <Header>
-                            <Wizard label="Añadir registro" view="assistance.registry.event.add.form" contextData={({ id, display_name, employee_id }) => ({ day_id: [id, display_name] as [number, string], from_api: false, employee_id: employee_id })} />
-                        </Header>
-                        <Sheet>
-                            <Field name="display_name" invisible />
-                            <Group label="Resumen">
-                                <Field name="employee_id" />
-                                <Field name="start_time" />
-                                <Field name="end_time" />
-                            </Group>
-                            <Group label="Detalles">
-                                <Field name="date" />
-                                <Field name="weekday" />
-                                <Field name="allowed_start" />
-                                <Field name="allowed_end" />
-                            </Group>
-                            <Group label="Métricas">
-                                <Group>
-                                    <Field name="has_valid_events" decoration={{ primary: true }} />
-                                    <Field name="is_complete" decoration={{ primary: true }} />
-                                </Group>
-                                <Field name="lunch_time" />
-                                <Field name="late_start" />
-                                <Field name="early_end" />
-                            </Group>
-                            <Group label="Eventos">
-                                <Field name="event_ids" decoration={{ info: true }} />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        ),
-    }),
-
-    'assistance.registry.event.tree': packedView({
-        modelName: 'assistance.registry.event',
-        type: 'tree',
-        View: (Tree) => (
-            <Tree open="assistance.registry.event.form">
-                {({ Page, Field, List }) => (
-                    <Page>
-                        <Field name="device_id" />
-                        <Field name="day_id" />
-
-                        <List>
-                            {({ Item, Title, Field, Trailing, Icon }) => (
-                                <Item>
-                                    <Field name="from_api" invisible />
-                                    <Field name="has_corrections" invisible />
-                                    <Field name="display_name" invisible />
-
-                                    <Title>
-                                        <Field name="employee_id" />
-                                    </Title>
-                                    <Field name="device_id" />
-                                    <Field name="day_id" />
-                                    <Trailing>
-                                        <Icon icon="scan-face" decoration={{ success: true }} invisible={[['from_api', '=', false]]} />
-                                        <Icon icon="file-pen" decoration={{ info: true }} invisible={[['has_corrections', '=', false]]} />
-                                    </Trailing>
-                                </Item>
-                            )}
-                        </List>
-                    </Page>
-                )}
-            </Tree>
-        ),
-    }),
-
-    'assistance.registry.event.form': packedView({
-        modelName: 'assistance.registry.event',
-        type: 'form',
-        View: (Form) => (
-            <Form readonly>
-                {({ Page, Sheet, Action, Group, Field, Header, Wizard, }) => (
-                    <Page>
-                        <Header>
-                            <Wizard label="Aplicar corrección" view="assistance.registry.event.correction.form" contextData={({ id, display_name }) => ({ event_id: [id, display_name] as any as [number, string] })} />
-                            <Action name="undo_corrections" label="Deshacer correcciones" decoration="danger" invisible={[['has_corrections', '=', false]]} />
-                        </Header>
                         <Sheet>
                             <Group label="General">
-                                <Field name="employee_id" />
-                                <Field name="status" />
-                                <Field name="registry_time" />
+                                <Field name="name" />
+                                <Field name="location_id" />
                             </Group>
-                            <Group label="Detalles">
-                                <Group>
-                                    <Field name="from_api" decoration={{ primary: true }} />
-                                    <Field name="has_corrections" decoration={{ primary: true }} />
-                                </Group>
-                                <Field name="day_id" />
-                            </Group>
-                            <Group label="Correciones" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="status_correction" invisible={[['status_correction', '=', null]]} />
-                                <Field name="registry_time_correction" invisible={[['registry_time_correction', '=', null]]} readonly />
-                            </Group>
-                            <Group label="Datos originales" invisible={[['has_corrections', '=', false]]}>
-                                <Field name="original_status" />
-                                <Field name="original_registry_time" />
-                            </Group>
-                            <Group label="Correcciones" invisible={[['correction_history_ids', '=', null]]}>
-                                <Field name="correction_history_ids" decoration={{ info: true }} />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        ),
-    }),
-
-    'assistance.registry.event.correction.form': packedView({
-        modelName: 'assistance.registry.event.correction',
-        type: 'form',
-        View: (Form) => (
-            <Form>
-                {({ Page, Sheet, Group, Field }) => (
-                    <Page>
-                        <Sheet>
-                            <Group label="Hora de registro">
-                                <Field name="registry_time" />
-                            </Group>
-                            <Group label="Tipo de registro">
-                                <Field name="status" />
-                            </Group>
-                        </Sheet>
-                    </Page>
-                )}
-            </Form>
-        ),
-    }),
-
-    'assistance.registry.event.credentials.form': packedView({
-        modelName: 'assistance.registry.event.credentials',
-        type: 'form',
-        View: (Form) => (
-            <Form>
-                {({ Page, Sheet, Group, Field }) => (
-                    <Page>
-                        <Sheet>
-                            <Group label="Datos">
-                                <Field name="cookie_uuid" />
-                                <Field name="site_id" />
-                                <Field name="token" />
+                            <Group label="Estatus">
+                                <Field name="active" />
+                                <Field name="hire_date" />
+                                <Field name="odoo_id" />
                             </Group>
                         </Sheet>
                     </Page>
