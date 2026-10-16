@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useAPI from "@/hooks/app/useAPI";
 import useDataView from "@/hooks/routes/useDataView";
-import useAppHeaderControls from "@/hooks/ui/useAppHeaderControls";
 import useGetModelNameFromView from "@/hooks/views/useGetModelNameFromView";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import { useCallback, useMemo, useState } from "react";
@@ -20,6 +19,7 @@ import VOID_CALLBACK from "@/constants/app/callbacks";
 import LABEL from "@/constants/app/label";
 import IconOption from "../IconOption";
 import IndividualRecordViewContext from "@/contexts/views/individualRecordViewContext";
+import HeaderControls from "@/components/portals/HeaderControls";
 
 const Form = <M extends IACele.Data.ModelName>({
     children,
@@ -59,13 +59,12 @@ const FormComponent = {
         children,
     }: IACele.View.FormComponents<M, keyof typeof IconOption>['Header']) => {
 
-        // Obtención de función para renderizar los controles en el encabezado de la app
-        const { renderHeaderControls } = useAppHeaderControls();
-
-        return renderHeaderControls(
-            <div className="mt-2">
-                {children}
-            </div>
+        return (
+            <HeaderControls.Portal>
+                <div className="mt-2">
+                    {children}
+                </div>
+            </HeaderControls.Portal>
         );
     },
 

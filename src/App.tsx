@@ -1,10 +1,10 @@
 import { Outlet } from "react-router";
 import Navbar from "./components/common/navbar/Navbar";
 import useRedirectToLogin from "./hooks/app/useRedirectToLogin";
-import HeaderControlsBearer from "./components/common/main/AppHeader";
 import useWebsocketNotification from "./hooks/app/useWebsocketNotification";
 import showToast from "./components/ui/toast/toast";
 import { KeyRound } from "lucide-react";
+import HeaderControls from "./components/portals/HeaderControls";
 
 const App = () => {
 
@@ -15,7 +15,7 @@ const App = () => {
         <div className="flex flex-col h-svh">
             <Navbar />
             <main className="h-full overflow-scroll scrollbar-hide">
-                <HeaderControlsBearer />
+                <HeaderControls.Render />
                 <Outlet />
             </main>
         </div>

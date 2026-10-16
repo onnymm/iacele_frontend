@@ -1,10 +1,10 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import DarkModeProvider from "./DarkModeProvider";
 import PageNameProvider from "./PageNameProvider"
-import HeaderControlsProvider from "./HeaderControlsProvider";
 import ModelsMetadataProvider from "./ModelsMetadataProvider";
 import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
 import NavbarMainControls from "@/components/portals/NavbarMainControls";
+import HeaderControls from "@/components/portals/HeaderControls";
 
 const ApplicationProvider = ({
     children,
@@ -20,9 +20,9 @@ const ApplicationProvider = ({
 
         <NavbarMainControls.Provider>
         <NavbarDynamicControls.Provider>
-        <HeaderControlsProvider>
+        <HeaderControls.Provider>
             {children}
-        </HeaderControlsProvider>
+        </HeaderControls.Provider>
         </NavbarDynamicControls.Provider>
         </NavbarMainControls.Provider>
 
