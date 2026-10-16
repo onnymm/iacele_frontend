@@ -19,13 +19,13 @@ import InvisibleComponent from "../form/ui/InvisibleComponent";
 import { Button } from "@/components/ui/button";
 import BUTTON from "@/constants/ui/button";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus, Settings2 } from "lucide-react";
-import MainControls from "@/components/common/navbar/MainControls";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
 import useAPI from "@/hooks/app/useAPI";
 import useResizeTreeColumn from "@/hooks/ui/useResizeTreeColumn";
 import { Spinner } from "@/components/ui/spinner";
 import TreeMainControls from "@/components/portals/TreeMainControls";
 import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
+import NavbarMainControls from "@/components/portals/NavbarMainControls";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -606,14 +606,14 @@ const TreeRender = <M extends IACele.Data.ModelName>({
 
     return (
         <TreeMainControls.Provider>
-            <MainControls>
+            <NavbarMainControls.Portal>
                 <div className="flex flex-wrap gap-1">
                     {open && canCreate &&
                         <NewRecordButton open={open} />
                     }
                     <TreeMainControls.Render />
                 </div>
-            </MainControls>
+            </NavbarMainControls.Portal>
             <Pagination />
             <div className="hidden lg:block relative size-full">
                 <div className="relative w-full h-full overflow-scroll">

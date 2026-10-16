@@ -1,22 +1,9 @@
-import MainControlsContext from "@/contexts/ui/mainControlsContext";
-import { useContext, useEffect, useRef } from "react";
 import NavbarSettings from "./NavbarSettings";
 import WebsocketConnection from "./WebsocketConnection";
 import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
+import NavbarMainControls from "@/components/portals/NavbarMainControls";
 
 const Navbar = () => {
-
-    // Obtención de función de cambio de estado para establecer elemento HTML en controles principales
-    const { setElement: setMainControlsElement } = useContext(MainControlsContext);
-    // Inicialización de referencia de controles principales
-    const mainControlsRef = useRef<HTMLDivElement>(null);
-
-    // Efecto para establecer la referencia de controles principales como elemento HTML
-    useEffect(
-        () => {
-            setMainControlsElement(mainControlsRef.current);
-        }, [setMainControlsElement]
-    );
 
     return (
         <nav id="navbar" className="z-20 sticky flex flex-col gap-2 bg-white dark:bg-[#1f2f3f] shadow p-2 w-full transition select-none">
@@ -28,7 +15,7 @@ const Navbar = () => {
                 <NavbarSettings />
             </div>
             <div className="flex flex-row justify-between items-center h-min min-h-12">
-                <div id="navbar-main-controls" ref={mainControlsRef}/>
+                <NavbarMainControls.Render />
                 <NavbarDynamicControls.Render />
             </div>
         </nav>

@@ -1,7 +1,7 @@
-import MainControls from "@/components/common/navbar/MainControls";
 import MainButtons from "../main-buttons/MainButtons";
 import { useContext } from "react";
 import individualRecordViewContext from "@/contexts/views/individualRecordViewContext";
+import NavbarMainControls from "@/components/portals/NavbarMainControls";
 
 const ScreenModeControls = () => {
 
@@ -9,7 +9,7 @@ const ScreenModeControls = () => {
     const { canCreate } = useContext(individualRecordViewContext);
 
     return (
-        <MainControls>
+        <NavbarMainControls.Portal>
             <div className="flex flex-row gap-2">
                 {canCreate &&
                     <MainButtons.NewRecord />
@@ -18,7 +18,7 @@ const ScreenModeControls = () => {
                 <MainButtons.Save />
                 <MainButtons.UndoChanges />
             </div>
-        </MainControls>
+        </NavbarMainControls.Portal>
     );
 };
 
