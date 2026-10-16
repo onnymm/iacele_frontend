@@ -12,7 +12,7 @@ import useRecordEdition from "@/hooks/views/useRecordEdition";
 import EditableRecordProvider from "@/providers/views/EditableRecordProvider";
 import RecordInViewProvider from "@/providers/views/RecordInViewProvider";
 import FieldComponent from "@/components/views/FieldComponent";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import IconOption from "../IconOption";
 import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
@@ -24,6 +24,8 @@ import usePathNavigation from "@/hooks/routes/usePathNavigation";
 import DynamicControls from "@/components/common/navbar/DynamicControls";
 import useAPI from "@/hooks/app/useAPI";
 import useResizeTreeColumn from "@/hooks/ui/useResizeTreeColumn";
+import { Spinner } from "@/components/ui/spinner";
+import TreeMainControls from "@/components/portals/TreeMainControls";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -76,11 +78,21 @@ export default Tree;
 
 const TreeInspector = {
 
-    Page: <M extends IACele.Data.ModelName>({
+    Wrapper: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Page']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Wrapper']) => {
 
         return (children);
+    },
+
+    Header: () => {
+
+        return (null);
+    },
+
+    Task: () => {
+
+        return (null);
     },
 
     Field: <M extends IACele.Data.ModelName>({
@@ -178,11 +190,64 @@ const ListInspector = {
 
 const ListComponent = {
 
-    Page: <M extends IACele.Data.ModelName>({
+    Wrapper: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Page']) => {
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Wrapper']) => {
 
         return (children);
+    },
+
+    Header: <M extends IACele.Data.ModelName>({
+        children,
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Header']) => {
+
+        return (
+            <TreeMainControls.Portal>
+                {children}
+            </TreeMainControls.Portal>
+        );
+    },
+
+    Task: <M extends IACele.Data.ModelName>({
+        name,
+        label,
+        icon,
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Task']) => {
+
+        // Obtención de función desde el contexto
+        const { serverTask } = useOriginalRecords<M>();
+        // Obtención de estado de carga de la API
+        const { appLoading } = useAPI();
+        // Inicialización de estado de carga
+        const [ loading, setLoading ] = useState<boolean>(false);
+
+        // Inicialización de función del botón
+        const onClick = useCallback(
+            async () => {
+                setLoading(true);
+                await serverTask(name);
+                setLoading(false);
+            }, [name, serverTask]
+        );
+
+        // Obtención de ícono a renderizar
+        const Icon = useMemo(
+            () => (IconOption[icon]), [icon]
+        );
+
+        return (
+            <Button onClick={onClick} disabled={appLoading} variant='primary' className="relative h-10 md:h-8 cursor-pointer">
+                <div className={`${loading ? 'opacity-0' : ''} flex gap-2 items-center`}>
+                    {label}
+                    <Icon />
+                </div>
+                {loading &&
+                    <div className="absolute">
+                        <Spinner />
+                    </div>
+                }
+            </Button>
+        );
     },
 
     Field: () => {
@@ -514,10 +579,12 @@ const TreeRender = <M extends IACele.Data.ModelName>({
     children,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
+
     // Inicialización de referencia de tabla
     const tableRef = useRef<HTMLTableElement>(null);
     // Inicialización de estado de carga en falso
     const [ loaded, setLoaded ] = useState<boolean>(false);
+
 
     // Se establece el estado de carga en verdadero para provocar la renderización
     useEffect(
@@ -538,12 +605,15 @@ const TreeRender = <M extends IACele.Data.ModelName>({
     if (!loaded) return null;
 
     return (
-        <>
-            {open && canCreate &&
-                <MainControls>
-                    <NewRecordButton open={open} />
-                </MainControls>
-            }
+        <TreeMainControls.Provider>
+            <MainControls>
+                <div className="flex flex-wrap gap-1">
+                    {open && canCreate &&
+                        <NewRecordButton open={open} />
+                    }
+                    <TreeMainControls.Render />
+                </div>
+            </MainControls>
             <Pagination />
             <div className="hidden lg:block relative size-full">
                 <div className="relative w-full h-full overflow-scroll">
@@ -564,9 +634,11 @@ const TreeRender = <M extends IACele.Data.ModelName>({
             <div className="lg:hidden flex flex-col gap-2 md:grid md:grid-cols-2 p-2">
                 {children({ ...ListComponent })}
             </div>
-        </>
+        </TreeMainControls.Provider>
     );
 };
+
+
 
 const SortColumn = <M extends IACele.Data.ModelName>({
     fieldName,
@@ -766,7 +838,7 @@ const TreeComponent = {
         // Obtención de la configuración de campos desde el contexto
         const { fieldConfig, onRowClick } = useContext<IACele.Context.ViewContext.FieldConfig<M, typeof FieldComponent>>(FieldConfigContext);
         // Obtención del registro en vista
-        const { recordInView } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
+        const { recordInView,  } = useContext<IACele.Context.ViewContext.RecordEdition<M>>(RecordEditionContext);
 
         return (
             <TableRow onClick={() => {onRowClick(recordInView)}} className="hover:bg-primary/20 cursor-pointer">

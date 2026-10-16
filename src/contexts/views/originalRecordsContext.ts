@@ -14,6 +14,7 @@ const OriginalRecordsContext = createContext<IACele.Context.ViewContext.Original
     setPage: VOID_CALLBACK.SYNC,
     limit: 40,
     totalPages: 1,
+    serverTask: VOID_CALLBACK.ASYNC,
 });
 
 export default OriginalRecordsContext;

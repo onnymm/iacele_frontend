@@ -104,6 +104,10 @@ declare namespace IACele {
                         & _RequiresRecordID
                     );
 
+                    type Task = (
+                        & _RequiresName
+                    );
+
                     type Create<M extends Data.ModelName> = (
                         & _RequiresModelName<M>
                         & _RequiresRecordsData<M>
@@ -150,6 +154,8 @@ declare namespace IACele {
 
             type Action<M extends Data.ModelName> = _Definition.Base.Action<M>;
 
+            type Task<M extends Data.ModelName> = _Definition.Base.Task<M>;
+
             type Create<M extends Data.ModelName> = _Definition.Base.Create<M>;
 
             type SearchRead<M extends Data.ModelName> = _Definition.Base.SearchRead<M>;
@@ -169,6 +175,8 @@ declare namespace IACele {
         declare namespace Response {
 
             type Action = true;
+
+            type Task = true;
 
             type Create = number[];
 
@@ -461,15 +469,15 @@ declare namespace IACele {
 
             'base.users.role': {
                 label: TType.Char<'not_null'>;
-                group_ids: TType.Many2Many<'base.user.groups'>;
+                group_ids: TType.Many2Many<'base.users.group'>;
             };
 
-            'base.user.groups': {
+            'base.users.group': {
                 label: TType.Char<'not_null'>;
-                access_ids: TType.One2Many<'base.user.access'>;
+                access_ids: TType.One2Many<'base.users.access'>;
             };
 
-            'base.user.access': {
+            'base.users.access': {
                 model_id: TType.Many2One<'not_null'>;
                 perm_create: TType.Boolean<'not_null'>;
                 perm_read: TType.Boolean<'not_null'>;
@@ -800,11 +808,17 @@ declare namespace IACele {
             };
 
             interface TreeComponents <M extends Data.ModelName, O extends FieldComponent, I extends string>{
-                'Page': {
+                'Wrapper': {
                     children: React.ReactNode;
                 };
                 'Field': _TreeWidgetDistribution<M, O>;
                 'List': ListRenderer<M, O, I>;
+                'Header': IACele.Common.SupportsChildren;
+                'Task': {
+                    name: string;
+                    label: string;
+                    icon: I;
+                };
             };
 
             interface _ListComponents <M extends Data.ModelName, O extends FieldComponent, I extends string>{
@@ -988,9 +1002,11 @@ declare namespace IACele {
         type TreeComponents<M extends Data.ModelName, O extends View.FieldComponent, I extends string> = _Definition.TreeComponents<M, O, I>;
 
         interface _TreeChildren <M extends Data.ModelName, O extends FieldComponent, I extends string>{
-            Page: React.FC<TreeComponents<M, O, I>['Page']>;
+            Wrapper: React.FC<TreeComponents<M, O, I>['Wrapper']>;
             Field: React.FC<TreeComponents<M, O, I>['Field']>;
             List: React.FC<TreeComponents<M, O, I>['List']>;
+            Header: React.FC<TreeComponents<M, O, I>['Header']>;
+            Task: React.FC<TreeComponents<M, O, I>['Task']>;
         };
 
         type OpenView<M extends Data.ModelName> = _Definition.OpenView<M>
@@ -1071,6 +1087,7 @@ declare namespace IACele {
                 originalRecords: Data.RecordFromDatabase<M>[];
                 reload: () => (void);
                 fieldsToRead: RefObject<Data.ReadField<M>[]>;
+                serverTask: (name: string) => Promise<void>;
                 toggleSortby: (fieldName: Data.FieldName<M>) => (void);
                 sortby: View.Sortby<M>;
                 page: number;

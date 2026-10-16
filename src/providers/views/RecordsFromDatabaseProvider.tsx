@@ -8,7 +8,7 @@ const RecordsFromDatabaseProvider = <M extends IACele.Data.ModelName>({
 }: IACele.Common.SupportsChildren) => {
 
     // Obtención de parámetros y funciones para lectura de datos desde la API
-    const { dataFromAPI, reload, fieldsToRead, suscribeFieldToRead, sortby, toggleSortby, page, setPage, limit, totalPages } = useReadRecordsFromAPI<M>();
+    const { dataFromAPI, reload, fieldsToRead, serverTask, suscribeFieldToRead, sortby, toggleSortby, page, setPage, limit, totalPages } = useReadRecordsFromAPI<M>();
 
     return (
         // Contexto para proveer función de registro de campos
@@ -25,6 +25,7 @@ const RecordsFromDatabaseProvider = <M extends IACele.Data.ModelName>({
                     originalRecords: dataFromAPI,
                     reload: reload,
                     fieldsToRead,
+                    serverTask,
                     sortby,
                     toggleSortby: toggleSortby as () => {},
                     page,

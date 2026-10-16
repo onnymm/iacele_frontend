@@ -19,6 +19,7 @@ const PATH = {
     },
     SERVER: {
         ACTION: '/server/action',
+        TASK: '/server/task',
     },
     WEBSOCKET: '/ws',
 } as const;

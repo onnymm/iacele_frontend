@@ -22,9 +22,19 @@ const TreeViewInspector = <M extends IACele.Data.ModelName>({
 
 const InspectView = {
 
-    Page: <M extends IACele.Data.ModelName>({
+    Wrapper: <M extends IACele.Data.ModelName>({
         children,
-    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Page']) => (children),
+    }: IACele.View.TreeComponents<M, typeof FieldComponent, keyof typeof IconOption>['Wrapper']) => (children),
+
+    Header: () => {
+
+        return (null);
+    },
+
+    Task: () => {
+
+        return (null);
+    },
 
     Field: <M extends IACele.Data.ModelName>({
         name,

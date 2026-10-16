@@ -41,6 +41,20 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         }, [api, initializeTotalItems, limit, modelName, offset, sortby]
     );
 
+    // Función para ejecutar tarea de servidor
+    const serverTask = useCallback(
+        async (name: string) => {
+
+            // Se envía la solicitud
+            await api.task({
+                'name': name,
+            });
+
+            // Recarga de los datos
+            await read(fieldsToRead);
+        }, [api, fieldsToRead, read]
+    );
+
     // Efecto para ejecutar la función de lectura
     useEffect(
         () => {
@@ -59,6 +73,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         setPage,
         limit,
         totalPages,
+        serverTask,
     };
 };
 
