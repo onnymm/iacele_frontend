@@ -21,11 +21,11 @@ import BUTTON from "@/constants/ui/button";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus, Settings2 } from "lucide-react";
 import MainControls from "@/components/common/navbar/MainControls";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
-import DynamicControls from "@/components/common/navbar/DynamicControls";
 import useAPI from "@/hooks/app/useAPI";
 import useResizeTreeColumn from "@/hooks/ui/useResizeTreeColumn";
 import { Spinner } from "@/components/ui/spinner";
 import TreeMainControls from "@/components/portals/TreeMainControls";
+import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -557,7 +557,7 @@ const Pagination = <M extends IACele.Data.ModelName>() => {
     const { page, prevPage, nextPage, totalPages } = usePaginator<M>();
 
     return (
-        <DynamicControls>
+        <NavbarDynamicControls.Portal>
             <div className="flex items-center gap-2">
                 {page + 1} / {totalPages}
                 <div className="flex">
@@ -569,7 +569,7 @@ const Pagination = <M extends IACele.Data.ModelName>() => {
                     </Button>
                 </div>
             </div>
-        </DynamicControls>
+        </NavbarDynamicControls.Portal>
     );
 };
 

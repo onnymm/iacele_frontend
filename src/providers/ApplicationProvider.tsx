@@ -4,7 +4,7 @@ import MainControlsProvider from "./MainControlsProvider";
 import PageNameProvider from "./PageNameProvider"
 import HeaderControlsProvider from "./HeaderControlsProvider";
 import ModelsMetadataProvider from "./ModelsMetadataProvider";
-import DynamicControlsProvider from "./DynamicControlsProvider";
+import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
 
 const ApplicationProvider = ({
     children,
@@ -19,11 +19,11 @@ const ApplicationProvider = ({
         <TooltipProvider>
 
         <MainControlsProvider>
-        <DynamicControlsProvider>
+        <NavbarDynamicControls.Provider>
         <HeaderControlsProvider>
             {children}
         </HeaderControlsProvider>
-        </DynamicControlsProvider>
+        </NavbarDynamicControls.Provider>
         </MainControlsProvider>
 
         </TooltipProvider>
