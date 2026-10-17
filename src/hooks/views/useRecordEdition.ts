@@ -7,7 +7,7 @@ import useModelMetadata from "./useModelMetadata";
 import useDataView from "../routes/useDataView";
 import useDataContext from "./useDataContext";
 import VOID_CALLBACK from "@/constants/app/callbacks";
-import useTrigger from "../app/useSignal";
+import useTrigger from "../app/useTrigger";
 
 const useRecordEdition = <M extends IACele.Data.ModelName>() => {
 

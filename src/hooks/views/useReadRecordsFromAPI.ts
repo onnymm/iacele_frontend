@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAPI from "../app/useAPI";
-import useReload from "../app/useReload";
 import useGetModelNameFromView from "./useGetModelNameFromView";
 import useSuscribeFieldsToRead from "./useSuscribeFieldsToRead";
 import useModelMetadata from "./useModelMetadata";
+import useTrigger from "../app/useTrigger";
 
 const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
 
@@ -12,7 +12,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
     // Obtención de la instancia de conexión a la API
     const { api } = useAPI();
     // Obtención de estado y función de recarga
-    const { reload, reloadSignal } = useReload();
+    const [ reloadSignal, reload ] = useTrigger();
     // Inicialización de estado de datos del registro de la base de datos
     const [ dataFromAPI, setDataFromAPI ] = useState<IACele.Data.RecordFromDatabase<M>[] | null>(null);
     // Inicialización de lista de campos a leer
