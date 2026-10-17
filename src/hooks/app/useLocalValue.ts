@@ -1,6 +1,20 @@
 import { useCallback } from "react";
 
-const useLocalValue = (name: string) => {
+const useLocalValue = <T, R extends string>(
+    name: string,
+    process: (v: R | null) => (T),
+) => {
+
+    // Inicialización de función para cargar el valor desde el almacenamiento local
+    const loadValue = useCallback(
+        () => {
+
+            // Obtención del valor desde el almacenamiento local
+            const value = localStorage.getItem(name);
+
+            return process(value as R);
+        }, [name, process]
+    );
 
     // Inicialización de función para guardar el valor en el almacenamiento local
     const saveValue = useCallback(
@@ -8,17 +22,6 @@ const useLocalValue = (name: string) => {
 
             // Se guarda el valor en el almacenamiento local
             localStorage.setItem(name, value);
-        }, [name]
-    );
-
-    // Inicialización de función para cargar el valor desde el almacenamiento local
-    const loadValue = useCallback(
-        (): string | null => {
-
-            // Obtención del valor desde el almacenamiento local
-            const value = localStorage.getItem(name);
-
-            return value as (string | null);
         }, [name]
     );
 
@@ -31,7 +34,7 @@ const useLocalValue = (name: string) => {
         }, [name]
     );
 
-    return [ saveValue, loadValue, removeValue ] as const;
+    return [ loadValue, saveValue, removeValue ] as const;
 };
 
 export default useLocalValue;
