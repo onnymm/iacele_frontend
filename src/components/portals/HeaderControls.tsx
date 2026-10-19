@@ -38,7 +38,7 @@ const HeaderControls = {
         children,
     }: IACele.Common.SupportsChildren) => {
 
-        // Obtención de función para establecer el estado del componente
+        // Obtención de elemento de renderización desde el contexto
         const { element } = useContext(HeaderControlsContext);
 
         // Si no existe elemento para renderizar no se renderiza

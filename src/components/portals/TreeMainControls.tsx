@@ -25,6 +25,25 @@ const TreeMainControls = {
         );
     },
 
+    Portal: ({
+        children,
+    }: IACele.Common.SupportsChildren) => {
+
+        // Obtención de elemento de renderización desde el contexto
+        const { element } = useContext(TreeMainControlsContext);
+
+        // Si no existe elemento para renderizar, no se renderiza nada
+        if ( element === null ) {
+            return;
+        };
+
+        // Creación del portal
+        return createPortal(
+            children,
+            element,
+        );
+    },
+
     Render: () => {
 
         // Inicialización de referencia de controles principales para árbol
@@ -40,25 +59,6 @@ const TreeMainControls = {
 
         return (
             <div ref={treeMainControlsRef} />
-        );
-    },
-
-    Portal: ({
-        children,
-    }: IACele.Common.SupportsChildren) => {
-
-        // Obtención de función para establecer el estado del componente
-        const { element } = useContext(TreeMainControlsContext);
-
-        // Si no existe elemento para renderizar, no se renderiza nada
-        if ( element === null ) {
-            return;
-        };
-
-        // Creación del portal
-        return createPortal(
-            children,
-            element,
         );
     },
 
