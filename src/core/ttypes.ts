@@ -11,15 +11,15 @@ const satisfiesStructure = (st: RegExp) => {
         );
     };
 
-    return callback;
+    return (callback);
 };
 
-const validate = {
+const validators = {
     isDate: satisfiesStructure(/^\d{4}(-\d{2}){2}$/),
     isDatetime: satisfiesStructure(/^\d{4}(-\d{2}){2} \d{2}(:\d{2}){2}$/),
     isTime: satisfiesStructure(/^\d{2}(:\d{2}){2}$/),
     isDuration: satisfiesStructure(/^\d*(:\d{2}){2}$/),
-};
+} as const;
 
 abstract class ScalarTType<
     T extends IACele.Data.Validator.Mode,
@@ -34,16 +34,16 @@ abstract class ScalarTType<
 
     equals = (value: any) => (this.validationValue === value);
     notEqual = (value: any) => (this.validationValue !== value);
-    abstract gt: (value: any) => boolean;
-    abstract lt: (value: any) => boolean;
-    abstract ge: (value: any) => boolean;
-    abstract le: (value: any) => boolean;
-    abstract isin: (value: any) => boolean;
-    abstract notIn: (value: any) => boolean;
-    abstract ilike: (value: any) => boolean;
-    abstract notIlike: (value: any) => boolean;
-    abstract regex: (value: any) => boolean;
-    abstract regexI: (value: any) => boolean;
+    abstract gt: (value: any) => (boolean);
+    abstract lt: (value: any) => (boolean);
+    abstract ge: (value: any) => (boolean);
+    abstract le: (value: any) => (boolean);
+    abstract isin: (value: any) => (boolean);
+    abstract notIn: (value: any) => (boolean);
+    abstract ilike: (value: any) => (boolean);
+    abstract notIlike: (value: any) => (boolean);
+    abstract regex: (value: any) => (boolean);
+    abstract regexI: (value: any) => (boolean);
 
     private op = {
         '>': (a: T['view'], b: T['view']) => (a > b),
@@ -61,29 +61,29 @@ abstract class ScalarTType<
         this.validationValue = this.parse(value);
     };
 
-    parse: (value: T['view']) => (T['validate'] | null) = (value: T['view']) => (value as T['validate'] | null)
+    parse (value: T['view']): (T['validate'] | null) {
+        return (value as T['validate'] | null);
+    };
 
-    compareInArray = (
-        arrLike: any,
-    ): boolean => {
+    compareInArray (arrLike: any) {
 
         if ( Array.isArray(arrLike) ) {
             const found = arrLike.find( (v) => ( v === this.validationValue ) );
-            return found !== undefined;
+            return (found !== undefined);
         };
-        return false;
+        return (false);
     };
 
-    narrowed = (
+    narrowed (
         other: any,
         o: keyof typeof this.op,
-    ) => {
+    ) {
 
         if ( typeof other === this.scalarType && notNull(this.validationValue) ) {
-            return this.op[o](this.validationValue, other);
+            return (this.op[o](this.validationValue, other));
         };
-        return false;
-    }
+        return (false);
+    };
 };
 
 abstract class ArrayTType<
@@ -105,9 +105,9 @@ abstract class ArrayTType<
 
     equals = (value: any) => {
         if ( value === null && ( this.viewValue === null || this.viewValue.length === 0 ) ) {
-            return true;
+            return (true);
         };
-        return false;
+        return (false);
     };
     notEqual = () => (false);
     gt = () => (false);
@@ -126,7 +126,7 @@ abstract class ArrayTType<
 class NumericScalarTType<
     T extends IACele.Data.Validator.Mode,
     M extends IACele.Data.ModelName,
-    F extends IACele.Data.FieldName<M>
+    F extends IACele.Data.FieldName<M>,
 > extends ScalarTType<T, M, F, 'number'> {
     scalarType = 'number' as const;
 
@@ -163,34 +163,34 @@ class StringScalarTType<
                 .indexOf(value.toLocaleLowerCase())
             );
 
-            return index !== -1;
+            return (index !== -1);
         };
-        return false;
+        return (false);
     };
     notIlike = (value: any) => {
-        return !this.ilike(value);
+        return (!this.ilike(value));
     };
     regex = (value: any) => {
         if ( typeof value === 'string' && typeof this.validationValue === 'string' ) {
             try {
                 const r = RegExp(value);
-                return r.test(this.validationValue);
+                return (r.test(this.validationValue));
             } catch {
-                return false;
+                return (false);
             };
         };
-        return false;
+        return (false);
     };
     regexI = (value: any) => {
         if ( typeof value === 'string' && typeof this.validationValue === 'string' ) {
             try {
                 const r = RegExp(value, 'i');
-                return r.test(this.validationValue);
+                return (r.test(this.validationValue));
             } catch {
-                return false;
+                return (false);
             };
         };
-        return false;
+        return (false);
     };
 };
 
@@ -225,9 +225,9 @@ abstract class TemporalityTType <
             );
             const na = Number(a);
             const ba = Number(b);
-            return this.tempOp[op](na, ba);
+            return (this.tempOp[op](na, ba));
         } else {
-            return false;
+            return (false);
         };
     };
 
@@ -250,16 +250,16 @@ abstract class NonComparableTType<
 > extends ScalarTType<T, M, F, 'string'> {
     scalarType = 'string' as const;
 
-    comparse = (value: any) => {
+    compare = (value: any) => {
         if ( value === null ) {
-            return this.validationValue === value;
+            return (this.validationValue === value);
         } else {
-            return false;
+            return (false);
         };
     };
 
-    equals = (value: any) => (this.comparse(value));
-    notEqual = (value: any) => (!this.comparse(value));
+    equals = (value: any) => (this.compare(value));
+    notEqual = (value: any) => (!this.compare(value));
     gt = () => (false);
     lt = () => (false);
     ge = () => (false);
@@ -311,7 +311,7 @@ class Date<
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Date<'not_null'>, M, F> {
     replaceChars = ['-'];
-    isValidFormat = validate.isDate;
+    override isValidFormat = validators.isDate;
 };
 
 class Datetime<
@@ -319,7 +319,7 @@ class Datetime<
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Datetime<'not_null'>, M, F> {
     replaceChars = ['-', ' ', ':'];
-    isValidFormat = validate.isDatetime;
+    override isValidFormat = validators.isDatetime;
 };
 
 class Time<
@@ -327,7 +327,7 @@ class Time<
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Time<'not_null'>, M, F> {
     replaceChars = [':'];
-    isValidFormat = validate.isTime;
+    override isValidFormat = validators.isTime;
 };
 
 class Duration<
@@ -335,7 +335,7 @@ class Duration<
     F extends IACele.Data.FieldName<M>,
 > extends TemporalityTType<IACele.Data.TType.Duration<'not_null'>, M, F> {
     replaceChars = [':'];
-    isValidFormat = validate.isDuration;
+    override isValidFormat = validators.isDuration;
 };
 
 class File<
@@ -354,11 +354,14 @@ class Many2One<
 > extends NumericScalarTType<IACele.Data.TType.Many2One<'not_null'>, M, F> {
     scalarType = 'number' as const;
 
-    parse = (value: IACele.Data.TType.Many2One<'not_null'>['view']) => {
-        if ( value === null ) {
-            return null;
+    override parse(
+        value: IACele.Data.TType.Many2One<'not_null'>['view'],
+    ): number | null {
+
+        if (value === null) {
+            return (null);
         };
-        return value[0];
+        return (value[0]);
     };
 };
 
@@ -455,7 +458,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
 
         // Si la condición provista es un booleano...
         if ( typeof conditionOrBoolean === 'boolean' ) {
-            return conditionOrBoolean;
+            return (conditionOrBoolean);
         };
 
         // Resolución de tripletas de condición
@@ -500,14 +503,14 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
         // Destructuración del resultado final
         const [ expression ] = (arrayResult as [boolean]);
 
-        return expression;
+        return (expression);
     };
 
     private isLogicOperator = (
         element: IACele.Data.LogicOperator | boolean,
     ): element is IACele.Data.LogicOperator => {
 
-        return this.LOGIC_OPERATORS.indexOf(element) !== -1;
+        return (this.LOGIC_OPERATORS.indexOf(element) !== -1);
     };
 
     private resolveTriplets = (
@@ -536,7 +539,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
             }
         );
 
-        return arrayResult as (IACele.Data.LogicOperator | boolean)[];
+        return (arrayResult as (IACele.Data.LogicOperator | boolean)[]);
     };
 
     private evaluateField = <F extends IACele.Data.FieldName<M>>(
@@ -552,7 +555,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
         // Evaluación con el valor
         const result = operatorCallback(value);
 
-        return result;
+        return (result);
     };
 
     private getOperation = <O extends IACele.Data.Validator.BaseTType>(
@@ -563,7 +566,7 @@ class RecordEvaluator<M extends IACele.Data.ModelName> {
         // Obtención del método de evaluación
         const operatorCallback = this.op[op](obj);
 
-        return operatorCallback;
+        return (operatorCallback);
     };
 
 };
