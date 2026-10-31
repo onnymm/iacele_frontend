@@ -11,7 +11,7 @@ const BadgeLabel = ({
 }: BadgeLabelParams) => {
 
     return (
-        <div className="flex flex-row items-center h-8 group-[.iacele-item]:h-6">
+        <div className="flex flex-row items-end">
             <Badge className={`bg-${decoration} text-sm`}>
                 {children}
             </Badge>

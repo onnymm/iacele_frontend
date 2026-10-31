@@ -553,7 +553,7 @@ const FieldWidget = {
             const { values, isReadonly, decorationColor, relatedRecordsManager, view } = TTypeInterface.useOne2Many<M>();
 
             return (
-                <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
+                <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (
@@ -589,7 +589,7 @@ const FieldWidget = {
             const { values, isReadonly, decorationColor, relatedRecordsManager, relatedModelName, searchCriteria, updateSearchCriteria, searchText, view } = TTypeInterface.useMany2Many<M, F>();
 
             return (
-                <div className="flex flex-wrap gap-2 w-full min-h-8 group-[.iacele-item]:min-h-6">
+                <div className="flex flex-wrap gap-2 w-full">
                     {
                         values.map(
                             (record: IACele.Data.RecordForView<any>) => (

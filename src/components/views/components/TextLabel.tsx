@@ -9,7 +9,7 @@ const TextLabel = ({
 }: TextLabelParams) => {
 
     return (
-        <span className={`text-${decoration} group-[.iacele-item]:h-6 h-8 flex flex-row items-center text-sm`}>
+        <span className={`text-${decoration} flex flex-row items-center text-sm`}>
             {children}
         </span>
     );
