@@ -17,7 +17,11 @@ const NavbarProfile = () => {
                 <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap">{userData.name}</p>
                 <p className="text-primary text-xs">@{userData.login}</p>
             </div>
-            <img src={`data:image/jpeg;base64,${userData.profile_picture}` as string} className="rounded-full size-10" />
+            {
+                userData.profile_picture
+                    ? <img src={`data:image/jpeg;base64,${userData.profile_picture}` as string} className="rounded-full size-10" />
+                    : <div className="flex justify-center items-center bg-primary rounded-full size-10 text-white text-2xl select-none">{userData.name[0].toUpperCase()}</div>
+            }
         </div>
     );
 };
