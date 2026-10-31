@@ -21,6 +21,8 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
     const { sortby, toggleSortby } = useSortby<M>();
     // Inicialización de valores de paginación
     const { page, setPage, limit, totalPages, initializeTotalItems, offset } = usePagination();
+    // Inicialización de criterio de búsqueda
+    const { searchCriteria, searchRecords } = useSearchCriteria<M>();
 
     // Función para leer el registro
     const read = useCallback(
@@ -28,6 +30,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
             // Obtención de los datos desde la API
             const data = await api.tree({
                 'model_name': modelName,
+                'search_criteria': searchCriteria,
                 'fields': fieldsToRead.current,
                 'offset': offset,
                 'limit': limit,
@@ -38,7 +41,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
             setDataFromAPI(data['data']);
             // Se establece el número total de elementos
             initializeTotalItems(data['count']);
-        }, [api, initializeTotalItems, limit, modelName, offset, sortby]
+        }, [api, initializeTotalItems, limit, modelName, offset, searchCriteria, sortby]
     );
 
     // Función para ejecutar tarea de servidor
@@ -67,6 +70,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         fieldsToRead,
         suscribeFieldToRead,
         reload,
+        searchRecords,
         toggleSortby,
         sortby,
         page,
@@ -172,4 +176,30 @@ const useSortby = <M extends IACele.Data.ModelName>() => {
     );
 
     return { sortby, toggleSortby };
+};
+
+const useSearchCriteria = <M extends IACele.Data.ModelName>() => {
+
+    // Inicialización de estado de criterio de búsqueda
+    const [ searchCriteria, setSearchCriteria ] = useState<IACele.Data.CriteriaStructure<M>>([]);
+
+    // Funcióin para búsqueda de registros
+    const searchRecords = useCallback(
+        async (
+            arg: string,
+            fn: (content: string) => (IACele.Data.CriteriaStructure<M>),
+        ) => {
+
+            // Construcción de criterio de búsqueda a usar
+            const builtSearchCriteria = (
+                arg !== ''
+                    ? fn(arg)
+                    : []
+            );
+            // Se actualiza el estado
+            setSearchCriteria(builtSearchCriteria);
+        }, []
+    );
+
+    return { searchCriteria, searchRecords };
 };

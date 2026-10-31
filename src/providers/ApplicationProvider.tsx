@@ -5,6 +5,7 @@ import ModelsMetadataProvider from "./ModelsMetadataProvider";
 import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
 import NavbarMainControls from "@/components/portals/NavbarMainControls";
 import HeaderControls from "@/components/portals/HeaderControls";
+import NavbarCentralControls from "@/components/portals/NavbarCentralControls";
 
 const ApplicationProvider = ({
     children,
@@ -19,11 +20,13 @@ const ApplicationProvider = ({
         <TooltipProvider>
 
         <NavbarMainControls.Provider>
+        <NavbarCentralControls.Provider>
         <NavbarDynamicControls.Provider>
         <HeaderControls.Provider>
             {children}
         </HeaderControls.Provider>
         </NavbarDynamicControls.Provider>
+        </NavbarCentralControls.Provider>
         </NavbarMainControls.Provider>
 
         </TooltipProvider>

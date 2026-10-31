@@ -53,7 +53,7 @@ const NavbarDynamicControls = {
         );
 
         return (
-            <div id="navbar-dynamic-controls" ref={dynamicControlsRef}/>
+            <div id="navbar-dynamic-controls" className="flex justify-end" ref={dynamicControlsRef}/>
         );
     },
 

@@ -18,7 +18,7 @@ import useRecordEditionParams from "@/hooks/views/useRecordEditionParams";
 import InvisibleComponent from "../form/ui/InvisibleComponent";
 import { Button } from "@/components/ui/button";
 import BUTTON from "@/constants/ui/button";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus, Settings2 } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, Plus, Search, Settings2, X } from "lucide-react";
 import usePathNavigation from "@/hooks/routes/usePathNavigation";
 import useAPI from "@/hooks/app/useAPI";
 import useResizeTreeColumn from "@/hooks/ui/useResizeTreeColumn";
@@ -26,6 +26,8 @@ import { Spinner } from "@/components/ui/spinner";
 import TreeMainControls from "@/components/portals/TreeMainControls";
 import NavbarDynamicControls from "@/components/portals/NavbarDynamicControls";
 import NavbarMainControls from "@/components/portals/NavbarMainControls";
+import NavbarCentralControls from "@/components/portals/NavbarCentralControls";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 interface LeadingAndTrailingContextParams {
     setLeading: React.Dispatch<React.SetStateAction<React.ReactNode>>;
@@ -48,6 +50,7 @@ const Tree = <M extends IACele.Data.ModelName>({
     canCreate,
     open,
     children,
+    domain,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
 
     // Obtención de configuración de vista y función para suscribir configuración de campos
@@ -67,7 +70,7 @@ const Tree = <M extends IACele.Data.ModelName>({
             {/* Aquí se obtienen los metadatos de la vista */}
             {children({ ...TreeInspector })}
             {/* Aquí se renderiza la vista */}
-            <TreeRender open={open} canCreate={canCreate}>
+            <TreeRender open={open} canCreate={canCreate} domain={domain}>
                 {children}
             </TreeRender>
         </ClosureFieldConfigContext.Provider>
@@ -573,18 +576,132 @@ const Pagination = <M extends IACele.Data.ModelName>() => {
     );
 };
 
+interface SearchBarParams <M extends IACele.Data.ModelName>{
+    domain: (arg: string) => (IACele.Data.CriteriaStructure<M>);
+};
+
+const SearchBar = <M extends IACele.Data.ModelName>({
+    domain,
+}: SearchBarParams<M>) => {
+
+    // Obtención del estado de carga de la aplicación
+    const { appLoading } = useAPI();
+    // Obtención de función para búsqueda de registros
+    const { searchRecords } = useOriginalRecords<M>();
+    // Inicialización de texto de búsqueda
+    const [ searchText, setSearchText ] = useState<string>('');
+    // Inicialización de estado de carga
+    const [ isLoading, setIsLoading ] = useState<boolean>(false);
+    // Inicialización de estado de enfoque
+    const [ isFocused, setIsFocused ] = useState<boolean>(false);
+    // Inicialización de estado de botón deshabilitado
+    const [ isClearDisabled, setIsClearDisabled ] = useState<boolean>(true);
+    // Inicialización de referencia de campo
+    const fieldRef = useRef<HTMLInputElement>(null);
+
+    // Inicialización de función para búsqueda
+    const search = useCallback(
+        async (event: KeyboardEvent) => {
+            // Si la tecla de enter fue presionada
+            if ( event.key === 'Enter' ) {
+                // Se establece el estado de carga del campo en verdadero
+                setIsLoading(true);
+                // Búsqueda de registros
+                await searchRecords(
+                    searchText,
+                    domain,
+                );
+                // Se establece el estado de carga del campo en falso
+                setIsLoading(false);
+                // Se establece el estado de botón de limpieza deshabilitado en falso
+                setIsClearDisabled(false);
+            };
+        }, [domain, searchRecords, searchText]
+    );
+
+    // Inicialización de función de borrar búsqueda
+    const resetSearch = useCallback(
+        async () => {
+            // Se establece el estado de botón deshabilitado en verdadero
+            setIsClearDisabled(true);
+            // Se reestablece el texto de búsqueda
+            setSearchText('');
+            // Se vuelve a realizar la búsqueda
+            await searchRecords(
+                '',
+                domain,
+            );
+        }, [domain, searchRecords]
+    );
+
+    // Efecto para añadir y remover escuchador de evento de tecla Enter
+    useEffect(
+        () => {
+            // Obtención de la referencia de current para tipado
+            const current = fieldRef.current;
+            // Si existe una referencia...
+            if ( current ) {
+                // Se añade el evento de búsqueda
+                current.addEventListener(
+                    'keydown',
+                    search,
+                );
+
+                // Remoción de evento de búsqueda cuando el componente se desmonta
+                return (
+                    () => {current.removeEventListener('keydown', search)}
+                );
+            };
+        }, [search]
+    );
+
+    return (
+        <div className={`${isFocused ? 'h-24 absolute md:static left-0 md:h-10 md:bottom-10 -bottom-16 items-end md:items-center w-full md:w-96' : ''} items-center h-10 w-96 flex gap-2`}>
+            <div className={`${isFocused ? 'dark:bg-[#1f2f3f] p-2 md:p-0 border border-gray-500/50 md:border-0 rounded-2xl w-full' : !isClearDisabled ? 'w-22' : ''} flex gap-2 w-10 md:w-full`}>
+                <InputGroup className="z-10 shadow-lg h-10 md:h-8">
+                    <InputGroupInput
+                        id="navbar-search-input"
+                        ref={fieldRef}
+                        value={searchText}
+                        placeholder="Buscar..."
+                        onChange={(a) => {setSearchText(a.target.value)}}
+                        disabled={appLoading || isLoading}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                    />
+                    <InputGroupAddon className="self-end h-full">
+                        {
+                            isLoading
+                                ? <Spinner />
+                                : <Search className={`${isFocused ? 'stroke-primary' : ''}`} />
+                        }
+                    </InputGroupAddon>
+                </InputGroup>
+                <Button
+                    variant="primary"
+                    className={`${isFocused || !isClearDisabled ? 'flex' : 'hidden'} md:flex size-10 md:size-8 cursor-pointer`}
+                    size='icon'
+                    disabled={isClearDisabled}
+                    onClick={resetSearch}
+                >
+                    <X />
+                </Button>
+            </div>
+        </div>
+    );
+};
+
 const TreeRender = <M extends IACele.Data.ModelName>({
     open,
     canCreate = true,
+    domain = (arg) => ([['name', 'ilike', arg]]),
     children,
 }: IACele.View.TreeStructure<M, typeof FieldComponent, keyof typeof IconOption>) => {
-
 
     // Inicialización de referencia de tabla
     const tableRef = useRef<HTMLTableElement>(null);
     // Inicialización de estado de carga en falso
     const [ loaded, setLoaded ] = useState<boolean>(false);
-
 
     // Se establece el estado de carga en verdadero para provocar la renderización
     useEffect(
@@ -614,6 +731,9 @@ const TreeRender = <M extends IACele.Data.ModelName>({
                     <TreeMainControls.Render />
                 </div>
             </NavbarMainControls.Portal>
+            <NavbarCentralControls.Portal>
+                <SearchBar domain={domain} />
+            </NavbarCentralControls.Portal>
             <Pagination />
             <div className="hidden lg:block relative size-full">
                 <div className="relative w-full h-full overflow-scroll">

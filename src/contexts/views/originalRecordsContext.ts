@@ -6,6 +6,7 @@ const OriginalRecordsContext = createContext<IACele.Context.ViewContext.Original
     reload: VOID_CALLBACK.SYNC,
     fieldsToRead: { current: [] },
     toggleSortby: () => {},
+    searchRecords: VOID_CALLBACK.ASYNC,
     sortby: {
         sortby: null,
         ascending: null,

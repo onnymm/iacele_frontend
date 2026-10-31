@@ -1014,6 +1014,7 @@ declare namespace IACele {
         interface TreeStructure <M extends Data.ModelName, O extends FieldComponent, I extends string>{
             open?: OpenView<M>;
             canCreate?: boolean;
+            domain?: (arg: string) => (IACele.Data.CriteriaStructure<M>);
             children: (components: _TreeChildren<M, O, I>) => (React.ReactNode);
         };
 
@@ -1087,6 +1088,7 @@ declare namespace IACele {
                 originalRecords: Data.RecordFromDatabase<M>[];
                 reload: () => (void);
                 fieldsToRead: RefObject<Data.ReadField<M>[]>;
+                searchRecords: (arg: string, fn: (content: string) => IACele.Data.CriteriaStructure<M>) => (Promise<void>);
                 serverTask: (name: string) => Promise<void>;
                 toggleSortby: (fieldName: Data.FieldName<M>) => (void);
                 sortby: View.Sortby<M>;
