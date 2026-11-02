@@ -4,6 +4,7 @@ import useGetModelNameFromView from "./useGetModelNameFromView";
 import useSuscribeFieldsToRead from "./useSuscribeFieldsToRead";
 import useModelMetadata from "./useModelMetadata";
 import useTrigger from "../app/useTrigger";
+import CONFIG from "@/settings/config";
 
 const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
 
@@ -20,9 +21,23 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
     // Inicialización de función y valores para establecer el ordenamiento
     const { sortby, toggleSortby } = useSortby<M>();
     // Inicialización de valores de paginación
-    const { page, setPage, limit, totalPages, initializeTotalItems, offset } = usePagination();
+    const { page, setPage, limit, totalPages, initializeTotalItems, offset, resetPage } = usePagination();
     // Inicialización de criterio de búsqueda
     const { searchCriteria, searchRecords } = useSearchCriteria<M>();
+
+    // Inicialización de función de búsqueda de registros con reinicio de índice de página
+    const searchRecordsWithPageReset = useCallback(
+        (
+            arg: string,
+            fn: (content: string) => (IACele.Data.CriteriaStructure<M>),
+        ) => {
+
+            // Reseteo de índice de página
+            resetPage();
+            // Búsqueda de registros
+            searchRecords(arg, fn);
+        }, [resetPage, searchRecords]
+    );
 
     // Función para leer el registro
     const read = useCallback(
@@ -70,7 +85,7 @@ const useReadRecordsFromAPI = <M extends IACele.Data.ModelName>() => {
         fieldsToRead,
         suscribeFieldToRead,
         reload,
-        searchRecords,
+        searchRecords: searchRecordsWithPageReset,
         toggleSortby,
         sortby,
         page,
@@ -88,11 +103,11 @@ const usePagination = () => {
     // Inicialización de valor de página
     const [ page, setPage ] = useState<number>(0);
     // Inicialización de valor de elementos por página
-    const [ limit ] = useState<number>(40);
+    const [ limit ] = useState<number>(CONFIG.VIEWS.TREE.ITEMS_PER_PAGE);
 
     // Inicialización de elementos totales
     const [ totalItems, setTotalItems ] = useState<number | null>(0);
-
+    // Inicialización de valor de páginas totales de resultados
     const totalPages = useMemo(
         () => (
             totalItems !== null
@@ -110,12 +125,20 @@ const usePagination = () => {
         }, []
     );
 
+    // Inicialización de valor de desfase de índice
     const offset = useMemo(
         () => (page * limit),
         [page, limit]
     );
 
-    return { page, setPage, limit, totalPages, initializeTotalItems, offset };
+    // Inicialización de reseteo de índice de página
+    const resetPage = useCallback(
+        () => {
+            setPage(0);
+        }, []
+    );
+
+    return { page, setPage, limit, totalPages, initializeTotalItems, offset, resetPage };
 };
 
 const useSortby = <M extends IACele.Data.ModelName>() => {
